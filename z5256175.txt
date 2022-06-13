@@ -6,13 +6,16 @@ Adding Epic & User Stories to Jira
 
 What I did
 -------------------------
+
 Added four epic stories (with their user stories) to Jira Roadmap. (Four Epic stories, 13 User stories)
 I added the epic stories for Searching for recipes, Viewing recipes, Engaging with the recipe (up-voting, commenting etc.) and Contributing (by adding your own recipe etc.)
 
 Who I worked with
 -------------------------
+
 I was tasked with completing all of the epic and user stories with Nathan. I've worked on these ones, and then Nathan is set to do the others. At this point in time, there should be two remaining Epic stories left for Nathan to do, and then two epic stories (and novel functions) that will be added at a later date (worked on by the team).
 
 When this was done
 -------------------------
+
 This was done on Monday the 13th of June, in preparation for our Tuesday (14th of June) meeting from 14:00-16:00.
