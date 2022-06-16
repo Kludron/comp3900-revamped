@@ -1,0 +1,27 @@
+Nathan
+You should also include in this diary the following information (if applicable) about the project
+progress:
+- what was planned for the period since the last work diary entry
+- what was finished
+- what were the main technical and non-technical obstacles and how they were overcome (or what was
+	tried and did not work)
+- what was not finished, why this happened, how this affects the overall project progress and what
+	adjustments (if any) are needed so the success of the project is not endangered 
+- what is planned for the next period (e.g., next week)
+
+Week 1
+	Group was formed. We brainstormed novel ideas for each of the project options and chose
+	the project that had the most interesting novel idea. The group decided on moving forward
+	with the Recipe Recommendation system. Next week we plan to finalise the functionalities
+	of this system.
+
+Week 2
+	We were confused about the definition of the 6 functionalities so we spent the lab clarifying
+	our understanding with the tutor. Towards the end of the lab we made a start on listing out our
+	functionalities. The team plans to use the remainder of the week to finalise the functionalities.
+
+Week 3
+	The functionalities were finalised and tasks were delegated to the team. Bill and Edmond were
+	responsible for the storyboards and flowcharts while Liam and I were to work on the user stories.
+	After finishing the user stories, Liam and I are going to work on part B of the project proposal
+	and get that finished by Saturday Wk3
