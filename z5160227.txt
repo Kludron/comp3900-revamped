@@ -1,2 +1,18 @@
 Week 1
-Organised groups.
+- We formed our group of five.
+- I created the Jira, GitHub Classroom and Google Drive where we would be completing our implementation and coursework for the term.
+- I was allocated Scrum Master.
+- I facilitated discussion and brainstormed through different project ideas
+- I collected out teammates' weekly availabilities and managed to set up two weekly meeting timeslots (Wed 6-8pm & Thur 1-2pm)
+
+Week 2
+- Confirmed our project was the recipe recommendation system.
+- During our meeting, I went through the requirements of the project proposal and assigned each member a major section. I assigned myself to work on storyboards and flow diagram as I have frontend experience.
+- During class time, I discussed with other members about our epic stories and what main functionalities were to be implemented in our project. Still yet to complete 2 novel ideas.
+- Confirmed 6 epic stories, Search, View Recipes, Engage with recipes (like, comment and review), Share Recipes, Customise Profile and Use Application to improve health.
+
+Week 3
+- Started working on storyboards and in conjunction with Bill Mo on the flow diagram for all pages within our project
+- Created a Google doc skeleton of the project proposal criteria to be filled in when we complete sections.
+- 
+
