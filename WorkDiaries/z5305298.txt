@@ -1,0 +1,9 @@
+Week 1:
+    We made up the team and discussed the topic of project. At last we chose recipe recommendation system.
+
+Week 2:
+    I Did some researches on recipe recommendation system. Found webside supercook.com and diet traking system: FatSecret, YAZIO. I did the flow diagram, which contains basic functionality of recipe recommendation, login system and recipe contribution.
+Week 3:
+    In tuesday meeting, we discussed how to revise the flow diagram. "My Recipe" page should be aggregate with "Recipe Contribution" page. Diet tracking functionality should be added.Color should be added to differenciate user's access.
+    After meeting, I did what we discussed in meeting. Besides, I add new functionalities. Users can post.Users can add friends and see their posts. Users can add exercise they did. The system can calculate users' calorie according to their diet and exercise. However, I discarded some of them after discussion.
+    I made two system architecture diagram, one discribing interaction between layers, one discribing the main library we are going to use.
