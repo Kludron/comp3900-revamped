@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Demonstration Flask Server</title>
+	</head>
+	<body>
+		<h1>This is a demonstration flask server</h1>
+		<p>Sample body text</p><br>
+		
+		<label>Search here</label>
+		<input type="text" name="search"></input>
+		<button type="submit">Search</button><br>
+
+		{%if request.results %}
+			<p>Results: {{results}}</p>
+		{% endif %}
+	</body>
+</html>
