@@ -20,8 +20,14 @@ sudo chown -R $(whoami) /var/run/postgresql
 /usr/lib/postgresql/13/bin/pg_ctl -D $PGDATA -l log.output start
 
 # The below needs to be run manually
-dropdb comp3900db
-createdb comp3900db
-psql -f init.sql comp3900db
+# dropdb comp3900db
+# createdb comp3900db
+# psql -f init.sql comp3900db
+
+if [ ! -d "venv" ]; then
+	echo "Please create a virtual environement (venv) and install requirements in there"
+	exit;
+fi
+
 venv/bin/python3 src/server.py
 
