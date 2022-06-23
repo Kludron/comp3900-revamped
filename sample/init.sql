@@ -1,13 +1,14 @@
-create domain email_address check (
-   value ~ '^\w+@+\w+(?:\.\w)?.+\w' -- Fix this later to suit email addresses... maybe?
-);
+-- create domain email_address check (
+--    value ~ '^\w+@+\w+(?:\.\w)?.+\w' -- Fix this later to suit email addresses... maybe?
+-- );
 
 create table Users (
     id            int unique not null,
     username      varchar(200) unique not null,
     pass_hash     varchar(256) not null,
-    email         email_address not null,
-    points        int default 0
+    -- email         email_address not null,
+    email         text not null,
+    points        int default 0,
     primary key  (id)
 );
 

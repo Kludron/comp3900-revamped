@@ -1,0 +1,11 @@
+2022-06-23 12:07:08.988 AEST [4072621] FATAL:  lock file "postmaster.pid" already exists
+2022-06-23 12:07:08.988 AEST [4072621] HINT:  Is another postmaster (PID 4059012) running in data directory "/localstorage/z5256175/pgsql/data"?
+2022-06-23 12:07:14.916 AEST [4072653] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-23 12:07:14.918 AEST [4072653] LOG:  listening on Unix socket "/localstorage/z5256175/pgsql/data/.s.PGSQL.5432"
+2022-06-23 12:07:14.922 AEST [4072654] LOG:  database system was shut down at 2022-06-23 12:07:12 AEST
+2022-06-23 12:07:14.957 AEST [4072653] LOG:  database system is ready to accept connections
+2022-06-23 12:11:47.879 AEST [4072653] LOG:  received smart shutdown request
+2022-06-23 12:11:47.895 AEST [4072653] LOG:  received SIGHUP, reloading configuration files
+2022-06-23 12:11:47.895 AEST [4072653] LOG:  background worker "logical replication launcher" (PID 4072660) exited with exit code 1
+2022-06-23 12:11:47.896 AEST [4072655] LOG:  shutting down
+2022-06-23 12:11:47.954 AEST [4072653] LOG:  database system is shut down
