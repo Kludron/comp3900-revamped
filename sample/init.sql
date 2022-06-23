@@ -11,16 +11,6 @@ create table Users (
     primary key  (id)
 );
 
-create table Recipes (
-    id            int unique not null,
-    name          varchar(200) not null,
-    description   text not null,
-    cuisine       int references Cuisines(id),
-    meal_type     int references MealTypes(id),
-    serving_size  int not null,
-    primary key   (id)
-);
-
 create table Cuisines (
     id            int unique not null,
     name          text unique not null,
@@ -37,6 +27,16 @@ create table Ingredients (
     id            int unique not null,
     name          text unique not null,
     calories      float,  -- Per 100g
+    primary key   (id)
+);
+
+create table Recipes (
+    id            int unique not null,
+    name          varchar(200) not null,
+    description   text not null,
+    cuisine       int references Cuisines(id),
+    meal_type     int references MealTypes(id),
+    serving_size  int not null,
     primary key   (id)
 );
 

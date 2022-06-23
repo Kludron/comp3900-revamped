@@ -4,15 +4,17 @@
 		<title>Demonstration Flask Server</title>
 	</head>
 	<body>
+		<a href="/">Home</a>
 		<h1>This is a demonstration flask server</h1>
-		<p>Sample body text</p><br>
+		<p>Sample body text</p>
 		
-		<label>Search here</label>
-		<input type="text" name="search"></input>
-		<button type="submit">Search</button><br>
-
-		{%if request.results %}
-			<p>Results: {{results}}</p>
+		<label>Find a recipe</label>
+		<form method="post">
+			<input type="text" name="sr" placeholder="Search..." value=""></input>
+			<button type="submit">Submit</button>
+		</form>
+		{%if results %}
+			<p>You searched for: {{results}}</p>
 		{% endif %}
 	</body>
 </html>
