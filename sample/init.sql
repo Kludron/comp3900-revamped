@@ -49,3 +49,7 @@ create table recipe_ingredients (
     millilitres   float,
     primary key   (recipe, ingredient)
 );
+
+COPY cuisines FROM '/home/user/Documents/comp3900/sample/data/cuisines.csv' DELIMITER ',' CSV HEADER;
+COPY mealtypes FROM '/home/user/Documents/comp3900/sample/data/mealtypes.csv' DELIMITER ',' CSV HEADER;
+COPY recipes FROM '/home/user/Documents/comp3900/sample/data/recipes.csv' DELIMITER ',' CSV HEADER;

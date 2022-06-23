@@ -11,7 +11,7 @@ import psycopg2 as ps
 
 try:
     database = "comp3900db"
-    conn = ps.connect("dbname="+database)
+    conn = ps.connect(host='localhost', database=database)
     cursor = conn.cursor()
 except Exception as e:
     sys.stderr.write('Error connecting to database: {}\n'.format(e))
@@ -25,10 +25,12 @@ app = Flask(__name__)
 def home():
     if request.method == 'POST':
         search = request.form['sr']
-        cursor.prepare("SELECT r.name FROM recipes r WHERE r.name LIKE %s")
-        retults = cursor.execute((search,))
+        cursor.execute("SELECT * FROM recipes r WHERE r.name=%s", (search,))
+        results = cursor.fetchall()
+        # if not results:
+        #     cursor.execute("SELECT * FROM recipes;")
+        #     results = cursor.fetchall()
         return render_template('index.html', results=results)
-        # return redirect(url_for('search', search_request=request.form['search']))
     elif request.method == 'GET':
         return render_template('index.html')
 
