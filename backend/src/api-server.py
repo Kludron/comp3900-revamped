@@ -1,3 +1,4 @@
+from hashlib import sha256
 import psycopg2
 import sys
 from datetime import datetime, timedelta, timezone
@@ -21,6 +22,8 @@ api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
 
+SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -38,11 +41,12 @@ def login():
         try:
             email = data['email']
             pword = data['password']
-        except IndexError:
+            passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
+        except (IndexError, ValueError):
             response["msg"] = "Invalid Email / Password"
             return (response, 401)
         # Run check on database
-        cursor.execute("SELECT email FROM users WHERE email=%s AND pass_hash=%s;", (email, pword)) # This is equivalent to a prepared statement
+        cursor.execute("SELECT email FROM users WHERE email=%s AND pass_hash=%s;", (email, passhash)) # This is equivalent to a prepared statement
 
         # Validate that there was a user with these credentials
         try:
@@ -62,7 +66,7 @@ def login():
 @api.route('/auth/register', methods=['POST'])
 def register():
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
-    # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, str(sha256(password.encode('utf-8')).hexdigest()), email))
+    # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
     # Feel free to check out psql-test.py to see what I did.
     pass
