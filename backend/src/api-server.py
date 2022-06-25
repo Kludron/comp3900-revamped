@@ -29,14 +29,18 @@ except Exception as e:
 
 jwt = JWTManager(api)
 
-@api.route('/login', methods=['POST'])
+@api.route('/auth/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = json.loads(request.get_data())
+    response = {}
     if type(data) is dict:
         # Extract relevant information from the request [TODO: Is this all the data we need to check for security?]
-        email = data['email']
-        pword = data['password']
-
+        try:
+            email = data['email']
+            pword = data['password']
+        except IndexError:
+            response["msg"] = "Invalid Email / Password"
+            return (response, 401)
         # Run check on database
         cursor.execute("SELECT email FROM users WHERE email=%s AND pass_hash=%s;", (email, pword)) # This is equivalent to a prepared statement
 
@@ -45,15 +49,17 @@ def login():
             isValid = cursor.fetchone()[0] == email
         except (TypeError, IndexError):
             isValid = False
-        finally:
-            if not isValid:
-                return {"msg" : "Invalid Email / Password"}, 401
+        if not isValid:
+            response["msg"] = "Invalid Email / Password"
+            return (response, 401)
         
         token = create_access_token(identity=email)
-        response = {"token":token} # [TODO: Do we need to send more data back on a successful login?]
-        return response # Automatically responds with 200 code
+        response["token"] = token # [TODO: Do we need to send more data back on a successful login?]
+        return (response, 200) # Automatically responds with 200 code
+    response["msg"] = "Invalid Email / Password"
+    return (response, 401)
 
-@api.route('/register', methods=['POST'])
+@api.route('/auth/register', methods=['POST'])
 def register():
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, str(sha256(password.encode('utf-8')).hexdigest()), email))
