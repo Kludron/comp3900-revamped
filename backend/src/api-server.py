@@ -58,28 +58,31 @@ def register():
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, str(sha256(password.encode('utf-8')).hexdigest()), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
+    # Feel free to check out psql-test.py to see what I did.
     pass
 
+# Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
-@jwt_required
+@jwt_required # Apparently this should check whether or not the jwt is valid?
 def profile():
     data = request.get_json()
     response = {}
     if type(data) is dict:
         token = data['token']
         # Verify token
-        isAuthenticated = False
+        isAuthenticated = True # [TODO: Placeholder]
         if not isAuthenticated:
             response["msg"] = "User not authenticated"
             response["isSuccess"] = False
             return response, 403
         # Extract what settings were changed and update the SQL database to reflect those changes
-        response["isSuccess"] = False # This is a placeholder. False because no changes were made
+        response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
         return response
     response["isSuccess"] = False
     response["msg"] = "The data provided is not valid"
     return response
 
+# Haven't tested this yet
 @api.after_request
 def refresh_jwt(response: request):
     # If the user is active within 15 minutes after their token expires, refresh their expiry time.
