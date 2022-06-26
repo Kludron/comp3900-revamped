@@ -65,11 +65,36 @@ def login():
 
 @api.route('/auth/register', methods=['POST'])
 def register():
+    data = json.loads(request.get_data())
+    response = {}
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
     # Feel free to check out psql-test.py to see what I did.
-    pass
+    if type(data) is dict:
+        name = data['name']
+        email = data['email']
+        pword = data['password']
+        passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
+
+        #Check if user already has an account
+        query_for_emails = ("SELECT email FROM users WHERE email=%s;", (email))
+        try:
+            doesExist = cursor.fetchone()[0] == email
+        except (TypeError, IndexError):
+            doesExist = False
+
+        if doesExist:
+            response["msg"] = "An account with this email already exists"
+            return (response, 401)
+
+        #Continue to create account for new user
+        cursor.execute(
+                        "INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", 
+                        (username, passhash, email)
+                       )
+    response['msg'] = "Successfully registered"
+    return (response, 401)
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
