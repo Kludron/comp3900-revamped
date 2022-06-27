@@ -67,6 +67,7 @@ def login():
 def register():
     data = json.loads(request.get_data())
     response = {}
+
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
@@ -90,11 +91,11 @@ def register():
 
         #Continue to create account for new user
         cursor.execute(
-                        "INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", 
-                        (username, passhash, email)
+                        "INSERT INTO users(email, pass_hash, username) VALUES (%s, %s, %s);", 
+                        (email, passhash, name)
                        )
     response['msg'] = "Successfully registered"
-    return (response, 401)
+    return (response, 200)
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
