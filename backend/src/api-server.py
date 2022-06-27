@@ -136,3 +136,6 @@ def refresh_jwt(response: request):
     except (RuntimeError, KeyError):
         # Invalid JWT Token
         return response
+
+if __name__ == '__main__':
+    api.run()
