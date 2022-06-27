@@ -31,10 +31,15 @@ function Login () {
       Sign in to F1V3GUY5
     </Typography>
     <LoginForm submit={async (email, password) => {
-      axios.post('http://localhost:5000/auth/login', JSON.stringify({email, password}))
-      .then(res => {
-        console.log(res.data);
-      })
+        /*console.log(email);
+        console.log(password);*/ //Email and Password are showing in console
+      axios.post('http://localhost:5000/auth/login', { email, password })
+      .then((response) => {
+        console.log(response);
+        navigate('/dashboard');
+      }, (error) => {
+        console.log(error);
+      });
     }} />
     <br />
     <span>Don&apos;t have an account? </span>

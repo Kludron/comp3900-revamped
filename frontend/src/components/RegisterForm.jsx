@@ -6,21 +6,31 @@ import { TextField } from '@mui/material';
 /* Register Form Component */
 function RegisterForm ({ submit }) {
   const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [name, setName] = React.useState('');
+  const [repassword, setRepassword] = React.useState('');
 
   const onSubmit = () => {
-    submit(email, password, name);
+    submit(email, username, password, repassword);
   }
   return (<>
     <TextField
       margin="normal"
       required
-      fullwidth
+      fullwidth="true"
       id="email"
       label="Email Address"
       name="email"
       onChange={e => setEmail(e.target.value)}
+    />
+    <TextField
+      margin="normal"
+      required
+      fullwidth="true"
+      id="username"
+      label="Username"
+      name="username"
+      onChange={e => setUsername(e.target.value)}
     />
     <TextField
       margin="normal"
@@ -36,10 +46,11 @@ function RegisterForm ({ submit }) {
       margin="normal"
       required
       fullwidth="true"
-      name="name"
-      id="name"
-      label="Name"
-      onChange={e => setName(e.target.value)}
+      name="repassword"
+      id="repassword"
+      type="password"
+      label="Re-type Password"
+      onChange={e => setRepassword(e.target.value)}
     />
 
     <Button variant="contained"

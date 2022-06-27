@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+import axios from 'axios';
 
 /* Register Page */
 function Register () {
@@ -25,33 +26,24 @@ function Register () {
       alignItems: 'center',
     }}
     >
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-      <Typography component="h1" variant="h5">
-        Create an account
-      </Typography>
-      <RegisterForm submit={async (email, password, name) => {
-        const response = await fetch('http://localhost:5005/admin/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            name,
-          })
-        });
-        const data = await response.json();
-        if (response.ok) {
-          localStorage.setItem('token', data.token);
-          navigate('/dashboard');
-        } else {
-          alert(await data.error);
-        }
-      }} />
-      <br />
-      <span>Already have an account? </span>
-      <Button variant="outlined" onClick={login}>Log in</Button>
+    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+    <Typography component="h1" variant="h5">
+      Create an account
+    </Typography>
+    <RegisterForm submit={async (email, username, password, repassword) => {
+      console.log(email, username, password, repassword);
+      axios.post('http://localhost:5000/auth/login', { email, password })
+      .then((response) => {
+        console.log(response);
+        //Need a popup box here
+        navigate('/login');
+      }, (error) => {
+        console.log(error);
+      });
+    }} />
+    <br />
+    <span>Already have an account? </span>
+    <Button variant="outlined" onClick={login}>Log in</Button>
     </Box>
   </>;
 }
