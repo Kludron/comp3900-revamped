@@ -34,7 +34,7 @@ function Login () {
     <LoginForm submit={async (email, password) => {
         /*console.log(email);
         console.log(password);*/ //Email and Password are showing in console
-      axios.post('http://localhost:5000/auth/login', { email, password })
+      axios.post('http://localhost:5000/auth/login', JSON.stringify({ email, password }))
       .then((response) => {
         console.log(response);
         navigate('/dashboard');
