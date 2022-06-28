@@ -79,7 +79,8 @@ def register():
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
 
         #Check if user already has an account
-        query_for_emails = ("SELECT email FROM users WHERE email=%s;", (email))
+        cursor.execute("SELECT email FROM users WHERE email=%s;", (email))
+        
         try:
             doesExist = cursor.fetchone()[0] == email
         except (TypeError, IndexError):
