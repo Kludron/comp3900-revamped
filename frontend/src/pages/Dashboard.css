@@ -1,0 +1,9 @@
+button {
+    margin: 5px;
+}
+
+.ingredientBox {
+    border-style: groove;
+    margin-top: 10px;
+    width: 90%;
+}

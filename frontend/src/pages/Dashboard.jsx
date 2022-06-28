@@ -3,18 +3,10 @@ import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
 import IngredientBar from '../components/IngredientBar';
-
+import './Dashboard.css'
 
 /* Dashboard Page */
 function Dashboard () {
-  localStorage.clear();
-  
-  // Style for ingredient boxes
-  const ingredientBox = {
-      borderStyle: 'groove',
-      marginTop: 10,
-      width: '90%',
-  }
 
   return <div>
     {/* left title and search bar */}
@@ -28,7 +20,7 @@ function Dashboard () {
     }}
     >
       <p style={{marginTop: 25}}>My Pantry</p>
-      <IngredientBar></IngredientBar>
+      <IngredientBar/>
       
       {/* left pantry box */}
       <div
@@ -46,22 +38,22 @@ function Dashboard () {
       >
 
         {/* ingredient boxes */}
-        <div style={ ingredientBox }>
+        <div className='ingredientBox'>
           <h4>Meat</h4>
-          <button style={{margin: 5}}>Pork</button>
-          <button style={{margin: 5}}>Lamb</button>
+          <button>Pork</button>
+          <button>Lamb</button>
         </div>
 
-        <div style={ ingredientBox }>
+        <div className='ingredientBox'>
           <h4>Vegetables&Greens</h4>
-          <button style={{margin: 5}}>Lettuce</button>
-          <button style={{margin: 5}}>Carrot</button>
+          <button>Lettuce</button>
+          <button>Carrot</button>
         </div>
 
-        <div style={ ingredientBox }>
+        <div className='ingredientBox'>
           <h4>Baking</h4>
-          <button style={{margin: 5}}>Flower</button>
-          <button style={{margin: 5}}>Sugar</button>
+          <button>Flower</button>
+          <button>Sugar</button>
         </div>
       </div>
     </div>
@@ -75,11 +67,11 @@ function Dashboard () {
       alignItems: 'center',
     }}
     >
-      <Link to='/Profile'>
+      <Link to='/profile'>
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
       <h1>F1V3GUY5 RECIPES</h1>
-      <RecipeBar></RecipeBar>
+      <RecipeBar/>
       
       {/* right recipes box */}
       <div
@@ -92,9 +84,9 @@ function Dashboard () {
           overflow: 'scroll',
       }}
       >
-        <button style={{margin: 5}}>Meal Type</button>
-        <button style={{margin: 5}}>Allergies</button>
-        <button style={{margin: 5}}>Cuisine</button>
+        <button>Meal Type</button>
+        <button>Allergies</button>
+        <button>Cuisine</button>
       </div>
     </div>
   </div>;
