@@ -20,5 +20,13 @@ Week 3
 - Submitted Proposal on Monday 1am
 
 Week 4
+- Delegated tasks to each member to focus on
+- Created Frontend folder for all frontend related implementation
+- Created Login, Register, Dashboard, Profile pages with help from Bill.
+- Added in Acceptance criteria into our User stories and retracted 2 user stories from the sprint as our sprint timings were wrong as informed by Tam our tutor.
+- Adjusted sprint timings according Tam to align with demo.
+
+Week 5
+- Continued working on Login and Register frontend API calls.
 - 
 
