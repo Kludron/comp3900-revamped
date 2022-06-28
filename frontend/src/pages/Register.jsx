@@ -16,6 +16,15 @@ function Register () {
   const login = () => {
     navigate('/login');
   }
+  
+  //Checks the password and re-type password fields are the same before registering.
+  const checkPasswords = (password, repassword) => {
+    if(password !== repassword){
+      return alert("Passwords do not match, please try again");
+    } else {
+      return true;
+    }
+  }
 
   return <>
     <Box
@@ -32,14 +41,18 @@ function Register () {
     </Typography>
     <RegisterForm submit={async (email, username, password, repassword) => {
       console.log(email, username, password, repassword);
-      axios.post('http://localhost:5000/auth/login', { email, password })
-      .then((response) => {
-        console.log(response);
-        //Need a popup box here
-        navigate('/login');
-      }, (error) => {
-        console.log(error);
-      });
+      if(checkPasswords(password, repassword)){
+        axios.post('http://localhost:5000/auth/register', { email, username, password })
+        .then((response) => {
+          console.log(response);
+          //Need a popup box here
+          navigate('/login');
+        }, (error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
     }} />
     <br />
     <span>Already have an account? </span>

@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import ForgotPassword from '../components/ForgotPassword';
 
 /* Login Page */
 function Login () {
@@ -41,6 +42,7 @@ function Login () {
         console.log(error);
       });
     }} />
+    <ForgotPassword/>
     <br />
     <span>Don&apos;t have an account? </span>
     <Button

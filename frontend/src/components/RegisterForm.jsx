@@ -52,7 +52,6 @@ function RegisterForm ({ submit }) {
       label="Re-type Password"
       onChange={e => setRepassword(e.target.value)}
     />
-
     <Button variant="contained"
     sx={{ mt: 3, mb: 2 }}
     type="submit"

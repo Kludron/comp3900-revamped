@@ -33,9 +33,10 @@ function LoginForm ({ submit }) {
       onChange={e => setPassword(e.target.value)}
     /><br />
     <Button
-    sx={{ mt: 3, mb: 2 }}
-    id='login'
-    variant="contained" onClick={onSubmit}>Log in</Button>
+      sx={{ mt: 3, mb: 2 }}
+      id='login'
+      variant="contained" onClick={onSubmit}>Log in
+    </Button>
   </>)
 }
 
