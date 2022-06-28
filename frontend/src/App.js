@@ -8,6 +8,8 @@ import {
 import Login from './pages/Login';
 import Welcome from './pages/Welcome';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+
 function App() {
   return (
     <>
@@ -16,6 +18,7 @@ function App() {
           <Route exact path='/' element={<Welcome />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
+          <Route path='forgot-password' element={<ForgotPassword />} />
         </Routes>
       </BrowserRouter>
     </>
