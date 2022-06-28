@@ -37,6 +37,7 @@ function Login () {
       axios.post('http://localhost:5000/auth/login', JSON.stringify({ email, password }))
       .then((response) => {
         console.log(response);
+        localStorage.setItem('token', response.token);
         navigate('/dashboard');
       }, (error) => {
         console.log(error);
