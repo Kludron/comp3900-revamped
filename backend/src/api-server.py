@@ -17,6 +17,7 @@ from flask_jwt_extended import (
     jwt_required,
     JWTManager
 )
+import smtplib, ssl
 
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
@@ -116,8 +117,29 @@ def register():
     return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
-def register():
+def reset():
+    data = json.loads(request.get_data())
+    response = {}
 
+    if type(data) is dict:
+        sender_email = "allofrandomness@gmail.com"
+        receiver_email = data['email']
+
+        message = """\
+        Subject: Hi there
+
+        This is your password reset code """ + reset_code
+
+        port = 465  # For SSL
+        password = "iamrandom123#"
+
+        # Create a secure SSL context
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login("allofrandomness@gmail.com", password)
+            server.sendmail(sender_email, receiver_email, message)
+    
     pass
 
 # Need to test this
