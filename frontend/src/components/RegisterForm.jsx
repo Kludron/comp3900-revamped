@@ -6,13 +6,14 @@ import { TextField } from '@mui/material';
 /* Register Form Component */
 function RegisterForm ({ submit }) {
   const [email, setEmail] = React.useState('');
-  const [username, setUsername] = React.useState('');
+  const [fullname, setFullname] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
 
   const onSubmit = () => {
-    submit(email, username, password, repassword);
+    submit(email, fullname, password, repassword);
   }
+
   return (<>
     <TextField
       margin="normal"
@@ -27,10 +28,10 @@ function RegisterForm ({ submit }) {
       margin="normal"
       required
       fullwidth="true"
-      id="username"
-      label="Username"
-      name="username"
-      onChange={e => setUsername(e.target.value)}
+      id="fullname"
+      label="Full name"
+      name="fullname"
+      onChange={e => setFullname(e.target.value)}
     />
     <TextField
       margin="normal"

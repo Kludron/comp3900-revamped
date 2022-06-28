@@ -27,37 +27,41 @@ function Register () {
   }
 
   return <>
-    <Box
-    sx={{
-      marginTop: 8,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }}
-    >
-    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-    <Typography component="h1" variant="h5">
-      Create an account
-    </Typography>
-    <RegisterForm submit={async (email, username, password, repassword) => {
-      console.log(email, username, password, repassword);
-      if(checkPasswords(password, repassword)){
-        axios.post('http://localhost:5000/auth/register', JSON.stringify({ email, username, password }))
-        .then((response) => {
-          console.log(response);
-          //Need a popup box here
-          navigate('/login');
-        }, (error) => {
-          console.log(error);
-        });
-      } else {
-        return false;
-      }
-    }} />
-    <br />
-    <span>Already have an account? </span>
-    <Button variant="outlined" onClick={login}>Log in</Button>
-    </Box>
+    <main>
+      <Box
+      sx={{
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+      >
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+      <Typography component="h1" variant="h5">
+        Create an account
+      </Typography>
+      <RegisterForm submit={async (email, fullname, password, repassword) => {
+        console.log(email, fullname, password, repassword);
+        if(checkPasswords(password, repassword)){
+          axios.post('http://localhost:5000/auth/register', JSON.stringify({ email, fullname, password }))
+          .then((response) => {
+            console.log(response);
+            //Need a popup box here
+            alert("You have successfully registered. You have been moved to the login page.")
+            navigate('/login');
+          }, (error) => {
+            console.log(error);
+            alert(error)
+          });
+        } else {
+          alert("Passwords do not match. Please try again.")
+        }
+      }} />
+      <br />
+      <span>Already have an account? </span>
+      <Button variant="outlined" onClick={login}>Log in</Button>
+      </Box>
+    </main>
   </>;
 }
 
