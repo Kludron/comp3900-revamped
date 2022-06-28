@@ -79,7 +79,7 @@ def register():
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
 
         #Check if user already has an account
-        query_for_emails = ("SELECT email FROM users WHERE email=%s;", (email))
+        cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
         try:
             doesExist = cursor.fetchone()[0] == email
         except (TypeError, IndexError):
@@ -91,8 +91,8 @@ def register():
 
         #Continue to create account for new user
         cursor.execute(
-                        "INSERT INTO users(email, pass_hash, username) VALUES (%s, %s, %s);", 
-                        (email, passhash, name)
+                        "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+                        (name, passhash, email)
                        )
         conn.commit()
     response['msg'] = "Successfully registered"
