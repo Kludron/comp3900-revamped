@@ -9,13 +9,6 @@ import Avatar from '@mui/material/Avatar';
 
 /* Profile Page */
 function Profile () {
-  const navigate = useNavigate();
-
-  // Navigate to register page
-  const register = () => {
-    navigate('/register');
-  }
-
   return <>
     <div className='flex-container'>
       <div>

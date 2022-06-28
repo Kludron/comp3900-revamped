@@ -1,42 +1,28 @@
 import React from 'react';
-import RegisterForm from '../components/RegisterForm';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
 import IngredientBar from '../components/IngredientBar';
-import { flexbox } from '@mui/system';
 
 
 /* Main Page */
 function Main () {
   localStorage.clear();
-  const navigate = useNavigate();
-
-  const ingredientBox = {
-    position: 'absolute',
-    borderStyle: 'solid',
-    borderColor: 'red',
-    marginTop: 2,
-    width: 350,
-    height: 200,
-    display: 'flex',
-  };
   
-  // Navigate to Login/Profile page
-  const login = () => {
-    navigate('/login');
+  // Style for ingredient boxes
+  const ingredientBox = {
+      borderStyle: 'groove',
+      marginTop: 10,
+      width: '90%',
   }
 
   return <div>
     {/* left title and search bar */}
-    <Box
-    sx={{
-      position: 'absolute',
-      width: 400,
-      height: 200,
+    <div
+    style={{
+      backgroundColor: 'red',
+      float: 'left',
+      width: '30%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -44,97 +30,77 @@ function Main () {
     >
       <p style={{marginTop: 25}}>My Pantry</p>
       <IngredientBar></IngredientBar>
-    </Box>
+      
+      {/* left pantry box */}
+      <div
+      style={{
+        backgroundColor: 'blue',
+        borderStyle: 'solid',
+        borderColor: 'pink',
+        marginTop: 15,
+        width: '90%',
+        height: '460px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        overflow: 'scroll',
+      }}
+      >
+
+        {/* ingredient boxes */}
+        <div style={ ingredientBox }>
+          <h4>Meat</h4>
+          <button style={{margin: 5}}>Pork</button>
+          <button style={{margin: 5}}>Lamb</button>
+        </div>
+
+        <div style={ ingredientBox }>
+          <h4>Vegetables&Greens</h4>
+          <button style={{margin: 5}}>Lettuce</button>
+          <button style={{margin: 5}}>Carrot</button>
+        </div>
+
+        <div style={ ingredientBox }>
+          <h4>Baking</h4>
+          <button style={{margin: 5}}>Flower</button>
+          <button style={{margin: 5}}>Sugar</button>
+        </div>
+      </div>
+    </div>
 
   {/* right title and search bar */}
-    <Box
-    sx={{
-      position: 'absolute',
-      right: 10,
-      width: 850,
-      height: 200,
+    <div
+    style={{
+      backgroundColor: 'gray',
+      width: '70%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
     }}
     >
+      <Link to='/Profile'>
+        <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
+      </Link>
       <h1>F1V3GUY5 RECIPES</h1>
       <RecipeBar></RecipeBar>
-    </Box>
-    <Avatar sx={{ margin: 1, position: 'absolute', right: 10 }}></Avatar>
-
-    {/* left pantry box */}
-    <Box
-    sx={{
-      position: 'absolute',
-      borderStyle: 'solid',
-      borderColor: 'pink',
-      marginTop: 15,
-      width: 400,
-      height: 440,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'scroll',
-    }}
-    >
-
-      {/* ingredient boxes */}
-      <Box
-      sx={{
-        position: 'absolute',
-        borderStyle: 'solid',
-        borderColor: 'red',
-        marginTop: 2,
-        width: 350,
-        height: 200,
-        display: 'flex',
+      
+      {/* right recipes box */}
+      <div
+      style={{
+        backgroundColor: 'yellow',
+          borderStyle: 'solid',
+          borderColor: 'pink',
+          marginTop: 15,
+          width: '95%',
+          height: '435px',
+          overflow: 'scroll',
       }}
-      >-------------</Box>
-
-      <Box
-      sx={{
-        position: 'absolute',
-        borderStyle: 'solid',
-        borderColor: 'red',
-        marginTop: 30,
-        width: 350,
-        height: 200,
-        display: 'flex',
-      }}
-      >-------------</Box>
-
-      <Box
-      sx={{
-        position: 'absolute',
-        borderStyle: 'solid',
-        borderColor: 'red',
-        marginTop: 58,
-        width: 350,
-        height: 200,
-        display: 'flex',
-      }}
-      >-------------</Box>
-
-    </Box>
-
-    {/* right recipes box */}
-    <Box
-    sx={{
-      position: 'absolute',
-      borderStyle: 'solid',
-      borderColor: 'blue',
-      marginTop: 16,
-      right: 10,
-      width: 850,
-      height: 430,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'scroll',
-    }}
-    >
-    </Box>
+      >
+        <button style={{margin: 5}}>Meal Type</button>
+        <button style={{margin: 5}}>Allergies</button>
+        <button style={{margin: 5}}>Cuisine</button>
+      </div>
+    </div>
   </div>;
 }
 
