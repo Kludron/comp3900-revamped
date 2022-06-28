@@ -17,6 +17,7 @@ from flask_jwt_extended import (
     jwt_required,
     JWTManager
 )
+import smtplib, ssl
 
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
@@ -24,6 +25,8 @@ api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
 
 SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
+# Command to access the database
+# psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -67,6 +70,7 @@ def login():
 def register():
     data = json.loads(request.get_data())
     response = {}
+
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
@@ -78,7 +82,8 @@ def register():
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
 
         #Check if user already has an account
-        query_for_emails = ("SELECT email FROM users WHERE email=%s;", (email))
+        cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
+        
         try:
             doesExist = cursor.fetchone()[0] == email
         except (TypeError, IndexError):
@@ -90,11 +95,53 @@ def register():
 
         #Continue to create account for new user
         cursor.execute(
-                        "INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", 
-                        (username, passhash, email)
+                        "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+                        (name, passhash, email)
                        )
+
+        #Move repeat code into function
+        #Check if user already has an account
+        cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
+        try:
+            doesExist = cursor.fetchone()[0] == email
+        except (TypeError, IndexError):
+            doesExist = False
+
+        if doesExist:
+            conn.commit()
+        else:
+            response["msg"] = "Error adding user, please try again"
+            return (response, 401)
+        
     response['msg'] = "Successfully registered"
-    return (response, 401)
+    return (response, 200)
+
+@api.route('/auth/reset', methods=['POST'])
+def reset():
+    data = json.loads(request.get_data())
+    response = {}
+
+    reset_code = "23489" #placeholder
+    
+    if type(data) is dict:
+        #Email details
+        sender_email = "allofrandomness@gmail.com"
+        receiver_email = data['email']
+        message = """\
+        Subject: Hi there
+
+        This is your password reset code """ + reset_code
+
+        #Setting up email connection
+        port = 465  # For SSL
+        password = "iamrandom123#"
+        context = ssl.create_default_context() # Create a secure SSL context
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login("allofrandomness@gmail.com", password)
+            server.sendmail(sender_email, receiver_email, message)
+    
+    pass
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
@@ -117,6 +164,10 @@ def profile():
     response["msg"] = "The data provided is not valid"
     return response
 
+### Search function
+# https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
+
+
 # Haven't tested this yet
 @api.after_request
 def refresh_jwt(response: request):
@@ -136,3 +187,6 @@ def refresh_jwt(response: request):
     except (RuntimeError, KeyError):
         # Invalid JWT Token
         return response
+
+if __name__ == '__main__':
+    api.run()
