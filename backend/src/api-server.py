@@ -80,6 +80,7 @@ def register():
 
         #Check if user already has an account
         cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
+        
         try:
             doesExist = cursor.fetchone()[0] == email
         except (TypeError, IndexError):
