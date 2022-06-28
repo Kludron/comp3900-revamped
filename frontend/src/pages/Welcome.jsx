@@ -1,15 +1,24 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
+import './Welcome.css';
 
 /* Welcome Page */
 function Welcome () {
   localStorage.clear();
   return <>
-    <nav>
-      <Link to='/register'>Sign up</Link> |
-      <Link to='/login'>Log in</Link>
-    </nav>
-    <h1>Welcome to F1V3GUY5</h1>
+  <main className="welcome-screen">
+    <div>
+      <h1>Welcome to F1V3GUY5</h1>
+    </div>
+    <div className="signuplogin-btn">
+      <div className="left">
+        <Link to='/register'>Sign up</Link>
+      </div>
+      <div className="right">
+        <Link to='/login'>Log in</Link>
+      </div>
+    </div>
+  </main>
   </>;
 }
 

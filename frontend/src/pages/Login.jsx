@@ -41,6 +41,7 @@ function Login () {
         navigate('/dashboard');
       }, (error) => {
         console.log(error);
+        alert(error)
       });
     }} />
     <ForgotPassword/>
