@@ -94,6 +94,7 @@ def register():
                         "INSERT INTO users(email, pass_hash, username) VALUES (%s, %s, %s);", 
                         (email, passhash, name)
                        )
+        conn.commit()
     response['msg'] = "Successfully registered"
     return (response, 200)
 
