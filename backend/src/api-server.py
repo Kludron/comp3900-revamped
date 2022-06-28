@@ -24,6 +24,8 @@ api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
 
 SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
+# Command to access the database
+# psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -95,9 +97,28 @@ def register():
                         "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
                         (name, passhash, email)
                        )
-        conn.commit()
+
+        #Move repeat code into function
+        #Check if user already has an account
+        cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
+        try:
+            doesExist = cursor.fetchone()[0] == email
+        except (TypeError, IndexError):
+            doesExist = False
+
+        if doesExist:
+            conn.commit()
+        else:
+            response["msg"] = "Error adding user, please try again"
+            return (response, 401)
+        
     response['msg'] = "Successfully registered"
     return (response, 200)
+
+@api.route('/auth/reset', methods=['POST'])
+def register():
+
+    pass
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
@@ -119,6 +140,10 @@ def profile():
     response["isSuccess"] = False
     response["msg"] = "The data provided is not valid"
     return response
+
+### Search function
+# https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
+
 
 # Haven't tested this yet
 @api.after_request
