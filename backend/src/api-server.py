@@ -121,20 +121,21 @@ def reset():
     data = json.loads(request.get_data())
     response = {}
 
+    reset_code = "23489" #placeholder
+    
     if type(data) is dict:
+        #Email details
         sender_email = "allofrandomness@gmail.com"
         receiver_email = data['email']
-
         message = """\
         Subject: Hi there
 
         This is your password reset code """ + reset_code
 
+        #Setting up email connection
         port = 465  # For SSL
         password = "iamrandom123#"
-
-        # Create a secure SSL context
-        context = ssl.create_default_context()
+        context = ssl.create_default_context() # Create a secure SSL context
 
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
             server.login("allofrandomness@gmail.com", password)
