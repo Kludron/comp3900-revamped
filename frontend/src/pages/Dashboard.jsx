@@ -5,8 +5,8 @@ import RecipeBar from '../components/RecipeBar';
 import IngredientBar from '../components/IngredientBar';
 
 
-/* Main Page */
-function Main () {
+/* Dashboard Page */
+function Dashboard () {
   localStorage.clear();
   
   // Style for ingredient boxes
@@ -20,7 +20,6 @@ function Main () {
     {/* left title and search bar */}
     <div
     style={{
-      backgroundColor: 'red',
       float: 'left',
       width: '30%',
       display: 'flex',
@@ -34,7 +33,6 @@ function Main () {
       {/* left pantry box */}
       <div
       style={{
-        backgroundColor: 'blue',
         borderStyle: 'solid',
         borderColor: 'pink',
         marginTop: 15,
@@ -71,7 +69,6 @@ function Main () {
   {/* right title and search bar */}
     <div
     style={{
-      backgroundColor: 'gray',
       width: '70%',
       display: 'flex',
       flexDirection: 'column',
@@ -87,7 +84,6 @@ function Main () {
       {/* right recipes box */}
       <div
       style={{
-        backgroundColor: 'yellow',
           borderStyle: 'solid',
           borderColor: 'pink',
           marginTop: 15,
@@ -104,4 +100,4 @@ function Main () {
   </div>;
 }
 
-export default Main;
+export default Dashboard;

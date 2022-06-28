@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+import axios from 'axios';
 
 /* Register Page */
 function Register () {
@@ -29,8 +30,8 @@ function Register () {
       <Typography component="h1" variant="h5">
         Create an account
       </Typography>
-      <RegisterForm submit={async (email, password, name) => {
-        const response = await fetch('http://localhost:5005/admin/auth/register', {
+      {/* <RegisterForm submit={async (email, password, name) => {
+        const response = await fetch('http://localhost:5000/auth/register', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -48,7 +49,14 @@ function Register () {
         } else {
           alert(await data.error);
         }
-      }} />
+      }} /> */}
+      <RegisterForm submit={async (email, password, name) => {
+        axios.post('http://localhost:5000/auth/register', JSON.stringify({email, password, name}))
+        .then(res => {
+          console.log(res.data)
+        })
+      }}
+      />
       <br />
       <span>Already have an account? </span>
       <Button variant="outlined" onClick={login}>Log in</Button>
