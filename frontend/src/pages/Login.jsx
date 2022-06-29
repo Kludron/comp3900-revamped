@@ -32,9 +32,14 @@ function Login () {
       Sign in to F1V3GUY5
     </Typography>
     <LoginForm submit={async (email, password) => {
-        /*console.log(email);
-        console.log(password);*/ //Email and Password are showing in console
-      axios.post('http://localhost:5000/auth/login', JSON.stringify({ email, password }))
+      let headers = {
+          'Content-Type': 'application/json',
+      };
+      var body = {
+        email,
+        password
+      };
+      axios.post('http://localhost:5000/auth/login', body, headers)
       .then((response) => {
         console.log(response);
         localStorage.setItem('token', response.token);

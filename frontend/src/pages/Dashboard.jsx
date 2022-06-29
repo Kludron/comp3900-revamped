@@ -15,7 +15,7 @@ function Dashboard () {
 
   const [query, setQuery] = useState('');
 
-  const [ingredientList, setIngredientList] = useState([]);
+  //const [ingredientList, setIngredientList] = useState([]);
   return <div>
     {/* left title and search bar */}
     <div className="pantry-upper">
@@ -39,8 +39,7 @@ function Dashboard () {
         }).map((post, key) => {
           return (
             <div className="pantry-ingredients" key={key}>
-              <button
-                onClick={set}>{post.name}</button>
+              <button>{post.name}</button>
             </div>
           )
       })}

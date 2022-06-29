@@ -19,6 +19,7 @@ from flask_jwt_extended import (
     JWTManager
 )
 import smtplib, ssl
+from flask_cors import CORS, cross_origin
 
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
@@ -37,6 +38,7 @@ except Exception as e:
 jwt = JWTManager(api)
 
 @api.route('/auth/login', methods=['POST'])
+@cross_origin()
 def login():
     data = json.loads(request.get_data())
     response = {"Access-Control-Allow-Origin":"http://localhost:3000"}
@@ -68,6 +70,7 @@ def login():
     return (response, 401)
 
 @api.route('/auth/register', methods=['POST'])
+@cross_origin()
 def register():
     data = json.loads(request.get_data())
     response = {}
@@ -118,12 +121,13 @@ def register():
     return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
+@cross_origin()
 def reset():
     data = json.loads(request.get_data())
     response = {}
 
     reset_code = "23489" #placeholder
-    
+
     if type(data) is dict:
         #Email details
         sender_email = "allofrandomness@gmail.com"
