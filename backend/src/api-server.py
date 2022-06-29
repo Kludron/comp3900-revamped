@@ -18,6 +18,7 @@ from flask_jwt_extended import (
     JWTManager
 )
 import smtplib, ssl
+from flask_cors import CORS, cross_origin
 
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
@@ -36,6 +37,7 @@ except Exception as e:
 jwt = JWTManager(api)
 
 @api.route('/auth/login', methods=['POST'])
+@cross_origin()
 def login():
     data = json.loads(request.get_data())
     response = {}
@@ -67,6 +69,7 @@ def login():
     return (response, 401)
 
 @api.route('/auth/register', methods=['POST'])
+@cross_origin()
 def register():
     data = json.loads(request.get_data())
     response = {}
@@ -76,7 +79,7 @@ def register():
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
     # Feel free to check out psql-test.py to see what I did.
     if type(data) is dict:
-        name = data['name']
+        name = data['username']
         email = data['email']
         pword = data['password']
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
@@ -117,12 +120,13 @@ def register():
     return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
+@cross_origin()
 def reset():
     data = json.loads(request.get_data())
     response = {}
 
     reset_code = "23489" #placeholder
-    
+
     if type(data) is dict:
         #Email details
         sender_email = "allofrandomness@gmail.com"
