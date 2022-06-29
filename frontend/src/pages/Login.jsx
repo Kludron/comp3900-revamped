@@ -40,7 +40,8 @@ function Login () {
         localStorage.setItem('token', response.token);
         navigate('/dashboard');
       }, (error) => {
-        console.log(error);
+        console.log(error.msg);
+        console.log("hi")
         alert(error)
       });
     }} />

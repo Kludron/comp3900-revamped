@@ -7,7 +7,8 @@ from urllib import response
 from flask import (
     Flask,
     request,
-    jsonify
+    jsonify,
+    Response
 )
 from flask_jwt_extended import (
     create_access_token,
@@ -38,7 +39,7 @@ jwt = JWTManager(api)
 @api.route('/auth/login', methods=['POST'])
 def login():
     data = json.loads(request.get_data())
-    response = {}
+    response = {"Access-Control-Allow-Origin":"http://localhost:3000"}
     if type(data) is dict:
         # Extract relevant information from the request [TODO: Is this all the data we need to check for security?]
         try:
@@ -76,7 +77,7 @@ def register():
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
     # Feel free to check out psql-test.py to see what I did.
     if type(data) is dict:
-        name = data['name']
+        name = data['username']
         email = data['email']
         pword = data['password']
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
