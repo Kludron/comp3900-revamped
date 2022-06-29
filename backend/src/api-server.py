@@ -76,7 +76,7 @@ def register():
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
     # Feel free to check out psql-test.py to see what I did.
     if type(data) is dict:
-        name = data['name']
+        name = data['username']
         email = data['email']
         pword = data['password']
         passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
@@ -96,7 +96,7 @@ def register():
         #Continue to create account for new user
         cursor.execute(
                         "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-                        (name, passhash, email)
+                        (username, passhash, email)
                        )
 
         #Move repeat code into function
@@ -122,7 +122,7 @@ def reset():
     response = {}
 
     reset_code = "23489" #placeholder
-    
+
     if type(data) is dict:
         #Email details
         sender_email = "allofrandomness@gmail.com"
