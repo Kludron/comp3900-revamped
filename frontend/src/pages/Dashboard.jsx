@@ -38,7 +38,7 @@ function Dashboard () {
         }).map((post, key) => {
         return (
           <div className="pantry-ingredients" key={key}>
-            <p>{post.name}</p>
+            <button>{post.name}</button>
           </div>
         )
       })}
