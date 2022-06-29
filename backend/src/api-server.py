@@ -36,6 +36,7 @@ except Exception as e:
 jwt = JWTManager(api)
 
 @api.route('/auth/login', methods=['POST'])
+@cross_origin()
 def login():
     data = json.loads(request.get_data())
     response = {}
@@ -67,6 +68,7 @@ def login():
     return (response, 401)
 
 @api.route('/auth/register', methods=['POST'])
+@cross_origin()
 def register():
     data = json.loads(request.get_data())
     response = {}
@@ -117,6 +119,7 @@ def register():
     return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
+@cross_origin()
 def reset():
     data = json.loads(request.get_data())
     response = {}
