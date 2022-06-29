@@ -15,6 +15,7 @@ function Dashboard () {
 
   const [query, setQuery] = useState('');
 
+  const [ingredientList, setIngredientList] = useState([]);
   return <div>
     {/* left title and search bar */}
     <div className="pantry-upper">
@@ -27,7 +28,7 @@ function Dashboard () {
           setQuery(event.target.value)
         }}
       />
-      {AllIngredients.filter((post) =>{
+      {AllIngredients.filter((post) => {
         if (query === ""){
           //returns empty
           return post;
@@ -36,11 +37,12 @@ function Dashboard () {
             return post;
           }
         }).map((post, key) => {
-        return (
-          <div className="pantry-ingredients" key={key}>
-            <p>{post.name}</p>
-          </div>
-        )
+          return (
+            <div className="pantry-ingredients" key={key}>
+              <button
+                onClick={set}>{post.name}</button>
+            </div>
+          )
       })}
       {/*
         AllIngredients.filer(post => {
