@@ -43,7 +43,15 @@ function Register () {
       <RegisterForm submit={async (email, username, password, repassword) => {
         console.log(email, username, password, repassword);
         if(checkPasswords(password, repassword)){
-          axios.post('http://localhost:5000/auth/register', JSON.stringify({ email, username, password }))
+          let headers = {
+            'Content-Type': 'application/json',
+          };
+          var body = {
+            email,
+            username,
+            password
+          };
+          axios.post('http://localhost:5000/auth/register', body, headers)
           .then((response) => {
             console.log(response);
             //Need a popup box here
@@ -55,6 +63,7 @@ function Register () {
           });
         } else {
           alert("Passwords do not match. Please try again.")
+          return;
         }
       }} />
       <br />
