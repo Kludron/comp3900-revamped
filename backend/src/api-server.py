@@ -18,6 +18,7 @@ from flask_jwt_extended import (
     JWTManager
 )
 import smtplib, ssl
+from flask_cors import CORS, cross_origin
 
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
@@ -98,7 +99,7 @@ def register():
         #Continue to create account for new user
         cursor.execute(
                         "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-                        (username, passhash, email)
+                        (name, passhash, email)
                        )
 
         #Move repeat code into function
