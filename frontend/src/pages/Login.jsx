@@ -37,7 +37,6 @@ function Login () {
       };
       var body = {
         email,
-        username,
         password
       };
       axios.post('http://localhost:5000/auth/login', body, headers)
