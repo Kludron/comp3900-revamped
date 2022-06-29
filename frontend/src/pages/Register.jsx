@@ -20,7 +20,7 @@ function Register () {
   //Checks the password and re-type password fields are the same before registering.
   const checkPasswords = (password, repassword) => {
     if(password !== repassword){
-      return alert("Passwords do not match, please try again");
+      return alert("Passwords do not match, please try again.");
     } else {
       return true;
     }
@@ -44,20 +44,20 @@ function Register () {
         console.log(email, username, password, repassword);
         if(checkPasswords(password, repassword)){
           let headers = {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           };
           var body = {
             email,
             username,
             password
           };
-          axios.post('http://localhost:5000/auth/register', body, headers)
+          axios.post("http://localhost:5000/auth/register", body, headers)
           .then((response) => {
             console.log(response);
             //Need a popup box here
             alert("You have successfully registered. You have been moved to the login page.")
             navigate('/login');
-          }, (error) => {
+          }).catch((error) => {
             console.log(error);
             alert(error)
           });

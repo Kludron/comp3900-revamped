@@ -33,15 +33,15 @@ function Dashboard () {
           //returns empty
           return post;
         } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
-            //returns filtered array
-            return post;
-          }
-        }).map((post, key) => {
-          return (
-            <div className="pantry-ingredients" key={key}>
-              <button>{post.name}</button>
-            </div>
-          )
+          //returns filtered array
+          return post;
+        }
+      }).map((post, key) => {
+        return (
+          <div className="pantry-ingredients" key={key}>
+            <button>{post.name}</button>
+          </div>
+        )
       })}
       {/*
         AllIngredients.filer(post => {
