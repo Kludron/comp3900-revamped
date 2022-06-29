@@ -1,0 +1,27 @@
+[
+    {
+		"id": 6,
+		"type": "Meat",
+		"name": "Beef Steak"
+	},
+	{
+		"id": 7,
+		"type": "Meat",
+		"name": "Bacon"
+	},
+	{
+		"id": 8,
+		"type": "Meat",
+		"name": "Chicken Breast"
+	},
+	{
+		"id": 9,
+		"type": "Meat",
+		"name": "Pork Belly"
+	},
+	{
+		"id": 10,
+		"type": "Meat",
+		"name": "Ham"
+	}
+]

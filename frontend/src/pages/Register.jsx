@@ -40,10 +40,10 @@ function Register () {
       <Typography component="h1" variant="h5">
         Create an account
       </Typography>
-      <RegisterForm submit={async (email, fullname, password, repassword) => {
-        console.log(email, fullname, password, repassword);
+      <RegisterForm submit={async (email, username, password, repassword) => {
+        console.log(email, username, password, repassword);
         if(checkPasswords(password, repassword)){
-          axios.post('http://localhost:5000/auth/register', JSON.stringify({ email, fullname, password }))
+          axios.post('http://localhost:5000/auth/register', JSON.stringify({ email, username, password }))
           .then((response) => {
             console.log(response);
             //Need a popup box here

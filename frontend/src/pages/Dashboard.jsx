@@ -1,59 +1,88 @@
 import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
-import IngredientBar from '../components/IngredientBar';
 import './Dashboard.css'
+import Meat from "../ingredients/meat.json";
+import Vegetables from "../ingredients/vegetables&greens.json";
+import Seafood from "../ingredients/seafood.json";
+import AllIngredients from "../ingredients/allingredients.json";
+
 
 /* Dashboard Page */
 function Dashboard () {
 
+  const [query, setQuery] = useState('');
+
   return <div>
     {/* left title and search bar */}
-    <div
-    style={{
-      float: 'left',
-      width: '30%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }}
-    >
-      <p style={{marginTop: 25}}>My Pantry</p>
-      <IngredientBar/>
-      
+    <div className="pantry-upper">
+      <h3 style={{marginTop: 25}}>My Pantry</h3>
+      <input 
+        className="ingredient-search"
+        type="search" 
+        placeholder="Search.." 
+        onChange={event => {
+          setQuery(event.target.value)
+        }}
+      />
+      {AllIngredients.filter((post) =>{
+        if (query === ""){
+          //returns empty
+          return post;
+        } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
+            //returns filtered array
+            return post;
+          }
+        }).map((post, key) => {
+        return (
+          <div className="pantry-ingredients" key={key}>
+            <p>{post.name}</p>
+          </div>
+        )
+      })}
+      {/*
+        AllIngredients.filer(post => {
+          if (query === ""){
+            //Empty query
+            return post;
+          } else if (post.title.toLowerCase().includes(query.toLowerCase())) {
+            //returns filtered array
+            return post;
+          }
+        }).map((post, index) => (
+          <div className="res" key={index}>
+              <p>{post.name}</p>
+          </div>
+        ))
+      */}
       {/* left pantry box */}
-      <div
-      style={{
-        borderStyle: 'solid',
-        borderColor: 'pink',
-        marginTop: 15,
-        width: '90%',
-        height: '460px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        overflow: 'scroll',
-      }}
-      >
-
+      <div className="pantrybox">
         {/* ingredient boxes */}
         <div className='ingredientBox'>
           <h4>Meat</h4>
-          <button>Pork</button>
-          <button>Lamb</button>
+          {Meat.map((post, index) => (
+            <div key={index}>
+              <button>{post.name}</button>
+            </div>
+          ))}
         </div>
-
         <div className='ingredientBox'>
-          <h4>Vegetables&Greens</h4>
-          <button>Lettuce</button>
-          <button>Carrot</button>
+          <h4>Seafood</h4>
+          {Seafood.map((post,index) => (
+            <div key={index}>
+              <button>{post.name}</button>
+            </div>
+          ))}
         </div>
-
         <div className='ingredientBox'>
-          <h4>Baking</h4>
-          <button>Flower</button>
-          <button>Sugar</button>
+          <h4>Vegetables & greens</h4>
+          {Vegetables.map((post,index) => (
+            <div key={index}>
+              <button>{post.name}</button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -61,16 +90,18 @@ function Dashboard () {
   {/* right title and search bar */}
     <div
     style={{
-      width: '70%',
+      width: '75%',
+      height: '100vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      overflow: 'scroll',
     }}
     >
       <Link to='/profile'>
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
-      <h1>F1V3GUY5 RECIPES</h1>
+      <h2>F1V3GUY5 RECIPES</h2>
       <RecipeBar/>
       
       {/* right recipes box */}
@@ -80,7 +111,7 @@ function Dashboard () {
           borderColor: 'pink',
           marginTop: 15,
           width: '95%',
-          height: '435px',
+          height: '100vh',
           overflow: 'scroll',
       }}
       >

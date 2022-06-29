@@ -1,0 +1,77 @@
+[
+	{
+		"id": 1,
+		"type": "Vegetables & Greens",
+		"name": "Carrot"
+	},
+	{
+		"id": 2,
+		"type": "Vegetables & Greens",
+		"name": "Potato"
+	},
+	{
+		"id": 3,
+		"type": "Vegetables & Greens",
+		"name": "Onion"
+	},
+	{
+		"id": 4,
+		"type": "Vegetables & Greens",
+		"name": "Tomato"
+	},
+	{
+		"id": 5,
+		"type": "Vegetables & Greens",
+		"name": "Celery"
+	},
+    {
+        "id": 6,
+        "type": "Meat",
+        "name": "Beef Steak"
+    },
+    {
+        "id": 7,
+        "type": "Meat",
+        "name": "Bacon"
+    },
+    {
+        "id": 8,
+        "type": "Meat",
+        "name": "Chicken Breast"
+    },
+    {
+        "id": 9,
+        "type": "Meat",
+        "name": "Pork Belly"
+    },
+    {
+        "id": 10,
+        "type": "Meat",
+        "name": "Ham"
+    },
+    {
+        "id": 1,
+        "type": "Seafood",
+        "name": "Tilapia"
+    },
+    {
+        "id": 2,
+        "type": "Seafood",
+        "name": "Salmon"
+    },
+    {
+        "id": 3,
+        "type": "Seafood",
+        "name": "Tuna"
+    },
+    {
+        "id": 4,
+        "type": "Seafood",
+        "name": "Cod"
+    },
+    {
+        "id": 5,
+        "type": "Seafood",
+        "name": "Halibut"
+    }
+]

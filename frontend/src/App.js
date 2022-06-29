@@ -22,9 +22,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route exact path='/' element={<Welcome />} />
-          <Route path='login' element={<Login />} />
-          <Route path='register' element={<Register />} />
-          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/favourite' element={<Favourite />} />
           <Route path='/dietAndMetrics' element={<DietAndMetrics />} />

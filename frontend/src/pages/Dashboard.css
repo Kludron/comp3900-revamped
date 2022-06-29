@@ -7,3 +7,37 @@ button {
     margin-top: 10px;
     width: 90%;
 }
+
+.pantry-upper {
+    float: left;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.pantrybox {
+    border-style: solid;
+    border-color: pink;
+    margin-top: 15;
+    width: 90%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+.ingredient-search {
+    width: 90%;
+    height: 35px;
+    font-size: 13px;
+    padding-left: 10px;
+}
+
+p {
+    margin: 3px;
+    font-size: 12px;
+}
