@@ -15,6 +15,12 @@ function Dashboard () {
 
   const [query, setQuery] = useState('');
 
+  const [ingredientList, setIngredientList] = useState([]);
+
+  const appendList = (ingredient) => {
+    setIngredientList(ingredientList => [...ingredientList, ingredient]);
+  }
+
   return <div>
     {/* left title and search bar */}
     <div className="pantry-upper">
@@ -38,7 +44,9 @@ function Dashboard () {
         }).map((post, key) => {
         return (
           <div className="pantry-ingredients" key={key}>
-            <button>{post.name}</button>
+            <button onClick={() => appendList({post})}>
+              {post.name}
+            </button>
           </div>
         )
       })}

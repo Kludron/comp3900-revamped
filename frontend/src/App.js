@@ -15,6 +15,7 @@ import DietAndMetrics from './pages/DietAndMetrics';
 import MyRecipes from './pages/MyRecipes';
 import Setting from './pages/Setting';
 import ForgotPassword from './pages/ForgotPassword';
+import ChangePassword from './pages/ChangePassword';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path='/myRecipes' element={<MyRecipes />} />
           <Route path='/setting' element={<Setting />} />
           <Route path='forgot-password' element={<ForgotPassword />} />
+          <Route path='/change-password' element={<ChangePassword />} />
         </Routes>
       </BrowserRouter>
     </>
