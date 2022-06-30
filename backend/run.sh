@@ -11,5 +11,4 @@ else
 fi
 
 pip3 install -r requirements.txt
-
-python3 src/api-server.py
+flask run
