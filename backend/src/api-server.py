@@ -122,7 +122,7 @@ def register():
     response['msg'] = "Successfully registered"
     return (response, 200)
 
-@api.route('/auth/change-password', methods=['POST', 'PUT'])
+@api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change():
@@ -139,7 +139,8 @@ def change():
         #                )
     return {"msg": "Success"}
     
-    pass
+    response['msg'] = "Password successfully changed"
+    return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
