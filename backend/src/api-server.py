@@ -24,6 +24,8 @@ from flask_cors import CORS, cross_origin
 api = Flask(__name__)
 api.config["JWT_SECRET_KEY"] = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N' # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
+api.config["JWT_TOKEN_LOCATION"] = 'headers'
+api.config["JWT_FORM_KEY"] = 'token'
 
 SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
@@ -98,10 +100,10 @@ def register():
             return (response, 401)
 
         #Continue to create account for new user
-        cursor.execute(
-                        "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-                        (name, passhash, email)
-                       )
+        # cursor.execute(
+        #                 "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+        #                 (name, passhash, email)
+        #                )
 
         #Move repeat code into function
         #Check if user already has an account
@@ -120,20 +122,22 @@ def register():
     response['msg'] = "Successfully registered"
     return (response, 200)
 
-@api.route('/auth/change-password', methods=['PUT'])
+@api.route('/auth/change-password', methods=['POST', 'PUT'])
+@jwt_required()
 @cross_origin()
 def change():
     data = json.loads(request.get_data())
     response = {}
     if type(data) is dict:
         newpwd = data['newpassword']
-        token = data['Authorisation']  
-             
-        cursor.execute(
-                        "UPDATE users SET password = %s WHERE email = %s;", 
-                        (newpwd, email)
-                       )
-
+        email = get_jwt_identity()
+        print(email)
+        # token = data['Authorisation']
+        # cursor.execute(
+        #                 "UPDATE users SET password = %s WHERE email = %s;", 
+        #                 (newpwd, email)
+        #                )
+    return {"msg": "Success"}
     
     pass
 
@@ -226,7 +230,7 @@ def search():
 
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
-@jwt_required # Apparently this should check whether or not the jwt is valid?
+@jwt_required() # Apparently this should check whether or not the jwt is valid?
 @cross_origin
 def profile():
     data = request.get_json()
