@@ -120,6 +120,23 @@ def register():
     response['msg'] = "Successfully registered"
     return (response, 200)
 
+@api.route('/auth/change-password', methods=['PUT'])
+@cross_origin()
+def change():
+    data = json.loads(request.get_data())
+    response = {}
+    if type(data) is dict:
+        newpwd = data['newpassword']
+        token = data['Authorisation']  
+             
+        cursor.execute(
+                        "UPDATE users SET password = %s WHERE email = %s;", 
+                        (newpwd, email)
+                       )
+
+    
+    pass
+
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
