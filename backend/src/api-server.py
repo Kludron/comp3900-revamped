@@ -41,7 +41,7 @@ jwt = JWTManager(api)
 @cross_origin()
 def login():
     data = json.loads(request.get_data())
-    response = {"Access-Control-Allow-Origin":"http://localhost:3000"}
+    response = {}
     if type(data) is dict:
         # Extract relevant information from the request [TODO: Is this all the data we need to check for security?]
         try:
@@ -145,8 +145,46 @@ def reset():
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
             server.login("allofrandomness@gmail.com", password)
             server.sendmail(sender_email, receiver_email, message)
-    
     pass
+
+@api.route('/search', methods=['POST'])
+def search():
+    data = json.loads(request.get_data)
+    if type(data) is dict:
+        try:
+            req = data['search']
+            cursor.execute("""
+                SELECT
+                    r.name, r.description, c.name, m.name, r.serving_size
+                FROM
+                    recipes r
+                JOIN
+                        cuisines c 
+                    ON 
+                        c.id=r.cuisine
+                JOIN
+                        mealtypes m
+                    ON
+                        m.id = r.meal_types
+                WHERE
+                    r.name LIKE CONCAT(%%,%s,%%);
+            """, (req,))
+            results = cursor.fetchall()
+            responseval = {
+                "recipes" : []
+            }
+            for recipe in results:
+                name, desc, cuisine, mealt, ss = recipe
+                responseval.append({
+                    "Name": name,
+                    "Description": desc,
+                    "Cuisine": cuisine,
+                    "Meal Type": mealt,
+                    "Serving Size": ss,
+                })
+            return (responseval, 200)
+        except (IndexError, ValueError):
+            return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
