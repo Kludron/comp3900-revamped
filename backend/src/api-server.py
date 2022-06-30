@@ -150,10 +150,7 @@ def reset():
 @api.route('/search', methods=['POST'])
 @cross_origin()
 def search():
-    print(request.data)
-    print(request.get_data())
     data = json.loads(request.get_data())
-    print(data)
     if isinstance(data, dict):
         try:
             recS = data['search']
@@ -162,27 +159,27 @@ def search():
                 "recipes" : []
             }
             # Search based on recipe name
-            cursor.execute("""
-                SELECT r.name, r.description, c.name, m.name, r.serving_size
-                FROM recipes r
-                    JOIN cuisines c ON c.id=r.cuisine
-                    JOIN mealtypes m ON m.id = r.meal_type
-                WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
-            """, (recS.lower(),))
-            for recipe in cursor.fetchall():
-                name, desc, cuisine, mealt, ss = recipe
-                responseval["recipes"].append({
-                    "Name": name.title(),
-                    "Description": desc,
-                    "Cuisine": cuisine.title(),
-                    "Meal Type": mealt.title(),
-                    "Serving Size": ss,
-                })
+            if recS:
+                cursor.execute("""
+                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    FROM recipes r
+                        JOIN cuisines c ON c.id=r.cuisine
+                        JOIN mealtypes m ON m.id = r.meal_type
+                    WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
+                """, (recS.lower(),))
+                for recipe in cursor.fetchall():
+                    name, desc, cuisine, mealt, ss = recipe
+                    responseval["recipes"].append({
+                        "Name": name.title(),
+                        "Description": desc,
+                        "Cuisine": cuisine.title(),
+                        "Meal Type": mealt.title(),
+                        "Serving Size": ss,
+                    })
             
             # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
             for ingredient in ingS:
-                if isinstance(ingredient, str):
-                    print(ingredient)
+                if ingredient:
                     query = """
                     SELECT r.name, r.description, c.name, m.name, r.serving_size
                     FROM recipes r
@@ -197,7 +194,7 @@ def search():
                     """
                     cursor.execute(query, (ingredient.lower(), ))
                     for recipe in cursor.fetchall():
-                        name, desc, ss, cuisine, mealT = recipe
+                        name, desc, cuisine, mealT, ss = recipe
                         responseval["recipes"].append({
                            "Name": name.title(),
                             "Description": desc,
@@ -237,7 +234,6 @@ def profile():
 
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
-
 
 # Haven't tested this yet
 @api.after_request
