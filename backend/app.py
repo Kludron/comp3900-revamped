@@ -211,12 +211,15 @@ def search():
             return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
-@api.route('/profile', methods=['POST']) # Route tbc later
+@api.route('/profile', methods=['GET', 'POST']) # Route tbc later
 @jwt_required # Apparently this should check whether or not the jwt is valid?
 @cross_origin
 def profile():
     data = request.get_json()
     response = {}
+    if request.method == 'GET':
+        #
+        pass
     if type(data) is dict:
         token = data['token']
         # Verify token
