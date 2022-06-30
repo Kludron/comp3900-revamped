@@ -132,7 +132,7 @@ def reset():
         #Email details
         sender_email = "allofrandomness@gmail.com"
         receiver_email = data['email']
-        message = """\
+        message = """
         Subject: Hi there
 
         This is your password reset code """ + reset_code
@@ -148,47 +148,72 @@ def reset():
     pass
 
 @api.route('/search', methods=['POST'])
+@cross_origin()
 def search():
-    data = json.loads(request.get_data)
-    if type(data) is dict:
+    print(request.data)
+    print(request.get_data())
+    data = json.loads(request.get_data())
+    print(data)
+    if isinstance(data, dict):
         try:
-            req = data['search']
-            cursor.execute("""
-                SELECT
-                    r.name, r.description, c.name, m.name, r.serving_size
-                FROM
-                    recipes r
-                JOIN
-                        cuisines c 
-                    ON 
-                        c.id=r.cuisine
-                JOIN
-                        mealtypes m
-                    ON
-                        m.id = r.meal_types
-                WHERE
-                    r.name LIKE CONCAT(%%,%s,%%);
-            """, (req,))
-            results = cursor.fetchall()
+            recS = data['search']
+            ingS = data['ingredients']
             responseval = {
                 "recipes" : []
             }
-            for recipe in results:
+            # Search based on recipe name
+            cursor.execute("""
+                SELECT r.name, r.description, c.name, m.name, r.serving_size
+                FROM recipes r
+                    JOIN cuisines c ON c.id=r.cuisine
+                    JOIN mealtypes m ON m.id = r.meal_type
+                WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
+            """, (recS.lower(),))
+            for recipe in cursor.fetchall():
                 name, desc, cuisine, mealt, ss = recipe
-                responseval.append({
-                    "Name": name,
+                responseval["recipes"].append({
+                    "Name": name.title(),
                     "Description": desc,
-                    "Cuisine": cuisine,
-                    "Meal Type": mealt,
+                    "Cuisine": cuisine.title(),
+                    "Meal Type": mealt.title(),
                     "Serving Size": ss,
                 })
+            
+            # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
+            for ingredient in ingS:
+                if isinstance(ingredient, str):
+                    print(ingredient)
+                    query = """
+                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    FROM recipes r
+                    JOIN cuisines c ON c.id=r.cuisine
+                    JOIN mealtypes m ON m.id=r.meal_type
+                    WHERE EXISTS(
+                        SELECT 1
+                        FROM recipes r, ingredients i
+                        JOIN recipe_ingredients ri ON ri.ingredient=i.id
+                        WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
+                    );
+                    """
+                    cursor.execute(query, (ingredient.lower(), ))
+                    for recipe in cursor.fetchall():
+                        name, desc, ss, cuisine, mealT = recipe
+                        responseval["recipes"].append({
+                           "Name": name.title(),
+                            "Description": desc,
+                            "Cuisine": cuisine.title(),
+                            "Meal Type": mealT,
+                            "Serving Size": ss,
+                        })
             return (responseval, 200)
-        except (IndexError, ValueError):
+        except (IndexError, ValueError, KeyError) as e:
+            print(e)
             return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
 @api.route('/profile', methods=['POST']) # Route tbc later
 @jwt_required # Apparently this should check whether or not the jwt is valid?
+@cross_origin
 def profile():
     data = request.get_json()
     response = {}
