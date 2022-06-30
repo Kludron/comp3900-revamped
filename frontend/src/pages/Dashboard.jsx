@@ -15,7 +15,12 @@ function Dashboard () {
 
   const [query, setQuery] = useState('');
 
-  //const [ingredientList, setIngredientList] = useState([]);
+  const [ingredientList, setIngredientList] = useState([]);
+
+  const appendList = (ingredient) => {
+    setIngredientList(ingredientList => [...ingredientList, ingredient]);
+  }
+
   return <div>
     {/* left title and search bar */}
     <div className="pantry-upper">
@@ -33,15 +38,17 @@ function Dashboard () {
           //returns empty
           return post;
         } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
-            //returns filtered array
-            return post;
-          }
-        }).map((post, key) => {
-          return (
-            <div className="pantry-ingredients" key={key}>
-              <button>{post.name}</button>
-            </div>
-          )
+          //returns filtered array
+          return post;
+        }
+      }).map((post, key) => {
+        return (
+          <div className="pantry-ingredients" key={key}>
+            <button onClick={() => appendList({post})}>
+              {post.name}
+            </button>
+          </div>
+        )
       })}
       {/*
         AllIngredients.filer(post => {

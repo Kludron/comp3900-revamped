@@ -1,5 +1,5 @@
 import { useMatch, useResolvedPath, Link } from 'react-router-dom';
-import './NavBar.css'
+import './NavBar.css';
 import React from 'react';
 
 function NavBar() {
