@@ -7,3 +7,7 @@ Week 3:
     In tuesday meeting, we discussed how to revise the flow diagram. "My Recipe" page should be aggregate with "Recipe Contribution" page. Diet tracking functionality should be added.Color should be added to differenciate user's access.
     After meeting, I did what we discussed in meeting. Besides, I add new functionalities. Users can post.Users can add friends and see their posts. Users can add exercise they did. The system can calculate users' calorie according to their diet and exercise. However, I discarded some of them after discussion.
     I made two system architecture diagram, one discribing interaction between layers, one discribing the main library we are going to use.
+Week 4:
+    Tasks for sprint one was allocated. I was in charge of frontend. However, I did not have any experience of frontend. So I spend the most of time on study HTML, CSS and JavaScript. In terms of contribution to group project, I create the dashboard and searchbars for our recipe recommender system.
+Week 5:
+    I kept learning React. For the project, I create personal pages and a navigation bar which can access personal pages. After lab, we held the retrospective and reflect what we did well and what need to be improved.
