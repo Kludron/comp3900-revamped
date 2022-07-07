@@ -12,21 +12,44 @@ function Profile () {
     navigate('/change-password');
   };
 
+  const changeUsername = () => {
+    navigate('/change-username');
+  };
+
   const previous = () => {
 		navigate('/dashboard');
 	};
+
+  const email = localStorage.getItem('email')
+  const password = localStorage.getItem('password')
 
   return <>
     <div>
       <NavBar/>
       <div className="main-content">
-      <button onClick={previous}>Go Back</button>
-        <div className="header">
-          <h2>My Profile</h2>
-        </div>
+        <button onClick={previous}>Go Back</button>
+        <h2>My Profile</h2>
+
         <div className="info">
-          <button onClick={changePassword}>Change Password</button>
+          <div className='attribute'>
+            <div>Email Address:</div>
+            <div>Username:</div>
+            <div>Password:</div>
+          </div>
+
+          <div className='data'>
+            <div>{email}</div>
+            <div>username</div>
+            <div>{password}</div>
+          </div>
+          
+          <div className='change-button'>
+            <button onClick={changeUsername}>Change Username</button>
+            <button onClick={changePassword}>Change Password</button>
+          </div>
         </div>
+        <h2>Allergies</h2>
+        
       </div>
     </div>
   </>
