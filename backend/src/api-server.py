@@ -183,10 +183,10 @@ def search():
             # Search based on recipe name
             if recS:
                 cursor.execute("""
-                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
                     FROM recipes r
                         JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id = r.meal_type
+                        JOIN mealtypes m ON m.id = r.mealType
                     WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
                 """, (recS.lower(),))
                 for recipe in cursor.fetchall():
@@ -203,10 +203,10 @@ def search():
             for ingredient in ingS:
                 if ingredient:
                     query = """
-                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
                     FROM recipes r
                     JOIN cuisines c ON c.id=r.cuisine
-                    JOIN mealtypes m ON m.id=r.meal_type
+                    JOIN mealtypes m ON m.id=r.mealType
                     WHERE EXISTS(
                         SELECT 1
                         FROM recipes r, ingredients i
