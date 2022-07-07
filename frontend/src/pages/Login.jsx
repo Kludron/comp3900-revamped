@@ -43,6 +43,8 @@ function Login () {
       .then((response) => {
         console.log(response);
         localStorage.setItem('token', response.token);
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
         navigate('/dashboard');
       }).catch((error) => {
         console.log(error);
