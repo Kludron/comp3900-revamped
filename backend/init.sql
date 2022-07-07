@@ -37,14 +37,14 @@ create table Recipes (
     name          varchar(200) not null,
     description   text not null,
     cuisine       int references Cuisines(id),
-    meal_type     int references MealTypes(id),
-    serving_size  int not null,
+    mealType     int references MealTypes(id),
+    servingSize  int not null,
     uploader      int references Users(id) default 0,
     primary key   (id)
 );
 
 create table recipe_ingredients (
-    recipe        int references Recipes(id) not null,
+    r_id        int references Recipes(id) not null,
     ingredient    int references Ingredients(id) not null,
     quantity      float,  -- E.g. 2 Lemons
     grams         float,
@@ -53,8 +53,8 @@ create table recipe_ingredients (
 );
 
 create table user_upvotes (
-    r_id          int references Recipes(id) not null,
     u_id          int references Users(id) not null,
+    r_id          int references Recipes(id) not null,
     primary key   (r_id, u_id)
 );
 
