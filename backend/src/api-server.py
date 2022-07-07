@@ -100,10 +100,10 @@ def register():
             return (response, 401)
 
         #Continue to create account for new user
-        # cursor.execute(
-        #                 "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-        #                 (name, passhash, email)
-        #                )
+        cursor.execute(
+            "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+            (name, passhash, email)
+        )
 
         #Move repeat code into function
         #Check if user already has an account
