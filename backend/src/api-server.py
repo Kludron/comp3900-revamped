@@ -196,7 +196,6 @@ def search():
             recS = data['search']
             ingS = data['ingredients']
             mltS = data['mealTypes']
-            print(mltS)
             responseval = {
                 "recipes" : []
             }
