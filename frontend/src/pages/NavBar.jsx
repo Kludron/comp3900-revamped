@@ -4,17 +4,7 @@ import React from 'react';
 
 function NavBar() {
   return <div>
-  <ul
-    style={{
-      listStyleType: 'none',
-      margin: 0,
-      padding: 0,
-      width: '15%',
-      position: 'fixed',
-      height: '100%',
-      overflow: 'auto',
-    }}
-    >
+  <ul>
       <CustomLink to='/profile'>Profile</CustomLink>
       <CustomLink to='/favourite'>Favourite Recipes</CustomLink>
       <CustomLink to='/dietAndMetrics'>Diet/Metrics Page</CustomLink>

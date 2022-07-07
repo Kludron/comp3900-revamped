@@ -17,7 +17,7 @@ function Profile () {
 	};
 
   return <>
-    <div className="wrapper">
+    <div>
       <NavBar/>
       <div className="main-content">
       <button onClick={previous}>Go Back</button>
@@ -25,7 +25,7 @@ function Profile () {
           <h2>My Profile</h2>
         </div>
         <div className="info">
-          <button onClick={() => changePassword()}>Change Password</button>
+          <button onClick={changePassword}>Change Password</button>
         </div>
       </div>
     </div>
