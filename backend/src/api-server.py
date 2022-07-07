@@ -131,7 +131,6 @@ def change():
     if type(data) is dict:
         newpwd = data['newpassword']
         email = get_jwt_identity()
-        print(email)
         # token = data['Authorisation']
         # cursor.execute(
         #                 "UPDATE users SET password = %s WHERE email = %s;", 
@@ -172,11 +171,31 @@ def reset():
 @api.route('/search', methods=['POST'])
 @cross_origin()
 def search():
-    data = json.loads(request.get_data())
+    """
+        At the moment, this search function returns a list of recipes that meet any of the criteria provided, in no order with no restrictions.
+        This is something that will need to be fixed at a later date. The goal at the moment is to get the search returning valid recipes.
+    """
+
+    def _add_to_results(data):
+        for recipe in data:
+            name, desc, cuisine, mealT, ss = recipe
+            responseval["recipes"].append({
+                "Name": name.title(),
+                "Description": desc,
+                "Cuisine": cuisine.title(),
+                "Meal Type": mealT,
+                "Serving Size": ss,
+            })
+    
+    try:
+        data = json.loads(request.get_data())
+    except json.decoder.JSONDecodeError:
+        return ({'msg': "Invalid request"}, 400)
     if isinstance(data, dict):
         try:
             recS = data['search']
             ingS = data['ingredients']
+            mltS = data['mealTypes']
             responseval = {
                 "recipes" : []
             }
@@ -189,15 +208,7 @@ def search():
                         JOIN mealtypes m ON m.id = r.mealType
                     WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
                 """, (recS.lower(),))
-                for recipe in cursor.fetchall():
-                    name, desc, cuisine, mealt, ss = recipe
-                    responseval["recipes"].append({
-                        "Name": name.title(),
-                        "Description": desc,
-                        "Cuisine": cuisine.title(),
-                        "Meal Type": mealt.title(),
-                        "Serving Size": ss,
-                    })
+                _add_to_results(cursor.fetchall())
             
             # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
             for ingredient in ingS:
@@ -205,8 +216,8 @@ def search():
                     query = """
                     SELECT r.name, r.description, c.name, m.name, r.servingSize
                     FROM recipes r
-                    JOIN cuisines c ON c.id=r.cuisine
-                    JOIN mealtypes m ON m.id=r.mealType
+                        JOIN cuisines c ON c.id=r.cuisine
+                        JOIN mealtypes m ON m.id=r.mealType
                     WHERE EXISTS(
                         SELECT 1
                         FROM recipes r, ingredients i
@@ -215,15 +226,19 @@ def search():
                     );
                     """
                     cursor.execute(query, (ingredient.lower(), ))
-                    for recipe in cursor.fetchall():
-                        name, desc, cuisine, mealT, ss = recipe
-                        responseval["recipes"].append({
-                           "Name": name.title(),
-                            "Description": desc,
-                            "Cuisine": cuisine.title(),
-                            "Meal Type": mealT,
-                            "Serving Size": ss,
-                        })
+                    _add_to_results(cursor.fetchall())
+
+            for mealType in mltS:
+                if mealType:
+                    query = """
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
+                    FROM recipes r
+                        JOIN cuisines c ON c.id=r.cuisine
+                        JOIN mealtypes m ON m.id=r.mealType
+                    WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
+                    """
+                    cursor.execute(query, (mealType.lower(), ))
+                    _add_to_results(cursor.fetchall())
             return (responseval, 200)
         except (IndexError, ValueError, KeyError) as e:
             print(e)
