@@ -237,21 +237,25 @@ def profile():
     data = request.get_json()
     response = {}
     if request.method == 'GET':
-        #
-        pass
-    if type(data) is dict:
-        token = data['token']
-        # Verify token
-        isAuthenticated = True # [TODO: Placeholder]
-        if not isAuthenticated:
-            response["msg"] = "User not authenticated"
-            response["isSuccess"] = False
-            return response, 403
-        # Extract what settings were changed and update the SQL database to reflect those changes
-        response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
-        return response
-    response["isSuccess"] = False
-    response["msg"] = "The data provided is not valid"
+        email = auth.get_jwt_identity()
+        query = """
+        SELECT u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+    elif request.method == 'POST':
+        if type(data) is dict:
+            token = data['token']
+            # Verify token
+            isAuthenticated = True # [TODO: Placeholder]
+            if not isAuthenticated:
+                response["msg"] = "User not authenticated"
+                response["isSuccess"] = False
+                return response, 403
+            # Extract what settings were changed and update the SQL database to reflect those changes
+            response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
+            return response
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
     return response
 
 ### Search function
