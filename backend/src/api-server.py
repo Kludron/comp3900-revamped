@@ -77,6 +77,8 @@ def register():
     data = json.loads(request.get_data())
     response = {}
 
+    # [TODO: When a user registers with an already existing username, an error occurs]
+
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
@@ -115,6 +117,8 @@ def register():
 
         if doesExist:
             conn.commit()
+            token = create_access_token(identity=email)
+            response['token'] = token
         else:
             response["msg"] = "Error adding user, please try again"
             return (response, 401)
@@ -247,17 +251,21 @@ def search():
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
 @jwt_required() # Apparently this should check whether or not the jwt is valid?
+# Required in request body: {"Authhorization":"Bearer <token>}"
 @cross_origin
 def profile():
-    data = request.get_json()
     response = {}
     if request.method == 'GET':
-        email = auth.get_jwt_identity()
+        print("Grabbing token")
+        email = get_jwt_identity()
+        print("Token Grabbed", email)
         query = """
         SELECT u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
         """
         cursor.execute(query, (email,))
     elif request.method == 'POST':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
         if type(data) is dict:
             token = data['token']
             # Verify token
