@@ -77,6 +77,8 @@ def register():
     data = json.loads(request.get_data())
     response = {}
 
+    # [TODO: When a user registers with an already existing username, an error occurs]
+
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
@@ -100,10 +102,10 @@ def register():
             return (response, 401)
 
         #Continue to create account for new user
-        # cursor.execute(
-        #                 "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-        #                 (name, passhash, email)
-        #                )
+        cursor.execute(
+            "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+            (name, passhash, email)
+        )
 
         #Move repeat code into function
         #Check if user already has an account
@@ -115,6 +117,8 @@ def register():
 
         if doesExist:
             conn.commit()
+            token = create_access_token(identity=email)
+            response['token'] = token
         else:
             response["msg"] = "Error adding user, please try again"
             return (response, 401)
@@ -122,7 +126,7 @@ def register():
     response['msg'] = "Successfully registered"
     return (response, 200)
 
-@api.route('/auth/change-password', methods=['POST', 'PUT'])
+@api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change():
@@ -131,7 +135,6 @@ def change():
     if type(data) is dict:
         newpwd = data['newpassword']
         email = get_jwt_identity()
-        print(email)
         # token = data['Authorisation']
         # cursor.execute(
         #                 "UPDATE users SET password = %s WHERE email = %s;", 
@@ -139,7 +142,8 @@ def change():
         #                )
     return {"msg": "Success"}
     
-    pass
+    response['msg'] = "Password successfully changed"
+    return (response, 200)
 
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
@@ -171,41 +175,53 @@ def reset():
 @api.route('/search', methods=['POST'])
 @cross_origin()
 def search():
-    data = json.loads(request.get_data())
+    """
+        At the moment, this search function returns a list of recipes that meet any of the criteria provided, in no order with no restrictions.
+        This is something that will need to be fixed at a later date. The goal at the moment is to get the search returning valid recipes.
+    """
+
+    def _add_to_results(data):
+        for recipe in data:
+            name, desc, cuisine, mealT, ss = recipe
+            responseval["recipes"].append({
+                "Name": name.title(),
+                "Description": desc,
+                "Cuisine": cuisine.title(),
+                "Meal Type": mealT,
+                "Serving Size": ss,
+            })
+    
+    try:
+        data = json.loads(request.get_data())
+    except json.decoder.JSONDecodeError:
+        return ({'msg': "Invalid request"}, 400)
     if isinstance(data, dict):
         try:
             recS = data['search']
             ingS = data['ingredients']
+            mltS = data['mealTypes']
             responseval = {
                 "recipes" : []
             }
             # Search based on recipe name
             if recS:
                 cursor.execute("""
-                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
                     FROM recipes r
                         JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id = r.meal_type
+                        JOIN mealtypes m ON m.id = r.mealType
                     WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
                 """, (recS.lower(),))
-                for recipe in cursor.fetchall():
-                    name, desc, cuisine, mealt, ss = recipe
-                    responseval["recipes"].append({
-                        "Name": name.title(),
-                        "Description": desc,
-                        "Cuisine": cuisine.title(),
-                        "Meal Type": mealt.title(),
-                        "Serving Size": ss,
-                    })
+                _add_to_results(cursor.fetchall())
             
             # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
             for ingredient in ingS:
                 if ingredient:
                     query = """
-                    SELECT r.name, r.description, c.name, m.name, r.serving_size
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
                     FROM recipes r
-                    JOIN cuisines c ON c.id=r.cuisine
-                    JOIN mealtypes m ON m.id=r.meal_type
+                        JOIN cuisines c ON c.id=r.cuisine
+                        JOIN mealtypes m ON m.id=r.mealType
                     WHERE EXISTS(
                         SELECT 1
                         FROM recipes r, ingredients i
@@ -214,15 +230,19 @@ def search():
                     );
                     """
                     cursor.execute(query, (ingredient.lower(), ))
-                    for recipe in cursor.fetchall():
-                        name, desc, cuisine, mealT, ss = recipe
-                        responseval["recipes"].append({
-                           "Name": name.title(),
-                            "Description": desc,
-                            "Cuisine": cuisine.title(),
-                            "Meal Type": mealT,
-                            "Serving Size": ss,
-                        })
+                    _add_to_results(cursor.fetchall())
+
+            for mealType in mltS:
+                if mealType:
+                    query = """
+                    SELECT r.name, r.description, c.name, m.name, r.servingSize
+                    FROM recipes r
+                        JOIN cuisines c ON c.id=r.cuisine
+                        JOIN mealtypes m ON m.id=r.mealType
+                    WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
+                    """
+                    cursor.execute(query, (mealType.lower(), ))
+                    _add_to_results(cursor.fetchall())
             return (responseval, 200)
         except (IndexError, ValueError, KeyError) as e:
             print(e)
@@ -231,26 +251,34 @@ def search():
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
 @jwt_required() # Apparently this should check whether or not the jwt is valid?
+# Required in request body: {"Authhorization":"Bearer <token>}"
 @cross_origin
 def profile():
-    data = request.get_json()
     response = {}
     if request.method == 'GET':
-        #
-        pass
-    if type(data) is dict:
-        token = data['token']
-        # Verify token
-        isAuthenticated = True # [TODO: Placeholder]
-        if not isAuthenticated:
-            response["msg"] = "User not authenticated"
-            response["isSuccess"] = False
-            return response, 403
-        # Extract what settings were changed and update the SQL database to reflect those changes
-        response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
-        return response
-    response["isSuccess"] = False
-    response["msg"] = "The data provided is not valid"
+        print("Grabbing token")
+        email = get_jwt_identity()
+        print("Token Grabbed", email)
+        query = """
+        SELECT u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+    elif request.method == 'POST':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            token = data['token']
+            # Verify token
+            isAuthenticated = True # [TODO: Placeholder]
+            if not isAuthenticated:
+                response["msg"] = "User not authenticated"
+                response["isSuccess"] = False
+                return response, 403
+            # Extract what settings were changed and update the SQL database to reflect those changes
+            response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
+            return response
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
     return response
 
 ### Search function
