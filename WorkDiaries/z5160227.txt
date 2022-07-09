@@ -28,5 +28,14 @@ Week 4
 
 Week 5
 - Continued working on Login and Register frontend API calls.
-- 
+- Completed Login and Register and waiting to debug issues with backend.
+- Called Liam and Nathan to resolve frontend/backend issues that occurred.
+- Asked Bill to prepare a short script for Progressive Demo A.
+- Had our Retrospective meeting after our demo.
+- I completed the Retrospective A report alone on Sunday and handed it in the next day.
+
+Week 6
+- Had a long meeting to go over our sprint 2 and allocate user stories to each of our programmers and myself.
+- Took some time away from working on the project due to sickness
+- Started working on displaying the recipes on the dashboard screen.
 

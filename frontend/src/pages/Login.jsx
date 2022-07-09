@@ -33,18 +33,18 @@ function Login () {
     </Typography>
     <LoginForm submit={async (email, password) => {
       let headers = {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
       };
       var body = {
         email,
         password
       };
-      axios.post('http://localhost:5000/auth/login', body, headers)
+      axios.post("http://localhost:5000/auth/login", body, headers)
       .then((response) => {
         console.log(response);
         localStorage.setItem('token', response.token);
         navigate('/dashboard');
-      }, (error) => {
+      }).catch((error) => {
         console.log(error);
         alert(error)
       });

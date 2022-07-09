@@ -33,15 +33,15 @@ function Dashboard () {
           setQuery(event.target.value)
         }}
       />
-      {AllIngredients.filter((post) =>{
+      {AllIngredients.filter((post) => {
         if (query === ""){
           //returns empty
           return post;
         } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
-            //returns filtered array
-            return post;
-          }
-        }).map((post, key) => {
+          //returns filtered array
+          return post;
+        }
+      }).map((post, key) => {
         return (
           <div className="pantry-ingredients" key={key}>
             <button onClick={() => appendList({post})}>
