@@ -2,6 +2,8 @@ import React from 'react';
 import NavBar from './NavBar';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import AllIngredients from "../ingredients/allingredients.json";
 
 /* Profile Page */
 function Profile () {
@@ -22,6 +24,13 @@ function Profile () {
 
   const email = localStorage.getItem('email')
   const password = localStorage.getItem('password')
+
+  const [query, setQuery] = useState('');
+  const [allergyList, setAllergyList] = useState([]);
+  const appendList = (allergy) => {
+    setAllergyList(allergyList => [...allergyList, allergy]);
+    console.log(allergyList)
+  };
 
   return <>
     <div>
@@ -48,8 +57,49 @@ function Profile () {
             <button onClick={changePassword}>Change Password</button>
           </div>
         </div>
-        <h2>Allergies</h2>
-        
+
+        <h2 className='allergies-title'>Allergies</h2>
+        <div className='allergies'>
+          <div className='search-allergies'>
+            <input 
+              type="search" 
+              placeholder="Search allergies.." 
+              onChange={event => {
+                setQuery(event.target.value)
+              }}
+            />
+            <div className='search-results'>
+            {AllIngredients.filter((post) => {
+              if (query === ""){
+                //returns empty
+                return post;
+              } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
+                //returns filtered array
+                return post;
+              }
+            }).map((post, key) => {
+              return (
+                <div className="pantry-ingredients" key={key}>
+                  <button onClick={() => appendList({post})}>
+                    {post.name}
+                  </button>
+                </div>
+              )
+            })}
+            </div>
+          </div>
+          <div className='added-allergies'>
+            <h5>Added Allergies</h5>
+            <div className='allergies-box'>
+              {allergyList.map((post, key) => {
+                return (
+                  <div key={key}>{post.name}</div>
+                )
+                })}
+          </div>
+            </div>
+        </div>
+
       </div>
     </div>
   </>
