@@ -6,3 +6,4 @@ id,username,pass_hash,email,points
 6,example2,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,example2@sample.com,0
 7,example3,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,example3@sample.com,0
 8,example4,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,example4@sample.com,0
+9,EdLung123,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,edmond.lung@email.com,0
