@@ -310,8 +310,8 @@ def get_recipe():
     response = {}
     cursor.execute("SELECT * FROM recipes;")
     response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
-    
-    return jsonify()(response)
+
+    return jsonify(response)
 
 
 if __name__ == '__main__':
