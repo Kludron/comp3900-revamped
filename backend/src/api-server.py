@@ -295,7 +295,7 @@ def refresh_jwt(response: request):
 if __name__ == '__main__':
     api.run()
 
-@api.route('/auth/post_recipe', methods=['POST'])
+@api.route('/post_recipe', methods=['POST'])
 @cross_origin()
 def post_recipe():
     data = json.loads(request.get_data())
