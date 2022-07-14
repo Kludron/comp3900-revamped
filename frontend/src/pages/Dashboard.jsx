@@ -8,18 +8,31 @@ import Meat from "../ingredients/meat.json";
 import Vegetables from "../ingredients/vegetables&greens.json";
 import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
+import axios from 'axios';
 
 
 /* Dashboard Page */
 function Dashboard () {
 
   const [query, setQuery] = useState('');
+  const [recipes, setRecipes] = useState([]);
 
-  const [ingredientList, setIngredientList] = useState([]);
-
-  const appendList = (ingredient) => {
-    setIngredientList(ingredientList => [...ingredientList, ingredient]);
+  //Gets Authorization token
+  const getAuthToken = () => {
+    let AuthToken = localStorage.getItem('token');
+    return AuthToken;
   }
+
+  //Gets all Recipe Data
+  const loadRecipes = async () => {
+    const response = await axios.get('http://localhost:5000/get_recipe');
+    console.log(response.data);
+    setRecipes(response.data.recipes);
+  }
+
+  React.useEffect(() => {
+    loadRecipes();
+  }, []);
 
   return <div>
     {/* left title and search bar */}
@@ -44,27 +57,13 @@ function Dashboard () {
       }).map((post, key) => {
         return (
           <div className="pantry-ingredients" key={key}>
-            <button onClick={() => appendList({post})}>
+            <button>
               {post.name}
             </button>
           </div>
         )
       })}
-      {/*
-        AllIngredients.filer(post => {
-          if (query === ""){
-            //Empty query
-            return post;
-          } else if (post.title.toLowerCase().includes(query.toLowerCase())) {
-            //returns filtered array
-            return post;
-          }
-        }).map((post, index) => (
-          <div className="res" key={index}>
-              <p>{post.name}</p>
-          </div>
-        ))
-      */}
+
       {/* left pantry box */}
       <div className="pantrybox">
         {/* ingredient boxes */}
@@ -96,36 +95,26 @@ function Dashboard () {
     </div>
 
   {/* right title and search bar */}
-    <div
-    style={{
-      width: '75%',
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'scroll',
-    }}
-    >
+    <div className='recipe_screen'>
       <Link to='/profile'>
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
       <h2>F1V3GUY5 RECIPES</h2>
-      <RecipeBar/>
       
       {/* right recipes box */}
-      <div
-      style={{
-          borderStyle: 'solid',
-          borderColor: 'pink',
-          marginTop: 15,
-          width: '95%',
-          height: '100vh',
-          overflow: 'scroll',
-      }}
-      >
+      <div className="recipeBox">
+      <RecipeBar/>
         <button>Meal Type</button>
         <button>Allergies</button>
         <button>Cuisine</button>
+        <button>Show Recipe</button>
+      </div>
+      <div className='list_recipes'>
+        {recipes.map((recipe) => {
+          return (
+            <p>{recipe.name}</p>
+          )
+        })}
       </div>
     </div>
   </div>;
