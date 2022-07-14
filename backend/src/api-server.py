@@ -188,5 +188,23 @@ def refresh_jwt(response: request):
         # Invalid JWT Token
         return response
 
+@api.route('/get_recipe', methods=['GET'])
+@cross_origin()
+def get_recipe():
+    response = {}
+    cursor.execute("SELECT * FROM recipes;")
+    response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+
+    
+    return jsonify({
+        "id" : "0",
+        "name": "test",
+        "description": "test_entry",
+        "cuisine" : "0",
+        "mealtype" : "0",
+        "servingsize" : "0",
+        "uploader" : "1"
+    })
+    
 if __name__ == '__main__':
     api.run()
