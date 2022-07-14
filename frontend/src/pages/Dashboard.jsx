@@ -25,9 +25,13 @@ function Dashboard () {
 
   //Gets all Recipe Data
   const loadRecipes = async () => {
-    const response = await axios.get('http://localhost:5000/get_recipe');
-    console.log(response.data);
-    setRecipes(response.data.recipes);
+    const result = await axios.get('http://localhost:5000/get_recipe');
+    console.log(result);
+    result.data.recipes.forEach((rec) => {
+      console.log('rec: '+ JSON.stringify(rec));
+      //setRecipes(rec);
+      /*setRecipes(recipes => [...recipes, {id: result.data.id, name: result.data.name, description: result.data.description, cuisine: result.data.cuisine, mealtype: result.data.mealtype, servingsize: result.data.servingsize, uploader: result.data.uploader}]);*/
+    });
   }
 
   React.useEffect(() => {
@@ -113,6 +117,7 @@ function Dashboard () {
         {recipes.map((recipe) => {
           return (
             <div>
+              <p>{recipe.id}</p>
               <p>{recipe.name}</p>
             </div>
           )
