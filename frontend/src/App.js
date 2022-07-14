@@ -17,6 +17,7 @@ import Setting from './pages/Setting';
 import ForgotPassword from './pages/ForgotPassword';
 import ChangePassword from './pages/ChangePassword';
 import ChangeUsername from './pages/ChangeUsername';
+import Comments from './pages/Comments';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path='forgot-password' element={<ForgotPassword />} />
           <Route path='/change-password' element={<ChangePassword />} />
           <Route path='/change-username' element={<ChangeUsername />} />
+          <Route path='/comments' element={<Comments />} />
         </Routes>
       </BrowserRouter>
     </>

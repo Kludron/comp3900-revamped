@@ -32,6 +32,14 @@ function Profile () {
     console.log(allergyList)
   };
 
+  const reset = () => {
+    setAllergyList([]);
+  }
+
+  const save = () => {
+    return;
+  }
+
   return <>
     <div>
       <NavBar/>
@@ -93,11 +101,13 @@ function Profile () {
             <div className='allergies-box'>
               {allergyList.map((post, key) => {
                 return (
-                  <div key={key}>{post.name}</div>
+                  <div key={key}>{key}</div>
                 )
                 })}
-          </div>
             </div>
+            <button onClick={reset}>reset</button>
+            <button onClick={save}>save</button>
+          </div>
         </div>
 
       </div>

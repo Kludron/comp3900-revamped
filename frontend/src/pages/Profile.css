@@ -69,9 +69,11 @@
 
 .added-allergies {
     text-align: center;
+    
 }
 .allergies-box {
-    height: 300px;
-    width: 500px;
+    height: 250px;
+    width: 400px;
     border-style: ridge;
 }
+
