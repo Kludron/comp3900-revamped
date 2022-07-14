@@ -31,6 +31,8 @@ SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
+# yckAPfc9MX42N4
+
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -311,7 +313,16 @@ def get_recipe():
     cursor.execute("SELECT * FROM recipes;")
     response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
 
-    return response
+    
+    return jsonify({
+        "id" : "0",
+        "name": "test",
+        "description": "test_entry",
+        "cuisine" : "0",
+        "mealtype" : "0",
+        "servingsize" : "0",
+        "uploader" : "1"
+    })
 
 
 if __name__ == '__main__':
