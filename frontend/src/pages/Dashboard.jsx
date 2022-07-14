@@ -112,7 +112,9 @@ function Dashboard () {
       <div className='list_recipes'>
         {recipes.map((recipe) => {
           return (
-            <p>{recipe.name}</p>
+            <div>
+              <p>{recipe.name}</p>
+            </div>
           )
         })}
       </div>
