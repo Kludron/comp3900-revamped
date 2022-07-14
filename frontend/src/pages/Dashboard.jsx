@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
@@ -18,25 +18,21 @@ function Dashboard () {
   const [recipes, setRecipes] = useState([]);
 
   //Gets Authorization token
-  const getAuthToken = () => {
-    let AuthToken = localStorage.getItem('token');
-    return AuthToken;
-  }
+  const token = localStorage.getItem('token');
 
   //Gets all Recipe Data
   const loadRecipes = async () => {
     const result = await axios.get('http://localhost:5000/get_recipe');
-    console.log(result);
-    result.data.recipes.forEach((rec) => {
-      console.log('rec: '+ JSON.stringify(rec));
-      //setRecipes(rec);
-      /*setRecipes(recipes => [...recipes, {id: result.data.id, name: result.data.name, description: result.data.description, cuisine: result.data.cuisine, mealtype: result.data.mealtype, servingsize: result.data.servingsize, uploader: result.data.uploader}]);*/
+    /*console.log(result);*/
+    result.data.forEach((rec) => {
+      console.log(rec);
+      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadRecipes();
-  }, []);
+  }, [false]);
 
   return <div>
     {/* left title and search bar */}
@@ -111,17 +107,20 @@ function Dashboard () {
         <button>Meal Type</button>
         <button>Allergies</button>
         <button>Cuisine</button>
-        <button>Show Recipe</button>
-      </div>
-      <div className='list_recipes'>
-        {recipes.map((recipe) => {
+        <div className='list_recipes'>
+        {recipes.map((recipe, key) => {
           return (
-            <div>
+            <div className='recipe_box' key={key}>
+              <h3>{recipe.name}</h3>
               <p>{recipe.id}</p>
-              <p>{recipe.name}</p>
+              <p>{recipe.description}</p>
+              <p>{recipe.mealtype}</p>
+              <p>{recipe.servingsize}</p>
+              <p>{recipe.uploader}</p>
             </div>
           )
         })}
+      </div>
       </div>
     </div>
   </div>;
