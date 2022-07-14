@@ -311,8 +311,16 @@ def get_recipe():
     cursor.execute("SELECT * FROM recipes;")
     response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
 
-    return jsonify(response)
-
-
+    
+    return jsonify({
+        "id" : "0",
+        "name": "test",
+        "description": "test_entry",
+        "cuisine" : "0",
+        "mealtype" : "0",
+        "servingsize" : "0",
+        "uploader" : "1"
+    })
+    
 if __name__ == '__main__':
     api.run()
