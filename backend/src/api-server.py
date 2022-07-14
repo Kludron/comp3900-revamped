@@ -321,6 +321,28 @@ def get_recipe():
         "servingsize" : "0",
         "uploader" : "1"
     })
-    
+
+    # Trying multiple recipes
+    #return jsonify([
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #},
+#
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #}])
+
 if __name__ == '__main__':
     api.run()
