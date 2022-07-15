@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
@@ -19,6 +20,7 @@ function Dashboard () {
 
   //Gets Authorization token
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   //Gets all Recipe Data
   const loadRecipes = async () => {
@@ -30,9 +32,14 @@ function Dashboard () {
     });
   }
 
+  const viewRecipe = (recipeID) => {
+    console.log(recipeID);
+    navigate(`/view/recipe/${recipeID}`);
+  }
+
   useEffect(() => {
     loadRecipes();
-  }, [false]);
+  }, []);
 
   return <div>
     {/* left title and search bar */}
@@ -116,7 +123,7 @@ function Dashboard () {
               <p>{recipe.description}</p>
               <p>{recipe.mealtype}</p>
               <p>{recipe.servingsize}</p>
-              <p>{recipe.uploader}</p>
+              <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
             </div>
           )
         })}
