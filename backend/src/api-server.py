@@ -308,7 +308,7 @@ def refresh_jwt(response: request):
 
 @api.route('/get_recipe', methods=['GET'])
 @cross_origin()
-def get_recipe():
+def get_recipes():
     response = []
     cursor.execute("SELECT * FROM recipes;")
     results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
@@ -348,9 +348,9 @@ def get_recipe():
     #    "uploader" : "1"
     #}])
 
-@api.route('/search/recipe/recipeid=<id>', methods=['GET'])
+@api.route('/view/recipe/recipeid=<id>', methods=['GET'])
 @cross_origin()
-def search(id):
+def find_recipe(id):
     response = []
     cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
     row = cursor.fetchone()

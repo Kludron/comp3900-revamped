@@ -36,9 +36,7 @@ function App() {
           <Route path='/setting' element={<Setting />} />
           <Route path='forgot-password' element={<ForgotPassword />} />
           <Route path='/change-password' element={<ChangePassword />} />
-          <Route path='/change-username' element={<ChangeUsername />} />
-          <Route path='/comments' element={<Comments />} />
-          <Route path='/search/recipe/:recipeID' element={<Recipe />} />
+          <Route path='/view/recipe/:recipeID' element={<Recipe />} />
         </Routes>
       </BrowserRouter>
     </>
