@@ -368,5 +368,24 @@ def search(id):
 
     return jsonify(response)
 
+@app.route('reviews/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def reviews(id):
+    response = []
+    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    results = cursor.fetchall()
+
+    for row in results:
+        tempDict = {}
+        #tempDict['c_id'] = row[0]
+        tempDict['r_id'] = row[1]
+        tempDict['u_id'] = row[2]
+        tempDict['description'] = row[3]
+        tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+        response.append(tempDict)
+
+    return jsonify(response)
+
 if __name__ == '__main__':
     api.run()
