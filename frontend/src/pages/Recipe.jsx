@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 function Recipe () {
 
-	const [recipe, setRecipe] = React.useState([]);
+	const [recipe, setRecipe] = useState([]);
 
 	//obtains the recipeID
 	const recipeID = window.location.pathname.split('/')[3];
@@ -17,16 +17,15 @@ function Recipe () {
 			'Content-type': 'application/json',
 			Authorization: `Bearer ${token}`,
 		}
-		const result = await axios.get(`http://localhost:5005/search/recipe/${recipeID}`, headers);
+		const result = await axios.get(`http://localhost:5000/view/recipe/${recipeID}`, headers);
 		console.log(result);
 		result.data.forEach((rec) => {
 			console.log(rec);
       setRecipe(recipe => [...recipe, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-		})
-
+		});
 	}
 
-	React.useEffect(() => {
+	useEffect(() => {
 		getRecipe();
 	}, []);
 
@@ -39,6 +38,7 @@ function Recipe () {
 				<p>{rec.servingsize}</p>
 				<p>{rec.cuisine}</p>
 				<p>{rec.uploader}</p>
+				<h1>Hi</h1>
 			</div>
 		)})};
 }
