@@ -350,7 +350,7 @@ def get_recipe():
 
 @api.route('/search/recipe/recipeid=<id>', methods=['GET'])
 @cross_origin()
-def search(id):
+def get_recipe(id):
     response = []
     cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
     row = cursor.fetchone()
