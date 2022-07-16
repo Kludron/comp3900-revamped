@@ -309,20 +309,64 @@ def refresh_jwt(response: request):
 @api.route('/get_recipe', methods=['GET'])
 @cross_origin()
 def get_recipe():
-    response = {}
+    response = []
     cursor.execute("SELECT * FROM recipes;")
-    response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+    results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
 
-    
-    return jsonify({
-        "id" : "0",
-        "name": "test",
-        "description": "test_entry",
-        "cuisine" : "0",
-        "mealtype" : "0",
-        "servingsize" : "0",
-        "uploader" : "1"
-    })
+    for row in results:
+        tempDict = {}
+        tempDict['id'] = row[0]
+        tempDict['name'] = row[1]
+        tempDict['description'] = row[2]
+        tempDict['cuisine'] = row[3]
+        tempDict['mealtype'] = row[4]
+        tempDict['servingsize'] = row[5]
+        tempDict['uploader'] = row[6]
+
+        response.append(tempDict)
+    # Trying multiple recipes
+    return jsonify(response)
+
+    #return jsonify([
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #},
+#
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #}])
+
+@app.route('search/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def search(id):
+    response = []
+    cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
+    row = cursor.fetchone()
+
+    tempDict = {}
+    tempDict['id'] = row[0]
+    tempDict['name'] = row[1]
+    tempDict['description'] = row[2]
+    tempDict['cuisine'] = row[3]
+    tempDict['mealtype'] = row[4]
+    tempDict['servingsize'] = row[5]
+    tempDict['uploader'] = row[6]
+
+    response.append(tempDict)
+
+    return jsonify(response)
 
 
 if __name__ == '__main__':
