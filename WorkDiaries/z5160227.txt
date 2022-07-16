@@ -39,3 +39,8 @@ Week 6
 - Took some time away from working on the project due to sickness
 - Started working on displaying the recipes on the dashboard screen.
 
+Week 7
+- Completed the frontend ability to display recipes and can click into them to view further details.
+- Discussed with Nathan about working on different backend routes to meet our user story requirements.
+- Have moved onto being able to comment/rate the recipe. (in the works)
+

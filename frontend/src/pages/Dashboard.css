@@ -8,6 +8,24 @@ button {
     width: 90%;
 }
 
+.recipeBox {
+    border-style: solid;
+    border-color: pink;
+    margin-top: 15;
+    width: 95%;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.recipe_screen {
+    width: 75%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
 .pantry-upper {
     float: left;
     width: 25%;
@@ -40,4 +58,19 @@ button {
 p {
     margin: 3px;
     font-size: 12px;
+}
+
+.list_recipes {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    flex: wrap;
+    padding: 15px;
+}
+
+.recipe_box {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: aqua;
+    width: 100%;
 }

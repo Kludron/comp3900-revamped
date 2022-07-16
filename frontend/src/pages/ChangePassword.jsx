@@ -10,6 +10,7 @@ function ChangePassword () {
 	const previous = () => {
 		navigate('/profile');
 	}
+	
 	const checkPasswords = (password, repassword) => {
     if(password !== repassword){
       return alert("Passwords do not match, please try again");
@@ -26,14 +27,13 @@ function ChangePassword () {
 		<ChangePasswordForm submit={async (newpassword, repassword) => {
 			console.log(newpassword,repassword)
 			if(checkPasswords(newpassword, repassword)){
-				let authToken = localStorage.getItem('token');
+				let token = localStorage.getItem('token');
 				let headers = {
           'Content-Type': 'application/json',
-					'Authorisation': `Bearer ${authToken}`
+					'Authorization': `Bearer ${token}`,
       };
       var body = {
-				newpassword,
-				repassword
+				newpassword
       };
       axios.put('http://localhost:5000/auth/change-password', body, headers)
 			.then((response) => {
