@@ -31,6 +31,8 @@ SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
+# yckAPfc9MX42N4
+
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -307,9 +309,62 @@ def refresh_jwt(response: request):
 @api.route('/get_recipe', methods=['GET'])
 @cross_origin()
 def get_recipe():
-    response = {}
+    response = []
     cursor.execute("SELECT * FROM recipes;")
-    response["recipes"] = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+    results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+
+    for row in results:
+        tempDict = {}
+        tempDict['id'] = row[0]
+        tempDict['name'] = row[1]
+        tempDict['description'] = row[2]
+        tempDict['cuisine'] = row[3]
+        tempDict['mealtype'] = row[4]
+        tempDict['servingsize'] = row[5]
+        tempDict['uploader'] = row[6]
+
+        response.append(tempDict)
+    # Trying multiple recipes
+    return jsonify(response)
+
+    #return jsonify([
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #},
+#
+    #{
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    #}])
+
+@app.route('search/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def search(id):
+    response = []
+    cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
+    row = cursor.fetchone()
+
+    tempDict = {}
+    tempDict['id'] = row[0]
+    tempDict['name'] = row[1]
+    tempDict['description'] = row[2]
+    tempDict['cuisine'] = row[3]
+    tempDict['mealtype'] = row[4]
+    tempDict['servingsize'] = row[5]
+    tempDict['uploader'] = row[6]
+
+    response.append(tempDict)
 
     
     #return jsonify({
