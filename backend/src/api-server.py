@@ -348,7 +348,7 @@ def get_recipe():
     #    "uploader" : "1"
     #}])
 
-@api.route('/search/recipeid=<id>', methods=['GET'])
+@api.route('/search/recipe/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def search(id):
     response = []
@@ -366,37 +366,26 @@ def search(id):
 
     response.append(tempDict)
 
-    
-    #return jsonify({
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    #})
+    return jsonify(response)
 
-    # Trying multiple recipes
-    return jsonify([
-    {
-        "id" : "0",
-        "name": "test",
-        "description": "test_entry",
-        "cuisine" : "0",
-        "mealtype" : "0",
-        "servingsize" : "0",
-        "uploader" : "1"
-    },
-    {
-        "id" : "1",
-        "name": "test2",
-        "description": "test_entry2",
-        "cuisine" : "2",
-        "mealtype" : "2",
-        "servingsize" : "2",
-        "uploader" : "2"
-    }])
+@api.route('/reviews/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def reviews(id):
+    response = []
+    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    results = cursor.fetchall()
+
+    for row in results:
+        tempDict = {}
+        #tempDict['c_id'] = row[0]
+        tempDict['r_id'] = row[1]
+        tempDict['u_id'] = row[2]
+        tempDict['description'] = row[3]
+        tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+        response.append(tempDict)
+
+    return jsonify(response)
 
 if __name__ == '__main__':
     api.run()
