@@ -30,17 +30,19 @@ function Recipe () {
 		getRecipe();
 	}, []);
 
-	{recipe.map((rec, key) => {
-		return (
-			<div key={key}>
-				<h3>{rec.name}</h3>
-				<p>{rec.description}</p>
-				<p>{rec.mealtype}</p>
-				<p>{rec.servingsize}</p>
-				<p>{rec.cuisine}</p>
-				<p>{rec.uploader}</p>
-			</div>
-		)})};
+	return <>
+		{recipe.map((rec, key) => {
+			return (
+				<div className='recipe_wrapper' key={key}>
+					<h3>{rec.name}</h3>
+					<p>{rec.description}</p>
+					<p>{rec.mealtype}</p>
+					<p>{rec.servingsize}</p>
+					<p>{rec.cuisine}</p>
+					<p>{rec.uploader}</p>
+				</div>
+			)})};
+	</>
 }
 
 export default Recipe;
