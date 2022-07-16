@@ -59,3 +59,18 @@ p {
     margin: 3px;
     font-size: 12px;
 }
+
+.list_recipes {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    flex: wrap;
+    padding: 15px;
+}
+
+.recipe_box {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: aqua;
+    width: 100%;
+}

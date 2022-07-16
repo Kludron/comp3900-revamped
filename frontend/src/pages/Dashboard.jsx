@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
@@ -18,19 +19,25 @@ function Dashboard () {
   const [recipes, setRecipes] = useState([]);
 
   //Gets Authorization token
-  const getAuthToken = () => {
-    let AuthToken = localStorage.getItem('token');
-    return AuthToken;
-  }
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   //Gets all Recipe Data
   const loadRecipes = async () => {
-    const response = await axios.get('http://localhost:5000/get_recipe');
-    console.log(response.data);
-    setRecipes(response.data.recipes);
+    const result = await axios.get('http://localhost:5000/get_recipe');
+    /*console.log(result);*/
+    result.data.forEach((rec) => {
+      console.log(rec);
+      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+    });
   }
 
-  React.useEffect(() => {
+  const viewRecipe = (recipeID) => {
+    console.log(recipeID);
+    navigate(`/view/recipe/${recipeID}`);
+  }
+
+  useEffect(() => {
     loadRecipes();
   }, []);
 
@@ -107,14 +114,20 @@ function Dashboard () {
         <button>Meal Type</button>
         <button>Allergies</button>
         <button>Cuisine</button>
-        <button>Show Recipe</button>
-      </div>
-      <div className='list_recipes'>
-        {recipes.map((recipe) => {
+        <div className='list_recipes'>
+        {recipes.map((recipe, key) => {
           return (
-            <p>{recipe.name}</p>
+            <div className='recipe_box' key={key}>
+              <h3>{recipe.name}</h3>
+              <p>{recipe.id}</p>
+              <p>{recipe.description}</p>
+              <p>{recipe.mealtype}</p>
+              <p>{recipe.servingsize}</p>
+              <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+            </div>
           )
         })}
+      </div>
       </div>
     </div>
   </div>;
