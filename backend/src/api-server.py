@@ -348,7 +348,7 @@ def get_recipe():
     #    "uploader" : "1"
     #}])
 
-@app.route('search/recipeid=<id>', methods=['GET'])
+@api.route('/search/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def search(id):
     response = []

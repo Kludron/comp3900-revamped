@@ -1,7 +1,28 @@
-ul {
+body {
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
 
 }
 
-li {
+.review {
+    padding: 2%;
+    display: flex;
+    border-bottom-style: double;
+}
 
+.review-user {
+    display: flex;
+    width: 15%;
+}
+
+.review-user-icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 5%;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: column;
 }

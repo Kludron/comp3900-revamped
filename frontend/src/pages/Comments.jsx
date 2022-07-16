@@ -3,36 +3,46 @@ import comments from '../comments/comments.json'
 import './Comments.css'
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
-import { TextField } from "@mui/material";
+import { Rating, TextField } from "@mui/material";
 
 function Comments () {
   return <div>
     <ReviewBar/>
-    <ul>
+    <div>
       {comments.map((post) => (
-        <Review commenter={post.commenter} comment={post.comment} rate={post.rate}/>
+        <Review commenter={post.commenter} comment={post.comment} rating={post.rating}/>
       ))}
-    </ul>
+    </div>
   </div>
 }
 
 export default Comments;
 
-function Review ({commenter, comment, rate}) {
-  return <li>
-    {commenter} {comment} {rate}
-  </li>
+function Review ({commenter, comment, rating}) {
+  return <div className="review">
+    <div className="review-user">
+      <Avatar className="review-user-icon"/>
+      {commenter}
+    </div>
+    <div className="review-content">
+      <Rating value={rating} readOnly/>
+      {comment} 
+    </div>
+  </div>
 }
 
 function ReviewBar () {
   const [comment, setComment] = React.useState('');
+  const [rating, setRating] = React.useState(0);
+
 
   const submitComment = async () => {
     let headers = {
         "Content-Type": "application/json",
     };
     var body = {
-      comment
+      comment,
+      rating
     };
     axios.post("http://localhost:5000/comment", body, headers)
     .then((response) => {
@@ -47,6 +57,11 @@ function ReviewBar () {
     <TextField
       variant="filled"
       onChange={e => setComment(e.target.value)}
+    />
+    <Rating
+      name="simple-controlled"
+      value={rating}
+      onChange={e => setRating(e.target.value)}
     />
     <button onClick={submitComment}>Comment</button>
   </div>
