@@ -348,7 +348,7 @@ def get_recipe():
     #    "uploader" : "1"
     #}])
 
-@api.route('search/recipe/recipeid=<id>', methods=['GET'])
+@api.route('/search/recipe/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def search(id):
     response = []
@@ -368,7 +368,7 @@ def search(id):
 
     return jsonify(response)
 
-@api.route('reviews/recipeid=<id>', methods=['GET'])
+@api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def reviews(id):
     response = []
