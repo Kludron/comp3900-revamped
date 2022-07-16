@@ -366,37 +366,7 @@ def search(id):
 
     response.append(tempDict)
 
-    
-    #return jsonify({
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    #})
-
-    # Trying multiple recipes
-    return jsonify([
-    {
-        "id" : "0",
-        "name": "test",
-        "description": "test_entry",
-        "cuisine" : "0",
-        "mealtype" : "0",
-        "servingsize" : "0",
-        "uploader" : "1"
-    },
-    {
-        "id" : "1",
-        "name": "test2",
-        "description": "test_entry2",
-        "cuisine" : "2",
-        "mealtype" : "2",
-        "servingsize" : "2",
-        "uploader" : "2"
-    }])
+    return jsonify(response)
 
 if __name__ == '__main__':
     api.run()
