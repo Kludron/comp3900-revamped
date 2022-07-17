@@ -17,9 +17,13 @@ function Dashboard () {
 
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
-
+  const [favourite, setfavourite] = useState(false);
+  const [bookmarkStar, setbookmarkStar] = useState('☆');
+  
   //Gets Authorization token
   const token = localStorage.getItem('token');
+
+  //allows page navigation
   const navigate = useNavigate();
 
   //Gets all Recipe Data
@@ -32,9 +36,22 @@ function Dashboard () {
     });
   }
 
-  const viewRecipe = (recipeID) => {
-    console.log(recipeID);
-    navigate(`/view/recipe/${recipeID}`);
+  //Navigates to a dynamically rendered page for a specific recipe with recipeID
+  const viewRecipe = (recipeid) => {
+    console.log(recipeid);
+    navigate(`/view/recipe/${recipeid}`);
+  }
+
+  const handleBookmark = () => {
+    if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
+      setfavourite(true);
+      setbookmarkStar('★');
+      console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
+    } else { //Un-bookmarked
+      setfavourite(false);
+      setbookmarkStar('☆');
+      console.log('unbookmarked'); //As above
+    }
   }
 
   useEffect(() => {
@@ -118,6 +135,7 @@ function Dashboard () {
         {recipes.map((recipe, key) => {
           return (
             <div className='recipe_box' key={key}>
+              <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
               <h3>{recipe.name}</h3>
               <p>{recipe.id}</p>
               <p>{recipe.description}</p>
