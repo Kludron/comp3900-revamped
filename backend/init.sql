@@ -85,13 +85,13 @@ GRANT UPDATE ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO comp3900_user;
 
 -- Load information into the table
-COPY Users FROM '/var/lib/postgresql/comp3900/backend/data/Users.csv' DELIMITER ',' CSV HEADER;
-COPY Cuisines FROM '/var/lib/postgresql/comp3900/backend/data/Cuisines.csv' DELIMITER ',' CSV HEADER;
-COPY MealTypes FROM '/var/lib/postgresql/comp3900/backend/data/MealTypes.csv' DELIMITER ',' CSV HEADER;
-COPY Ingredients FROM '/var/lib/postgresql/comp3900/backend/data/Ingredients.csv' DELIMITER ',' CSV HEADER;
-COPY Recipes FROM '/var/lib/postgresql/comp3900/backend/data/Recipes.csv' DELIMITER ',' CSV HEADER;
+COPY Users FROM '/var/lib/postgresql/comp3900/backend/data/users.csv' DELIMITER ',' CSV HEADER;
+COPY Cuisines FROM '/var/lib/postgresql/comp3900/backend/data/cuisines.csv' DELIMITER ',' CSV HEADER;
+COPY MealTypes FROM '/var/lib/postgresql/comp3900/backend/data/mealtypes.csv' DELIMITER ',' CSV HEADER;
+COPY Ingredients FROM '/var/lib/postgresql/comp3900/backend/data/ingredients.csv' DELIMITER ',' CSV HEADER;
+COPY Recipes FROM '/var/lib/postgresql/comp3900/backend/data/recipes.csv' DELIMITER ',' CSV HEADER;
 COPY recipe_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/recipe_ingredients.csv' DELIMITER ',' CSV HEADER;
 COPY user_upvotes FROM '/var/lib/postgresql/comp3900/backend/data/user_upvotes.csv' DELIMITER ',' CSV HEADER;
 COPY user_bookmarks FROM '/var/lib/postgresql/comp3900/backend/data/user_bookmarks.csv' DELIMITER ',' CSV HEADER;
 COPY user_recentlyViewed FROM '/var/lib/postgresql/comp3900/backend/data/user_recentlyViewed.csv' DELIMITER ',' CSV HEADER;
-COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/Comments.csv' DELIMITER ',' CSV HEADER;
+COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELIMITER ',' CSV HEADER;
