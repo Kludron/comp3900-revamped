@@ -182,7 +182,7 @@ def search():
         This is something that will need to be fixed at a later date. The goal at the moment is to get the search returning valid recipes.
     """
 
-    def _add_to_results(data):
+    def __add_to_results(data):
         for recipe in data:
             name, desc, cuisine, mealT, ss = recipe
             responseval["recipes"].append({
@@ -242,7 +242,7 @@ def search():
                             JOIN mealtypes m ON m.id = r.mealType
                         WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
                     """, (recS.lower(),))
-                    _add_to_results(cursor.fetchall())
+                    __add_to_results(cursor.fetchall())
                 
                 # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
                 for ingredient in ingS:
@@ -260,7 +260,7 @@ def search():
                         );
                         """
                         cursor.execute(query, (ingredient.lower(), ))
-                        _add_to_results(cursor.fetchall())
+                        __add_to_results(cursor.fetchall())
 
                 for mealType in mltS:
                     if mealType:
@@ -272,7 +272,7 @@ def search():
                         WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
                         """
                         cursor.execute(query, (mealType.lower(), ))
-                        _add_to_results(cursor.fetchall())
+                        __add_to_results(cursor.fetchall())
                 return (responseval, 200)
             except (IndexError, ValueError, KeyError) as e:
                 print(e)
@@ -281,18 +281,56 @@ def search():
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
 @jwt_required() # Apparently this should check whether or not the jwt is valid?
-# Required in request body: {"Authhorization":"Bearer <token>}"
-@cross_origin
+# Required in request header: {"Authorization":"Bearer <token>}"
+@cross_origin()
 def profile():
     response = {}
     if request.method == 'GET':
-        print("Grabbing token")
         email = get_jwt_identity()
-        print("Token Grabbed", email)
         query = """
-        SELECT u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        SELECT u.id, u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
         """
         cursor.execute(query, (email,))
+        try:
+            u_id, username, email, points = cursor.fetchone()
+        except ValueError:
+            return {'msg' : 'Authentication Error'}, 403
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r.name, r.description, c.name, m.name, r.servingSize
+            FROM recipes r
+                JOIN cuisines c ON c.id=r.cuisine
+                JOIN mealtypes m ON m.id = r.mealType
+            WHERE EXISTS (
+                SELECT 1
+                FROM user_bookmarks b
+                    JOIN users u ON u.id = b.u_id
+                    JOIN recipes r ON r.id = b.r_id
+                WHERE u.id = %s
+            );
+        """, (u_id,))
+
+        bookmarks = cursor.fetchall()
+        response = {
+            'Username' : username,
+            'Email' : email,
+            'Points' : points,
+            'Bookmarks' : []
+        }
+
+        for recipe in bookmarks:
+            name,desc,cuisine,mealType,sS = recipe
+            response["Bookmarks"].append({
+                "Name":name,
+                "Description":desc,
+                "Cuisine":cuisine,
+                "Meal Type":mealType,
+                "Serving Size":sS
+            })
+
+        return response, 200
+
     elif request.method == 'POST':
         # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(request.get_data())
