@@ -1,5 +1,5 @@
 create table Users (
-    id            int GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     username      varchar(200) unique not null,
     pass_hash     text not null,
     email         text unique not null,
@@ -20,7 +20,7 @@ create table MealTypes (
 );
 
 create table Ingredients (
-    id            int unique not null,
+    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name          text unique not null,
     calories      float,  -- Per 100g
     fat           float,  -- Per 100g
