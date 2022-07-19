@@ -200,13 +200,13 @@ def search():
         response = {}
 
         cursor.execute("SELECT name FROM ingredients")
-        response['Ingredients'] = cursor.fetchall()
+        response['Ingredients'] = [x[0] for x in cursor.fetchall()]
 
         cursor.execute("SELECT name FROM mealTypes")
-        response['Meal Types'] = cursor.fetchall()
+        response['Meal Types'] = [x[0] for x in cursor.fetchall()]
 
         cursor.execute("SELECT name FROM cuisines")
-        response['Cuisine'] = cursor.fetchall()
+        response['Cuisine'] = [x[0] for x in cursor.fetchall()]
 
         return response, 200
     elif request.method == 'POST':
@@ -374,7 +374,7 @@ def refresh_jwt(response: request):
 
 @api.route('/get_recipe', methods=['GET'])
 @cross_origin()
-def get_recipe():
+def get_recipes():
     response = []
     cursor.execute("SELECT * FROM recipes;")
     results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
@@ -414,9 +414,15 @@ def get_recipe():
     #    "uploader" : "1"
     # }])
 
+<<<<<<< HEAD
+@api.route('/view/recipe/<id>', methods=['GET'])
+@cross_origin()
+def find_recipe(id):
+=======
 @api.route('/search/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def recipe_search(id):
+>>>>>>> b2c9cb9318d908a905e32068f4dedc6748225f3e
     response = []
     cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
     row = cursor.fetchone()
@@ -432,6 +438,9 @@ def recipe_search(id):
 
     response.append(tempDict)
 
+<<<<<<< HEAD
+    return jsonify(response)
+=======
     
     # return jsonify({
     #    "id" : "0",
@@ -442,27 +451,26 @@ def recipe_search(id):
     #    "servingsize" : "0",
     #    "uploader" : "1"
     # })
+>>>>>>> b2c9cb9318d908a905e32068f4dedc6748225f3e
 
-    # Trying multiple recipes
-    return jsonify([
-    {
-        "id" : "0",
-        "name": "test",
-        "description": "test_entry",
-        "cuisine" : "0",
-        "mealtype" : "0",
-        "servingsize" : "0",
-        "uploader" : "1"
-    },
-    {
-        "id" : "1",
-        "name": "test2",
-        "description": "test_entry2",
-        "cuisine" : "2",
-        "mealtype" : "2",
-        "servingsize" : "2",
-        "uploader" : "2"
-    }])
+@api.route('/reviews/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def reviews(id):
+    response = []
+    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    results = cursor.fetchall()
+
+    for row in results:
+        tempDict = {}
+        #tempDict['c_id'] = row[0]
+        tempDict['r_id'] = row[1]
+        tempDict['u_id'] = row[2]
+        tempDict['description'] = row[3]
+        tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+        response.append(tempDict)
+
+    return jsonify(response)
 
 if __name__ == '__main__':
     api.run()
