@@ -174,7 +174,7 @@ def reset():
             server.sendmail(sender_email, receiver_email, message)
     pass
 
-@api.route('/search', methods=['POST'])
+@api.route('/search', methods=['POST', 'GET'])
 @cross_origin()
 def search():
     """
@@ -192,63 +192,91 @@ def search():
                 "Meal Type": mealT,
                 "Serving Size": ss,
             })
-    
-    try:
-        data = json.loads(request.get_data())
-    except json.decoder.JSONDecodeError:
-        return ({'msg': "Invalid request"}, 400)
-    if isinstance(data, dict):
-        try:
-            recS = data['search']
-            ingS = data['ingredients']
-            mltS = data['mealTypes']
-            responseval = {
-                "recipes" : []
-            }
-            # Search based on recipe name
-            if recS:
-                cursor.execute("""
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id = r.mealType
-                    WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
-                """, (recS.lower(),))
-                _add_to_results(cursor.fetchall())
-            
-            # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
-            for ingredient in ingS:
-                if ingredient:
-                    query = """
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id=r.mealType
-                    WHERE EXISTS(
-                        SELECT 1
-                        FROM recipes r, ingredients i
-                        JOIN recipe_ingredients ri ON ri.ingredient=i.id
-                        WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
-                    );
-                    """
-                    cursor.execute(query, (ingredient.lower(), ))
-                    _add_to_results(cursor.fetchall())
 
-            for mealType in mltS:
-                if mealType:
-                    query = """
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id=r.mealType
-                    WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
-                    """
-                    cursor.execute(query, (mealType.lower(), ))
-                    _add_to_results(cursor.fetchall())
-            return (responseval, 200)
-        except (IndexError, ValueError, KeyError) as e:
-            print(e)
+    if request.method == 'GET':
+        # Grab all ingredients
+        # Grab all meal types
+        # Grab all cuisines
+        response = {}
+
+        cursor.execute("SELECT name FROM ingredients")
+        response['Ingredients'] = cursor.fetchall()
+
+        cursor.execute("SELECT name FROM mealTypes")
+        response['Meal Types'] = cursor.fetchall()
+
+        cursor.execute("SELECT name FROM cuisines")
+        response['Cuisine'] = cursor.fetchall()
+
+        return response, 200
+    elif request.method == 'POST':
+        try:
+            data = json.loads(request.get_data())
+        except json.decoder.JSONDecodeError:
             return ({'msg': "Invalid request"}, 400)
+        if isinstance(data, dict):
+            try:
+
+                """
+                What we're expecting to receive
+                {
+                    "Search Term" : '',
+                    "Ingredients" : [],
+                    "Meal Types" : [],
+                    "Cuisines" : []
+                }
+                """
+
+                recS = data['search']
+                ingS = data['ingredients']
+                mltS = data['mealTypes']
+                responseval = {
+                    "recipes" : []
+                }
+                # Search based on recipe name
+                if recS:
+                    cursor.execute("""
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id = r.mealType
+                        WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
+                    """, (recS.lower(),))
+                    _add_to_results(cursor.fetchall())
+                
+                # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
+                for ingredient in ingS:
+                    if ingredient:
+                        query = """
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id=r.mealType
+                        WHERE EXISTS(
+                            SELECT 1
+                            FROM recipes r, ingredients i
+                            JOIN recipe_ingredients ri ON ri.ingredient=i.id
+                            WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
+                        );
+                        """
+                        cursor.execute(query, (ingredient.lower(), ))
+                        _add_to_results(cursor.fetchall())
+
+                for mealType in mltS:
+                    if mealType:
+                        query = """
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id=r.mealType
+                        WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
+                        """
+                        cursor.execute(query, (mealType.lower(), ))
+                        _add_to_results(cursor.fetchall())
+                return (responseval, 200)
+            except (IndexError, ValueError, KeyError) as e:
+                print(e)
+                return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
