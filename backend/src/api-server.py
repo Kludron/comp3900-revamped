@@ -200,13 +200,13 @@ def search():
         response = {}
 
         cursor.execute("SELECT name FROM ingredients")
-        response['Ingredients'] = cursor.fetchall()
+        response['Ingredients'] = [x[0] for x in cursor.fetchall()]
 
         cursor.execute("SELECT name FROM mealTypes")
-        response['Meal Types'] = cursor.fetchall()
+        response['Meal Types'] = [x[0] for x in cursor.fetchall()]
 
         cursor.execute("SELECT name FROM cuisines")
-        response['Cuisine'] = cursor.fetchall()
+        response['Cuisine'] = [x[0] for x in cursor.fetchall()]
 
         return response, 200
     elif request.method == 'POST':
