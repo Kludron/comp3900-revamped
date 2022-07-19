@@ -292,9 +292,6 @@ def refresh_jwt(response: request):
         # Invalid JWT Token
         return response
 
-if __name__ == '__main__':
-    api.run()
-
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in
 @cross_origin()
@@ -350,7 +347,14 @@ def post_recipe():
             )
 
         conn.commit()
-
-        
+    
     response['msg'] = "Recipe successfully added"
     return (response, 200)
+
+@api.route('/my-recipes/recipe', methods=['POST'])
+@jwt_required() # To ensure that the user is logged in
+@cross_origin()
+def post_recipe():
+
+if __name__ == '__main__':
+    api.run()
