@@ -327,8 +327,8 @@ def get_recipe():
     # Trying multiple recipes
     return jsonify(response)
 
-    #return jsonify([
-    #{
+    # return jsonify([
+    # {
     #    "id" : "0",
     #    "name": "test",
     #    "description": "test_entry",
@@ -336,21 +336,21 @@ def get_recipe():
     #    "mealtype" : "0",
     #    "servingsize" : "0",
     #    "uploader" : "1"
-    #},
-#
-    #{
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    #}])
+    # },
 
-@app.route('search/recipeid=<id>', methods=['GET'])
+    # {
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    # }])
+
+@api.route('/search/recipeid=<id>', methods=['GET'])
 @cross_origin()
-def search(id):
+def recipe_search(id):
     response = []
     cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
     row = cursor.fetchone()
@@ -367,7 +367,7 @@ def search(id):
     response.append(tempDict)
 
     
-    #return jsonify({
+    # return jsonify({
     #    "id" : "0",
     #    "name": "test",
     #    "description": "test_entry",
@@ -375,7 +375,7 @@ def search(id):
     #    "mealtype" : "0",
     #    "servingsize" : "0",
     #    "uploader" : "1"
-    #})
+    # })
 
     # Trying multiple recipes
     return jsonify([
