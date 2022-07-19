@@ -10,7 +10,7 @@ import Vegetables from "../ingredients/vegetables&greens.json";
 import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
-
+import MultipleSelect from '../components/MultipleSelect';
 
 /* Dashboard Page */
 function Dashboard () {
@@ -21,7 +21,10 @@ function Dashboard () {
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   
   //Gets Authorization token
-  const token = localStorage.getItem('token');
+  const checkToken = () => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+  }
 
   //allows page navigation
   const navigate = useNavigate();
@@ -127,25 +130,34 @@ function Dashboard () {
       
       {/* right recipes box */}
       <div className="recipeBox">
-      <RecipeBar/>
-        <button>Meal Type</button>
+        <RecipeBar/>
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
+          console.log('submitted');
+          var searchRequest = {
+            Mealtype: mealtypeName,
+            Cuisine: cuisineName,
+            Ingredients: ingredientsName
+          }
+          console.log(searchRequest);
+          }}
+        />
         <button>Allergies</button>
         <button>Cuisine</button>
         <div className='list_recipes'>
-        {recipes.map((recipe, key) => {
-          return (
-            <div className='recipe_box' key={key}>
-              <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-              <h3>{recipe.name}</h3>
-              <p>{recipe.id}</p>
-              <p>{recipe.description}</p>
-              <p>{recipe.mealtype}</p>
-              <p>{recipe.servingsize}</p>
-              <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-            </div>
-          )
-        })}
-      </div>
+          {recipes.map((recipe, key) => {
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <h3>{recipe.name}</h3>
+                <p>{recipe.id}</p>
+                <p>{recipe.description}</p>
+                <p>{recipe.mealtype}</p>
+                <p>{recipe.servingsize}</p>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   </div>;

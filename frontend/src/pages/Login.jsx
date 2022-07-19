@@ -44,7 +44,7 @@ function Login () {
       .then((response) => {
         console.log(response.data.token);
         localStorage.setItem('token', response.data.token);
-        if(response.status === 200 && response.data.token != null) {
+        if(response.status === 200 && response.data.token != null) {        
           setAuthenticated(true);
           navigate('/dashboard');
         }
