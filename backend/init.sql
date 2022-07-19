@@ -1,5 +1,5 @@
 create table Users (
-    id            int GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     username      varchar(200) unique not null,
     pass_hash     text not null,
     email         text unique not null,
@@ -33,18 +33,18 @@ create table Ingredients (
 );
 
 create table Recipes (
-    id            int unique not null,
+    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name          varchar(200) not null,
     description   text not null,
     cuisine       int references Cuisines(id),
-    mealType     int references MealTypes(id),
-    servingSize  int not null,
+    mealType      int references MealTypes(id),
+    servingSize   int not null,
     uploader      int references Users(id) default 0,
     primary key   (id)
 );
 
 create table recipe_ingredients (
-    r_id        int references Recipes(id) not null,
+    r_id          int references Recipes(id) not null,
     ingredient    int references Ingredients(id) not null,
     quantity      float,  -- E.g. 2 Lemons
     grams         float,
