@@ -1,20 +1,17 @@
 from hashlib import sha256
+from urllib import response
 import psycopg2
 import sys
 from datetime import datetime, timedelta, timezone
 import json
-from urllib import response
 from flask import (
     Flask,
     request,
-    jsonify,
-    Response
 )
 from flask_jwt_extended import (
     create_access_token,
     get_jwt,
     get_jwt_identity,
-    unset_jwt_cookies,
     jwt_required,
     JWTManager
 )
@@ -310,7 +307,7 @@ def post_recipe():
         cursor.execute(query, (email,))
         try:
             uploader = cursor.fetchone()[0]
-        except IndexError:
+        except IndexError or ValueError:
             return {'msg' : 'Invalid Credentials'}, 403
 
         name = data['name']
@@ -328,7 +325,7 @@ def post_recipe():
         cursor.execute("SELECT id FROM recipes ORDER BY id DESC LIMIT 1")
         try:
             r_id = cursor.fetchone()[0]
-        except IndexError:
+        except IndexError or ValueError:
             return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed 
         
         for ingredient in ingredients:
@@ -339,7 +336,7 @@ def post_recipe():
             cursor.execute("SELECT id FROM ingredients WHERE name = %s", (name, ))
             try:
                 i_id = cursor.fetchone()[0]
-            except IndexError:
+            except IndexError or ValueError:
                 return {'msg' : 'Invalid ingredient supplied'}, 400
 
             cursor.execute(
@@ -351,10 +348,75 @@ def post_recipe():
     response['msg'] = "Recipe successfully added"
     return (response, 200)
 
-@api.route('/my-recipes/recipe', methods=['POST'])
-@jwt_required() # To ensure that the user is logged in
+@api.route('/my-recipes/recipeid=<r_id>', methods=['POST', 'GET'])
+@jwt_required()
 @cross_origin()
-def post_recipe():
+def edit_recipe(r_id):
+    if request.method == 'POST':
+        pass
+    elif request.method == 'GET':
+        # Get the users id
+        email = get_jwt_identity()
+        cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+        try:
+            u_id = cursor.fetchone()[0]
+        except IndexError or ValueError:
+            return {'msg' : 'Authentication Failed'}, 403
+        # Get all recipes from that user
+        query = """
+        SELECT r.name, r.description, c.name, m.name, r.servingSize
+        FROM recipes r
+            JOIN cuisines c ON c.id=r.cuisine
+            JOIN mealtypes m ON m.id = r.mealType
+        WHERE r.uploader = %s AND r.id = %s;
+        """
+        cursor.execute(query, (u_id,r_id))
+        
+        try:
+            recipe = cursor.fetchone()[0]
+        except ValueError or IndexError:
+            return {'msg' : 'This user does not own this recipe'}, 403
+            
+        r_name, r_description, c_name, m_name, r_sS = recipe
+       
+        cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
+        ingredients = cursor.fetchall()
+
+        response = {
+            "Name" : r_name,
+            "Description" : r_description,
+            "Cuisine" : c_name,
+            "Meal Type" : m_name,
+            "Serving Size" : r_sS,
+            "Ingredients" : list()
+        }
+
+        for ingredient in ingredients:
+            i_id, quantity, grams, mL = ingredient
+
+            cursor.execute("SELECT name,calories,fat,sodium,carbohydrates,fiber,sugars,protein FROM ingredients WHERE id=%s", (i_id,))
+            try:
+                name,calories,fat,sodium,carbohydrates,fiber,sugars,protein = cursor.fetchone()[0]
+            except ValueError:
+                # This ingredient doesn't exist
+                pass
+            
+            ingredient_info = {
+                "Name" : name,
+                "Calories" : calories,
+                "Fat" : fat,
+                "Sodium" : sodium,
+                "Carbohydrates" : carbohydrates,
+                "Fiber" : fiber,
+                "Sugars" : sugars,
+                "Protein" : protein,
+                "Quantity" : quantity,
+                "Grams" : grams,
+                "Millilitres (mL)" : mL,
+            }
+            response["Ingredients"].append(ingredient_info)
+        return response, 200
+
 
 if __name__ == '__main__':
     api.run()
