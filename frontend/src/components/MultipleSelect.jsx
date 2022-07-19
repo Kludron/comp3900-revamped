@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -104,13 +105,20 @@ export default function MultipleSelect({ submit }) {
     );
   };
 
+  const getCuisines = async () => {
+    const data = await axios.get('http://localhost:5000/search')
+    console.log(data);
+  };
+
+  React.useEffect(() => {
+    getCuisines();
+  });
+
   return (
     <div>
       <FormControl sx={{ m: 1, width: 200}}>
         <InputLabel id="Mealtype_inputlabel">Select Mealtype(s)...</InputLabel>
         <Select
-          labelId="demo-multiple-name-label"
-          id="Mealtype_selectbox"
           multiple
           value={mealtypeName}
           onChange={handleChangeMealtype}
@@ -129,14 +137,12 @@ export default function MultipleSelect({ submit }) {
         </Select>
       </FormControl>
       <FormControl sx={{ m: 1, width: 200}}>
-        <InputLabel id="">Select Cuisine(s)...</InputLabel>
+        <InputLabel id="Cuisine_selectbox">Select Cuisine(s)...</InputLabel>
         <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
           multiple
           value={cuisineName}
           onChange={handleChangeCuisine}
-          input={<OutlinedInput label="Mealtypes" />}
+          input={<OutlinedInput label="Cuisines" />}
           MenuProps={MenuProps}
         >
           {cuisines.map((name) => (
@@ -151,14 +157,12 @@ export default function MultipleSelect({ submit }) {
         </Select>
       </FormControl>
       <FormControl sx={{ m: 1, width: 200}}>
-        <InputLabel id="">Select ingredient(s)...</InputLabel>
+        <InputLabel id="Ingredient_selectbox">Select ingredient(s)...</InputLabel>
         <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
           multiple
           value={ingredientsName}
           onChange={handleChangeIngredients}
-          input={<OutlinedInput label="Mealtypes" />}
+          input={<OutlinedInput label="Ingredients" />}
           MenuProps={MenuProps}
         >
           {ingredients.map((name) => (

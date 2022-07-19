@@ -142,20 +142,23 @@ function Dashboard () {
           }}
         />
         <button>Allergies</button>
-        <button>Cuisine</button>
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
-            return (
-              <div className='recipe_box' key={key}>
-                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-                <h3>{recipe.name}</h3>
-                <p>{recipe.id}</p>
-                <p>{recipe.description}</p>
-                <p>{recipe.mealtype}</p>
-                <p>{recipe.servingsize}</p>
-                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-              </div>
-            )
+            if(recipes === []) {
+              return <div>No recipes</div>
+            } else {
+              return (
+                <div className='recipe_box' key={key}>
+                  <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                  <h3>{recipe.name}</h3>
+                  <p>{recipe.id}</p>
+                  <p>{recipe.description}</p>
+                  <p>{recipe.mealtype}</p>
+                  <p>{recipe.servingsize}</p>
+                  <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+                </div>
+              )
+            }
           })}
         </div>
       </div>
