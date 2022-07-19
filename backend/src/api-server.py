@@ -315,14 +315,14 @@ def post_recipe():
         cuisine = data['cuisine']
         mealtype = data['mealtype']
         servingsize = data['servingsize']
-        ingredients = data['ingredients']
+        ingredients: list = data['ingredients']
 
         cursor.execute(
             "INSERT INTO recipes(name, description, cuisine, mealType, servingSize, uploader) VALUES (%s, %s,%s, %s, %s, %s);", 
             (name, description, cuisine, mealtype, servingsize, uploader)
         )
-
         cursor.execute("SELECT id FROM recipes ORDER BY id DESC LIMIT 1")
+
         try:
             r_id = cursor.fetchone()[0]
         except IndexError or ValueError:
@@ -347,6 +347,9 @@ def post_recipe():
     
     response['msg'] = "Recipe successfully added"
     return (response, 200)
+
+def detailed_search():
+    pass
 
 @api.route('/my-recipes/recipeid=<r_id>', methods=['POST', 'GET'])
 @jwt_required()
