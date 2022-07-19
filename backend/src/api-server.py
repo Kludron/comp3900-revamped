@@ -414,15 +414,9 @@ def get_recipes():
     #    "uploader" : "1"
     # }])
 
-<<<<<<< HEAD
 @api.route('/view/recipe/<id>', methods=['GET'])
 @cross_origin()
 def find_recipe(id):
-=======
-@api.route('/search/recipeid=<id>', methods=['GET'])
-@cross_origin()
-def recipe_search(id):
->>>>>>> b2c9cb9318d908a905e32068f4dedc6748225f3e
     response = []
     cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
     row = cursor.fetchone()
@@ -438,20 +432,7 @@ def recipe_search(id):
 
     response.append(tempDict)
 
-<<<<<<< HEAD
     return jsonify(response)
-=======
-    
-    # return jsonify({
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    # })
->>>>>>> b2c9cb9318d908a905e32068f4dedc6748225f3e
 
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
