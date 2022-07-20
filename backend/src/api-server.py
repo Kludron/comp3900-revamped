@@ -203,48 +203,58 @@ def search():
         response['Ingredients'] = [x[0] for x in cursor.fetchall()]
         cursor.execute("SELECT name FROM mealTypes")
         response['MealTypes'] = [x[0] for x in cursor.fetchall()]
-
         cursor.execute("SELECT name FROM cuisines")
         response['Cuisine'] = [x[0] for x in cursor.fetchall()]
 
         return response, 200
     elif request.method == 'POST':
+        """
+        1. Load the data passed through
+        2. Do a big SQL query for each of these
+        """
+
         try:
             data = json.loads(request.get_data())
-        except json.decoder.JSONDecodeError:
-            return ({'msg': "Invalid request"}, 400)
+        except json.decoder.JSONDecodeError as e:
+            print(e.args)
+            return ({'msg': "Invalid request type"}, 400)
         if isinstance(data, dict):
             try:
-
-                """
-                What we're expecting to receive
-                {
-                    "Search Term" : '',
-                    "Ingredients" : [],
-                    "Meal Types" : [],
-                    "Cuisines" : []
-                }
-                """
-
-                recS = data['search']
-                ingS = data['ingredients']
-                mltS = data['mealTypes']
+                # Pull data
+                print(data)
+                search_query = data['search']
+                ingredients = data['ingredients']
+                mealTypes = data['mealTypes']
+                cuisines = data['cuisines']
+            except KeyError as e:
+                print(e)
+                return {'msg' : 'Invalid search parameters'}, 400    
+            
+            try:
                 responseval = {
                     "recipes" : []
                 }
+
+                query = """
+                SELECT r.name, r.description, c.name, m.name, r.servingSize
+                FROM recipes r
+                    JOIN cuisines c ON c.id=r.cuisine
+                    JOIN mealtypes m ON m.id = r.mealType
+                """
+
                 # Search based on recipe name
-                if recS:
+                if search_query:
                     cursor.execute("""
                         SELECT r.name, r.description, c.name, m.name, r.servingSize
                         FROM recipes r
                             JOIN cuisines c ON c.id=r.cuisine
                             JOIN mealtypes m ON m.id = r.mealType
                         WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
-                    """, (recS.lower(),))
+                    """, (search_query.lower(),))
                     __add_to_results(cursor.fetchall())
                 
                 # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
-                for ingredient in ingS:
+                for ingredient in ingredients:
                     if ingredient:
                         query = """
                         SELECT r.name, r.description, c.name, m.name, r.servingSize
@@ -261,7 +271,7 @@ def search():
                         cursor.execute(query, (ingredient.lower(), ))
                         __add_to_results(cursor.fetchall())
 
-                for mealType in mltS:
+                for mealType in mealTypes:
                     if mealType:
                         query = """
                         SELECT r.name, r.description, c.name, m.name, r.servingSize
