@@ -36,6 +36,7 @@ function App() {
           <Route path='/setting' element={<Setting />} />
           <Route path='forgot-password' element={<ForgotPassword />} />
           <Route path='/change-password' element={<ChangePassword />} />
+          <Route path='/change-username' element={<ChangeUsername />} />
           <Route path='/view/recipe/:recipeid' element={<Recipe />} />
           <Route path='/view/recipe/:recipeid/comments' element={<Comments />} />
         </Routes>

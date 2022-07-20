@@ -16,7 +16,7 @@ function ChangeUsername () {
 			<h1>Change Username</h1>
 			<button onClick={previous}>Go Back</button>
 		</div>
-		<ChangePasswordForm submit={async (newusername) => { //[TODO fix this]
+		<ChangeUsernameForm submit={async (newusername) => {
 			console.log(newusername)
             let authToken = localStorage.getItem('token');
             let headers = {
