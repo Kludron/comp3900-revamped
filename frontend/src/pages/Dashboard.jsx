@@ -21,10 +21,7 @@ function Dashboard () {
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   
   //Gets Authorization token
-  const checkToken = () => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-  }
+  const token = localStorage.getItem('token');
 
   //allows page navigation
   const navigate = useNavigate();
@@ -133,15 +130,20 @@ function Dashboard () {
         <RecipeBar/>
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
           console.log('submitted');
-          var searchRequest = {
-            Mealtype: mealtypeName,
+          var body = {
+            MealTypes: mealtypeName,
             Cuisine: cuisineName,
             Ingredients: ingredientsName
           }
-          console.log(searchRequest);
+          console.log(body);
+          let headers = {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          };
+          const response = axios.post('http://localhost:5000/search', body, headers);
+          console.log(response);
           }}
         />
-        <button>Allergies</button>
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
             if(recipes === []) {
@@ -150,11 +152,11 @@ function Dashboard () {
               return (
                 <div className='recipe_box' key={key}>
                   <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-                  <h3>{recipe.name}</h3>
-                  <p>{recipe.id}</p>
-                  <p>{recipe.description}</p>
-                  <p>{recipe.mealtype}</p>
-                  <p>{recipe.servingsize}</p>
+                  <h3>Name: {recipe.name}</h3>
+                  <p>ID: {recipe.id}</p>
+                  <p>Description: {recipe.description}</p>
+                  <p>Mealtype: {recipe.mealtype}</p>
+                  <p>Serving Size: {recipe.servingsize}</p>
                   <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
                 </div>
               )

@@ -19,25 +19,6 @@ const MenuProps = {
   },
 };
 
-const mealtypes = [
-  'Breakfast',
-  'Lunch',
-  'Dinner',
-  'Snack',
-  'Dessert'
-];
-
-const cuisines = [
-  'Chinese',
-  'Korean',
-  'Japanese'
-];
-
-const ingredients = [
-  'Broccoli',
-  'Tomato'
-]
-
 function getStylesMealtype(name, mealtypeName, theme) {
   return {
     fontWeight:
@@ -65,11 +46,27 @@ function getStylesIngredients(name, ingredientsName, theme) {
   };
 }
 
+const mealtypeList = [
+  'mealtype'
+];
+
+const ingredientsList = [
+  'ingred'
+];
+
+const cuisineList = [
+  'cuisine'
+];
+
 export default function MultipleSelect({ submit }) {
+
   const theme = useTheme();
 	const [mealtypeName, setmealtypes] = React.useState([]);
   const [cuisineName, setCuisines] = React.useState([]);
   const [ingredientsName, setIngredients] = React.useState([]);
+  /*const [cuisineList, setCuisineList] = React.useState([]);
+  const [mealtypeList, setMealtypeList] =  React.useState([]);
+  const [ingredientsList, setIngredientsList] = React.useState([]);*/
 
   const onSubmit = () => {
     submit(mealtypeName, cuisineName, ingredientsName);
@@ -106,13 +103,16 @@ export default function MultipleSelect({ submit }) {
   };
 
   const getCuisines = async () => {
-    const data = await axios.get('http://localhost:5000/search')
-    console.log(data);
+    const configdata = await axios.get('http://localhost:5000/search');
+    console.log(configdata.data);
+    /*setMealtypeList(configdata.data.MealTypes);
+    setCuisineList(configdata.data.Cuisine);
+    setIngredientsList(configdata.data.Ingredients); */
   };
 
   React.useEffect(() => {
     getCuisines();
-  });
+  }, []);
 
   return (
     <div>
@@ -125,7 +125,7 @@ export default function MultipleSelect({ submit }) {
           input={<OutlinedInput label="Mealtypes" />}
           MenuProps={MenuProps}
         >
-          {mealtypes.map((name) => (
+          {mealtypeList.map((name) => (
             <MenuItem
               key={name}
               value={name}
@@ -145,7 +145,7 @@ export default function MultipleSelect({ submit }) {
           input={<OutlinedInput label="Cuisines" />}
           MenuProps={MenuProps}
         >
-          {cuisines.map((name) => (
+          {cuisineList.map((name) => (
             <MenuItem
               key={name}
               value={name}
@@ -165,7 +165,7 @@ export default function MultipleSelect({ submit }) {
           input={<OutlinedInput label="Ingredients" />}
           MenuProps={MenuProps}
         >
-          {ingredients.map((name) => (
+          {ingredientsList.map((name) => (
             <MenuItem
               key={name}
               value={name}
@@ -176,7 +176,7 @@ export default function MultipleSelect({ submit }) {
           ))}
         </Select>
       </FormControl>
-      <Button variant="contained"
+      <Button variant="outlined"
         sx={{ mt: 3, mb: 2 }}
         type="submit" 
         onClick={onSubmit}>Search

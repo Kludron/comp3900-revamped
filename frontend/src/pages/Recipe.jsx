@@ -42,11 +42,11 @@ function Recipe () {
 				return (
 					<div className='recipe_details' key={key}>
 						<button onClick={() => goBack()}>←Go Back</button>
-						<h2 className='recipe_name'>{r.name}</h2>
-						<p className='recipe_description'>{r.description}</p>
-						<p className='recipe_mealtype'>{r.mealtype}</p>
-						<p className='recipe_servingsize'>{r.servingsize}</p>
-						<p className='recipe_cuisine'>{r.cuisine}</p>
+						<h2 className='recipe_name'>Recipe Name: {r.name}</h2>
+						<p className='recipe_description'>Description: {r.description}</p>
+						<p className='recipe_mealtype'>Mealtype: {r.mealtype}</p>
+						<p className='recipe_servingsize'>Serving Size: {r.servingsize}</p>
+						<p className='recipe_cuisine'>Cuisine: {r.cuisine}</p>
 					</div>
 				)
 			})}
