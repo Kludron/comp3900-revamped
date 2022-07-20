@@ -9,8 +9,12 @@ import AllIngredients from "../ingredients/allingredients.json";
 /* Profile Page */
 function Profile () {
 
-  const navigate = useNavigate();
+  const [userData, setuserData] = React.useState({});
 
+  //Gets Auth Token
+  const token = localStorage.getItem('token');
+
+  const navigate = useNavigate();
   const changePassword = () => {
     navigate('/change-password');
   };
@@ -23,6 +27,24 @@ function Profile () {
 		navigate('/dashboard');
 	};
 
+  const loadProfile = async () => {
+    var headers = {
+      "Authorization": `Bearer ${token}`
+    }
+    const response = await axios.get('http://localhost:5000/profile', {headers:headers});
+    console.log(response.data.Email);
+      setuserData({
+        email: response.data.Email, 
+        username: response.data.Username, 
+        points: response.data.Points, 
+        bookmarks: response.data.Bookmarks
+      });
+      console.log(userData);
+  }
+
+  React.useEffect(() => {
+    loadProfile();
+  }, []);
   const email = localStorage.getItem('email')
   const username = localStorage.getItem('username')
   const points = localStorage.getItem('points')
@@ -41,11 +63,12 @@ function Profile () {
   const Save = async () => {
     let headers = {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     };
     var body = {
       allergyList
     };
-    axios.put("http://localhost:5000/profile", body, headers)
+    axios.put("http://localhost:5000/profile", body, {headers:headers})
     .then((response) => {
       console.log(response);
     }).catch((error) => {
@@ -58,9 +81,15 @@ function Profile () {
     <div>
       <NavBar/>
       <div className="main-content">
-        <button onClick={previous}>Go Back</button>
-        <h2>My Profile</h2>
-
+      <button onClick={previous}>Go Back</button>
+        <div className="header">
+          <h2>My Profile</h2>
+          <div className='userdata_field' >
+            <h4>Username: {userData.username}</h4>
+            <p>Email: {userData.email}</p>
+            <p>Points: {userData.points}</p>
+          </div>
+        </div>
         <div className="info">
           <div className='attribute'>
             <div>Email Address:</div>

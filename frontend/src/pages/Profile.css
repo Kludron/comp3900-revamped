@@ -78,3 +78,7 @@
     display: flex;
 }
 
+.wrapper .main-content {
+    width: 100%;
+    margin-left: 20vw;
+}
