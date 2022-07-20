@@ -26,15 +26,15 @@ function Dashboard () {
   //allows page navigation
   const navigate = useNavigate();
 
-  // //Gets all Recipe Data
-  // const loadRecipes = async () => {
-  //   const result = await axios.get('http://localhost:5000/get_recipe');
-  //   /*console.log(result);*/
-  //   result.data.forEach((rec) => {
-  //     console.log(rec);
-  //     setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-  //   });
-  // }
+  //Gets all Recipe Data
+  //const loadRecipes = async () => {
+  //  const result = await axios.get('http://localhost:5000/get_recipe');
+  //  /*console.log(result);*/
+  //  result.data.forEach((rec) => {
+  //    console.log(rec);
+  //    setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+  //  });
+  //}
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid) => {
@@ -54,9 +54,9 @@ function Dashboard () {
     }
   }
 
-  // useEffect(() => {
-  //   loadRecipes();
-  // }, []);
+  //useEffect(() => {
+    //loadRecipes();
+  //}, []);
 
   return <div>
     {/* left title and search bar */}
@@ -140,10 +140,13 @@ function Dashboard () {
           let headers = {
             "Content-Type": "application/json",
           };
-          axios.post("http://localhost:5000/search", body, headers) //This not working?
+          axios.post("http://localhost:5000/search", body, headers)
             .then((response) => {
-              console.log(response.data);
-              //Need to setRecipes map
+              console.log(response.data.recipes);
+              response.data.recipes.forEach((rec) => {
+                console.log(rec);
+                setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+              })
             }).catch((error) => {
               alert(error);
             });
@@ -151,21 +154,18 @@ function Dashboard () {
         />
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
-            if(recipes === []) {
-              return <div>No recipes</div>
-            } else {
-              return (
-                <div className='recipe_box' key={key}>
-                  <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-                  <h3>Name: {recipe.name}</h3>
-                  <p>ID: {recipe.id}</p>
-                  <p>Description: {recipe.description}</p>
-                  <p>Mealtype: {recipe.mealtype}</p>
-                  <p>Serving Size: {recipe.servingsize}</p>
-                  <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-                </div>
-              )
-            }
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <h3>Name: {recipe.name}</h3>
+                <p>ID: {recipe.id}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serving Size: {recipe.servingsize}</p>
+                <p>Uploader: {recipe.uploader}</p>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+              </div>
+            )
           })}
         </div>
       </div>
