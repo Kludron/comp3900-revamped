@@ -216,12 +216,10 @@ def search():
         try:
             data = json.loads(request.get_data())
         except json.decoder.JSONDecodeError as e:
-            print(e.args)
             return ({'msg': "Invalid request type"}, 400)
         if isinstance(data, dict):
             try:
                 # Pull data
-                print(data)
                 search_query = data['search']
                 ingredients = data['ingredients']
                 mealTypes = data['mealTypes']
@@ -262,9 +260,8 @@ def search():
                                     SELECT 1
                                     FROM recipes r, ingredients i
                                     JOIN recipe_ingredients ri ON ri.ingredient=i.id
-                                    WHERE i.name in {','.join(['%s' for _ in range(len(ingredients))])}
+                                    WHERE i.name in ({','.join(['%s' for _ in range(len(ingredients))])})
                                 )""")
-                    "m.name in (%s, %s, %s)"
                     for ingredient in ingredients:
                         arguments.append(ingredient)
                 if mealTypes:
@@ -280,8 +277,6 @@ def search():
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 
-                print(query)
-
                 cursor.execute(query, tuple(arguments))
 
                 __add_to_results(cursor.fetchall())
