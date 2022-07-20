@@ -46,7 +46,7 @@ function getStylesIngredients(name, ingredientsName, theme) {
   };
 }
 
-const mealtypeList = [
+/*const mealtypeList = [
   'mealtype'
 ];
 
@@ -56,7 +56,7 @@ const ingredientsList = [
 
 const cuisineList = [
   'cuisine'
-];
+];*/
 
 export default function MultipleSelect({ submit }) {
 
@@ -64,9 +64,9 @@ export default function MultipleSelect({ submit }) {
 	const [mealtypeName, setmealtypes] = React.useState([]);
   const [cuisineName, setCuisines] = React.useState([]);
   const [ingredientsName, setIngredients] = React.useState([]);
-  /*const [cuisineList, setCuisineList] = React.useState([]);
+  const [cuisineList, setCuisineList] = React.useState([]);
   const [mealtypeList, setMealtypeList] =  React.useState([]);
-  const [ingredientsList, setIngredientsList] = React.useState([]);*/
+  const [ingredientsList, setIngredientsList] = React.useState([]);
 
   const onSubmit = () => {
     submit(mealtypeName, cuisineName, ingredientsName);
@@ -105,9 +105,9 @@ export default function MultipleSelect({ submit }) {
   const getCuisines = async () => {
     const configdata = await axios.get('http://localhost:5000/search');
     console.log(configdata.data);
-    /*setMealtypeList(configdata.data.MealTypes);
+    setMealtypeList(configdata.data.MealTypes);
     setCuisineList(configdata.data.Cuisine);
-    setIngredientsList(configdata.data.Ingredients); */
+    setIngredientsList(configdata.data.Ingredients);
   };
 
   React.useEffect(() => {

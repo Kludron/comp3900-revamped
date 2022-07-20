@@ -137,11 +137,15 @@ function Dashboard () {
           }
           console.log(body);
           let headers = {
-            'Content-type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
           };
-          const response = axios.post('http://localhost:5000/search', body, headers);
-          console.log(response);
+          axios.post("http://localhost:5000/search", body, headers) //This not working?
+            .then((response) => {
+              console.log(response.data);
+              //Need to setRecipes map
+            }).catch((error) => {
+              alert(error);
+            });
           }}
         />
         <div className='list_recipes'>
