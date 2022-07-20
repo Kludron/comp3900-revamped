@@ -1,19 +1,10 @@
 create table Users (
-<<<<<<< HEAD
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     username        varchar(200) unique not null,
     pass_hash       text not null,
     email           text unique not null,
     points          int default 0,
     primary key     (id)
-=======
-    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
-    username      varchar(200) unique not null,
-    pass_hash     text not null,
-    email         text unique not null,
-    points        int default 0,
-    primary key   (id)
->>>>>>> 1a860108f47f7651030e8a7af1e9dc39eae897b0
 );
 
 create table Cuisines (
@@ -49,6 +40,12 @@ create table Recipes (
     mealType        int references MealTypes(id),
     servingSize     int not null,
     uploader        int references Users(id) default 0,
+    primary key     (id)
+);
+
+create table Allergens (
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    name            varchar(200) not null,
     primary key     (id)
 );
 
@@ -92,7 +89,13 @@ create table recipe_instructions (
     r_id            int references Recipes(id) not null unique,
     instructions    text not null,
     primary key     (r_id)
-)
+);
+
+create table allergen_ingredients (
+    i_id            int references Ingredients(id),
+    a_id            int references Allergens(id),
+    primary key     (i_id, a_id)
+);
 
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO comp3900_user;
@@ -110,3 +113,6 @@ COPY user_upvotes FROM '/var/lib/postgresql/comp3900/backend/data/user_upvotes.c
 COPY user_bookmarks FROM '/var/lib/postgresql/comp3900/backend/data/user_bookmarks.csv' DELIMITER ',' CSV HEADER;
 COPY user_recentlyViewed FROM '/var/lib/postgresql/comp3900/backend/data/user_recentlyviewed.csv' DELIMITER ',' CSV HEADER;
 COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELIMITER ',' CSV HEADER;
+COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DELIMITER ',' CSV HEADER;
+COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
+COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;

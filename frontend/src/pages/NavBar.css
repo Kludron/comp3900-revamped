@@ -2,7 +2,17 @@ body {
     margin: 0;
 }
 
-li {
+ul.navBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+ul.navBar li {
     display: block;
     height: 20%;
     background-color: #dddddd;
@@ -11,12 +21,12 @@ li {
     align-items: center;
 }
 
-li.currentTag {
+ul.navBar li.active {
     background-color: #4CAF50;
     color: white;
 }
 
-li:hover {
+ul.navBar li:hover {
   background-color: #555;
   color: white;
 };

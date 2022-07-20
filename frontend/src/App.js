@@ -16,6 +16,8 @@ import MyRecipes from './pages/MyRecipes';
 import Setting from './pages/Setting';
 import ForgotPassword from './pages/ForgotPassword';
 import ChangePassword from './pages/ChangePassword';
+import ChangeUsername from './pages/ChangeUsername';
+import Comments from './pages/Comments';
 import Recipe from './pages/Recipe';
 import CreateRecipe from './pages/CreateRecipe';
 
@@ -37,6 +39,7 @@ function App() {
           <Route path='/change-password' element={<ChangePassword />} />
           <Route path='/view/recipe/:recipeid' element={<Recipe />} />
           <Route path='/create-recipe' element={<CreateRecipe />} />
+          <Route path='/view/recipe/:recipeid/comments' element={<Comments />} />
         </Routes>
       </BrowserRouter>
     </>
