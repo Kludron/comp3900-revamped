@@ -26,15 +26,15 @@ function Dashboard () {
   //allows page navigation
   const navigate = useNavigate();
 
-  //Gets all Recipe Data
-  const loadRecipes = async () => {
-    const result = await axios.get('http://localhost:5000/get_recipe');
-    /*console.log(result);*/
-    result.data.forEach((rec) => {
-      console.log(rec);
-      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-    });
-  }
+  // //Gets all Recipe Data
+  // const loadRecipes = async () => {
+  //   const result = await axios.get('http://localhost:5000/get_recipe');
+  //   /*console.log(result);*/
+  //   result.data.forEach((rec) => {
+  //     console.log(rec);
+  //     setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+  //   });
+  // }
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid) => {
@@ -54,9 +54,9 @@ function Dashboard () {
     }
   }
 
-  useEffect(() => {
-    loadRecipes();
-  }, []);
+  // useEffect(() => {
+  //   loadRecipes();
+  // }, []);
 
   return <div>
     {/* left title and search bar */}
