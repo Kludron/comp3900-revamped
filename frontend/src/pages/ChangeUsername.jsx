@@ -16,8 +16,8 @@ function ChangeUsername () {
 			<h1>Change Username</h1>
 			<button onClick={previous}>Go Back</button>
 		</div>
-		<ChangePasswordForm submit={async (newpassword, repassword) => { //[TODO fix this]
-			console.log(newpassword,repassword)
+		<ChangePasswordForm submit={async (newusername) => { //[TODO fix this]
+			console.log(newusername)
             let authToken = localStorage.getItem('token');
             let headers = {
           		'Content-Type': 'application/json',
