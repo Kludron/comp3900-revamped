@@ -8,13 +8,13 @@ create table Users (
 );
 
 create table Cuisines (
-    id              int unique not null,
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
     primary key     (id)
 );
 
 create table MealTypes (
-    id              int unique not null,
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
     primary key     (id)
 );
