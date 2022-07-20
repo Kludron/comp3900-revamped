@@ -45,9 +45,6 @@ function Profile () {
   React.useEffect(() => {
     loadProfile();
   }, []);
-  const email = localStorage.getItem('email')
-  const username = localStorage.getItem('username')
-  const points = localStorage.getItem('points')
   
   const [query, setQuery] = useState('');
   const [allergyList, setAllergyList] = useState([]);

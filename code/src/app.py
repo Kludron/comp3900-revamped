@@ -38,3 +38,7 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/database')
+def database():
+    return {"Recipes": ["recipe1", "recipes2"]}
