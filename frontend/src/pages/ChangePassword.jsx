@@ -12,11 +12,11 @@ function ChangePassword () {
 	}
 	
 	const checkPasswords = (password, repassword) => {
-    if(password !== repassword){
-      return alert("Passwords do not match, please try again");
-    } else {
-      return true;
-    }
+		if(password !== repassword){
+			return alert("Passwords do not match, please try again");
+		} else {
+			return true;
+		}
   }
 
 	return <>
@@ -29,7 +29,7 @@ function ChangePassword () {
 			if(checkPasswords(newpassword, repassword)){
 				let token = localStorage.getItem('token');
 				let headers = {
-          'Content-Type': 'application/json',
+          			'Content-Type': 'application/json',
 					'Authorization': `Bearer ${token}`,
       };
       var body = {

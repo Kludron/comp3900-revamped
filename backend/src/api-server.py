@@ -150,6 +150,27 @@ def change():
         conn.commit()
         return {"msg": "Success"}, 200
 
+@api.route('/auth/change-username', methods=['PUT'])
+@jwt_required()
+@cross_origin()
+def change():
+    try:
+        data = json.loads(request.get_data())
+    except json.decoder.JSONDecodeError:
+        return {'msg':'Invalid parameters'}, 401
+
+    if type(data) is dict:
+        username = data['newusername']
+        email = get_jwt_identity()
+
+        cursor.execute(
+            "UPDATE users SET username = %s WHERE email = %s;", 
+            (username, email)
+        )
+
+        conn.commit()
+        return {"msg": "Success"}, 200
+
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
