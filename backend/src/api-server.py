@@ -208,13 +208,14 @@ def search():
 
     def __add_to_results(data):
         for recipe in data:
-            name, desc, cuisine, mealT, ss = recipe
+            id, name, desc, cuisine, mealT, ss = recipe
             responseval["recipes"].append({
+                "ID" : id,
                 "Name": name.title(),
                 "Description": desc,
                 "Cuisine": cuisine.title(),
-                "Meal Type": mealT,
-                "Serving Size": ss,
+                "MealType": mealT,
+                "ServingSize": ss,
             })
 
     if request.method == 'GET':
@@ -267,7 +268,7 @@ def search():
                 """
 
                 query = """
-                SELECT r.name, r.description, c.name, m.name, r.servingSize
+                SELECT r.id, r.name, r.description, c.name, m.name, r.servingSize
                 FROM recipes r
                     JOIN cuisines c ON c.id=r.cuisine
                     JOIN mealtypes m ON m.id = r.mealType
