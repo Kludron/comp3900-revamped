@@ -35,7 +35,7 @@ function ChangePassword () {
       var body = {
 				newpassword
       };
-      axios.put('http://localhost:5000/auth/change-password', body, headers)
+      axios.put('http://localhost:5000/auth/change-password', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
 			}).catch((error) => {

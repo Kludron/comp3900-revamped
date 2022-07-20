@@ -3,7 +3,6 @@ import NavBar from './NavBar';
 import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useState } from 'react';
 import AllIngredients from "../ingredients/allingredients.json";
 

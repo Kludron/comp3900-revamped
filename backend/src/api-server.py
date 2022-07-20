@@ -132,20 +132,23 @@ def register():
 @jwt_required()
 @cross_origin()
 def change():
-    data = json.loads(request.get_data())
-    response = {}
+    try:
+        data = json.loads(request.get_data())
+    except json.decoder.JSONDecodeError:
+        return {'msg':'Invalid parameters'}, 401
+
     if type(data) is dict:
         newpwd = data['newpassword']
         email = get_jwt_identity()
-        # token = data['Authorisation']
-        # cursor.execute(
-        #                 "UPDATE users SET password = %s WHERE email = %s;", 
-        #                 (newpwd, email)
-        #                )
-    return {"msg": "Success"}
-    
-    response['msg'] = "Password successfully changed"
-    return (response, 200)
+        passhash = sha256(str(newpwd + SALT).encode('utf8')).hexdigest()
+
+        cursor.execute(
+            "UPDATE users SET pass_hash = %s WHERE email = %s;", 
+            (passhash, email)
+        )
+
+        conn.commit()
+        return {"msg": "Success"}, 200
 
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
