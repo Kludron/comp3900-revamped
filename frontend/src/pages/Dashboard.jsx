@@ -54,9 +54,11 @@ function Dashboard () {
     }
   }
 
-  //useEffect(() => {
-    //loadRecipes();
-  //}, []);
+  React.useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  });
 
   return <div>
     {/* left title and search bar */}

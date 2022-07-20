@@ -2,9 +2,14 @@ import React from 'react';
 import NavBar from './NavBar';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 /* Profile Page */
 function Profile () {
+
+  //Gets Auth Token
+  const token = localStorage.getItem('token');
+
 
   const navigate = useNavigate();
 
@@ -15,6 +20,19 @@ function Profile () {
   const previous = () => {
 		navigate('/dashboard');
 	};
+
+  const loadProfile = async () => {
+    let headers = {
+      "Authorization": `Bearer ${token}`,
+    };
+    console.log(headers);
+    const response = await axios.get('http://localhost:5000/profile', headers);
+    console.log(response);
+  }
+
+  React.useEffect(() => {
+    loadProfile();
+  }, []);
 
   return <>
     <div className="wrapper">
