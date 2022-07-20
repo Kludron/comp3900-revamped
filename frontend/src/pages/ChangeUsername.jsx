@@ -21,12 +21,12 @@ function ChangeUsername () {
             let authToken = localStorage.getItem('token');
             let headers = {
           		'Content-Type': 'application/json',
-				'Authorisation': `Bearer ${authToken}`
+				'Authorization': `Bearer ${authToken}`
       };
       var body = {
 				newusername
       };
-      axios.put('http://localhost:5000/auth/change-username', body, headers)
+      axios.put('http://localhost:5000/auth/change-username', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
 			}).catch((error) => {
