@@ -235,6 +235,15 @@ def search():
                     "recipes" : []
                 }
 
+                """
+                Grab all the recipes that satisfy any of these
+
+                If no search_query, exclude the name in the search
+                If no ingredients, exclude ingredients
+                If no meal_types, exclude them
+                If no cuisines, exclude them
+                """
+
                 query = """
                 SELECT r.name, r.description, c.name, m.name, r.servingSize
                 FROM recipes r
@@ -242,46 +251,41 @@ def search():
                     JOIN mealtypes m ON m.id = r.mealType
                 """
 
-                # Search based on recipe name
-                if search_query:
-                    cursor.execute("""
-                        SELECT r.name, r.description, c.name, m.name, r.servingSize
-                        FROM recipes r
-                            JOIN cuisines c ON c.id=r.cuisine
-                            JOIN mealtypes m ON m.id = r.mealType
-                        WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
-                    """, (search_query.lower(),))
-                    __add_to_results(cursor.fetchall())
-                
-                # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
-                for ingredient in ingredients:
-                    if ingredient:
-                        query = """
-                        SELECT r.name, r.description, c.name, m.name, r.servingSize
-                        FROM recipes r
-                            JOIN cuisines c ON c.id=r.cuisine
-                            JOIN mealtypes m ON m.id=r.mealType
-                        WHERE EXISTS(
-                            SELECT 1
-                            FROM recipes r, ingredients i
-                            JOIN recipe_ingredients ri ON ri.ingredient=i.id
-                            WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
-                        );
-                        """
-                        cursor.execute(query, (ingredient.lower(), ))
-                        __add_to_results(cursor.fetchall())
+                constraints = []
+                arguments = []
 
-                for mealType in mealTypes:
-                    if mealType:
-                        query = """
-                        SELECT r.name, r.description, c.name, m.name, r.servingSize
-                        FROM recipes r
-                            JOIN cuisines c ON c.id=r.cuisine
-                            JOIN mealtypes m ON m.id=r.mealType
-                        WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
-                        """
-                        cursor.execute(query, (mealType.lower(), ))
-                        __add_to_results(cursor.fetchall())
+                if search_query:
+                    constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
+                    arguments.append(search_query)
+                if ingredients:
+                    constraints.append(f"""EXISTS(
+                                    SELECT 1
+                                    FROM recipes r, ingredients i
+                                    JOIN recipe_ingredients ri ON ri.ingredient=i.id
+                                    WHERE i.name in {','.join(['%s' for _ in range(len(ingredients))])}
+                                )""")
+                    "m.name in (%s, %s, %s)"
+                    for ingredient in ingredients:
+                        arguments.append(ingredient)
+                if mealTypes:
+                    constraints.append(f"m.name in ({','.join(['%s' for _ in range(len(mealTypes))])})")
+                    for mealType in mealTypes:
+                        arguments.append(mealType)
+                if cuisines:
+                    constraints.append(f"c.name in ({','.join(['%s' for _ in range(len(cuisines))])})")
+                    for cuisine in cuisines:
+                        arguments.append(cuisine)
+
+                if constraints:
+                    query += " WHERE "
+                    query += " AND ".join(constraints)
+                
+                print(query)
+
+                cursor.execute(query, tuple(arguments))
+
+                __add_to_results(cursor.fetchall())
+
                 return (responseval, 200)
             except (IndexError, ValueError, KeyError) as e:
                 print(e)
