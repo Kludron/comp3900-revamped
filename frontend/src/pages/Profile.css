@@ -1,9 +1,84 @@
-.wrapper {
-    display: flex;
+.main-content {
     position: relative;
+    left: 15%;
+    width: 85%;
+}
+
+.main-content > * {
+    margin: 20px;
+}
+
+.info {
+    display: flex;
+}
+
+.attribute {
+    display: flex;
+    flex-direction: column;
+}
+
+.attribute div {
+    margin: 10px;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 70px;
+}
+
+.data div {
+    margin: 10px;
+}
+
+.change-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 70px;
+}
+
+.change-button button {
+    margin: 10px;
+}
+
+.allergies-title {
+    margin-bottom: 0;
+}
+
+.allergies {
+    background-color: coral;
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.search-allergies {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.search-results {
+    margin-top: 20px;
+    height: 200px;
+    width: 200px;
+    border-style: ridge;
+    overflow: auto;
+}
+
+.added-allergies {
+    text-align: center;
+    
+}
+.allergies-box {
+    height: 250px;
+    width: 400px;
+    border-style: ridge;
+    display: flex;
 }
 
 .wrapper .main-content {
     width: 100%;
-    margin-left: 100px;
+    margin-left: 20vw;
 }

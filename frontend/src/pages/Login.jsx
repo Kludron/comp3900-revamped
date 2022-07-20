@@ -34,7 +34,7 @@ function Login () {
     </Typography>
     <LoginForm submit={async (email, password) => {
       let headers = {
-          "Content-Type": "application/json",
+        "Content-Type": "application/json",
       };
       var body = {
         email,
@@ -44,6 +44,9 @@ function Login () {
       .then((response) => {
         console.log(response.data.token);
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.username);
+        localStorage.setItem('email', response.data.email);
+        localStorage.setItem('points', response.data.points);
         if(response.status === 200 && response.data.token != null) {        
           setAuthenticated(true);
           navigate('/dashboard');
