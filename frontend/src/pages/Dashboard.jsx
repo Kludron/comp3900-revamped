@@ -131,9 +131,9 @@ function Dashboard () {
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
           console.log('submitted');
           var body = {
-            MealTypes: mealtypeName,
-            Cuisine: cuisineName,
-            Ingredients: ingredientsName
+            "mealTypes": mealtypeName,
+            "cuisines": cuisineName,
+            "ingredients": ingredientsName
           }
           console.log(body);
           let headers = {

@@ -46,18 +46,6 @@ function getStylesIngredients(name, ingredientsName, theme) {
   };
 }
 
-/*const mealtypeList = [
-  'mealtype'
-];
-
-const ingredientsList = [
-  'ingred'
-];
-
-const cuisineList = [
-  'cuisine'
-];*/
-
 export default function MultipleSelect({ submit }) {
 
   const theme = useTheme();
@@ -78,7 +66,7 @@ export default function MultipleSelect({ submit }) {
     } = event;
     setmealtypes(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(',') : value,
     );
   };
 
@@ -88,7 +76,7 @@ export default function MultipleSelect({ submit }) {
     } = event;
     setCuisines(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(',') : value,
     );
   };
 
@@ -98,7 +86,7 @@ export default function MultipleSelect({ submit }) {
     } = event;
     setIngredients(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(',') : value,
     );
   };
 
