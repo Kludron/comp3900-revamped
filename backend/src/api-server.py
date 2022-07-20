@@ -46,32 +46,32 @@ jwt = JWTManager(api)
 def login():
     data = json.loads(request.get_data())
     response = {}
-    if type(data) is dict:
-        # Extract relevant information from the request [TODO: Is this all the data we need to check for security?]
-        try:
-            email = data['email']
-            pword = data['password']
-            passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
-        except (IndexError, ValueError):
-            response["msg"] = "Invalid Email / Password"
-            return (response, 401)
-        # Run check on database
-        cursor.execute("SELECT email FROM users WHERE email=%s AND pass_hash=%s;", (email, passhash)) # This is equivalent to a prepared statement
+    try:
+        email = data['email']
+        pword = data['password']
+        passhash = sha256(str(pword + SALT).encode('utf8')).hexdigest()
+    except ValueError:
+        response["msg"] = "Invalid Email / Password"
+        return (response, 401)
+    # Run check on database
+    cursor.execute("SELECT email, username, points FROM users WHERE email=%s AND pass_hash=%s;",(email, passhash)) # This is equivalent to a prepared statement
 
-        # Validate that there was a user with these credentials
-        try:
-            isValid = cursor.fetchone()[0] == email
-        except (TypeError, IndexError):
-            isValid = False
-        if not isValid:
-            response["msg"] = "Invalid Email / Password"
-            return (response, 401)
-        
-        token = create_access_token(identity=email)
-        response["token"] = token # [TODO: Do we need to send more data back on a successful login?]
-        return (response, 200) # Automatically responds with 200 code
-    response["msg"] = "Invalid Email / Password"
-    return (response, 401)
+    # Validate that there was a user with these credentials
+    try:
+        vEmail, username, points = cursor.fetchone()
+        isValid = vEmail == email
+    except TypeError or ValueError:
+        isValid = False
+    if not isValid:
+        response["msg"] = "Invalid Email / Password"
+        return (response, 401)
+    
+    token = create_access_token(identity=email)
+    response["token"] = token 
+    response["username"] = username
+    response["points"] = points
+
+    return response, 200
 
 @api.route('/auth/register', methods=['POST'])
 @cross_origin()
@@ -300,7 +300,7 @@ def profile():
         cursor.execute(query, (email,))
         try:
             u_id, username, email, points = cursor.fetchone()
-        except ValueError:
+        except TypeError:
             return {'msg' : 'Authentication Error'}, 403
 
         # Grab Bookmarks
@@ -481,13 +481,13 @@ def post_recipe():
     cursor.execute("SELECT id FROM cuisines WHERE name=%s", (cuisine,))
     try:
         c_id = cursor.fetchone()[0]
-    except ValueError:
+    except TypeError:
         return {"msg" : "Cuisine not found"}, 401
 
     cursor.execute("SELECT id FROM mealtypes WHERE name=%s", (mealtype,))
     try:
         m_id = cursor.fetchone()[0]
-    except ValueError:
+    except TypeError:
         return {"msg" : "MealType not found"}, 401
 
     cursor.execute(
