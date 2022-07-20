@@ -44,9 +44,9 @@ create table Recipes (
 );
 
 create table Allergens (
-    id              unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            varchar(200) not null,
-    primary key     (name)
+    primary key     (id)
 );
 
 create table recipe_ingredients (
@@ -89,13 +89,13 @@ create table recipe_instructions (
     r_id            int references Recipes(id) not null unique,
     instructions    text not null,
     primary key     (r_id)
-)
+);
 
 create table allergen_ingredients (
     i_id            int references Ingredients(id),
     a_id            int references Allergens(id),
     primary key     (i_id, a_id)
-)
+);
 
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO comp3900_user;
