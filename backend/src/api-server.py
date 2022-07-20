@@ -461,7 +461,9 @@ def eaten(id):
     
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
-    u_id = null #to do: need jwt token stuff
+    u_id = getUserId()
+    if(u_id == null):
+        return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
     cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
@@ -482,7 +484,9 @@ def IntakeOverview():
     response = {}
     
     r_id = data["r_id"]
-    u_id = null #to do: need jwt token stuff
+    u_id = getUserId()
+    if(u_id == null):
+        return ("msg: user does not exist", 401)
 
     #Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
@@ -533,12 +537,25 @@ def setGoal():
     except KeyError():
         return {"msg: wrong key", 401}
 
-    u_id = null #To do: jwt id stuff
+    u_id = getUserId()
+    if(u_id == null):
+        return ("msg: user does not exist", 401)
 
     #To do: need to add caloric values to ingredients
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (goal, u_id))
 
     return (response, 200)
+
+def getUserId():
+    # This section is to verify user identity
+    email = get_jwt_identity()
+    query = "SELECT id FROM users WHERE email=%s"
+    cursor.execute(query, (email,))
+    try:
+        uploader = cursor.fetchone()[0]
+        return uploader
+    except IndexError:
+        return null
 
 if __name__ == '__main__':
     api.run()
