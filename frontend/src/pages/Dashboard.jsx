@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
@@ -8,18 +9,57 @@ import Meat from "../ingredients/meat.json";
 import Vegetables from "../ingredients/vegetables&greens.json";
 import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
-
+import axios from 'axios';
+import MultipleSelect from '../components/MultipleSelect';
 
 /* Dashboard Page */
 function Dashboard () {
 
   const [query, setQuery] = useState('');
-
-  const [ingredientList, setIngredientList] = useState([]);
-
-  const appendList = (ingredient) => {
-    setIngredientList(ingredientList => [...ingredientList, ingredient]);
+  const [recipes, setRecipes] = useState([]);
+  const [favourite, setfavourite] = useState(false);
+  const [bookmarkStar, setbookmarkStar] = useState('☆');
+  
+  //Gets Authorization token
+  const checkToken = () => {
+    const token = localStorage.getItem('token');
+    console.log(token);
   }
+
+  //allows page navigation
+  const navigate = useNavigate();
+
+  //Gets all Recipe Data
+  const loadRecipes = async () => {
+    const result = await axios.get('http://localhost:5000/get_recipe');
+    /*console.log(result);*/
+    result.data.forEach((rec) => {
+      console.log(rec);
+      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+    });
+  }
+
+  //Navigates to a dynamically rendered page for a specific recipe with recipeID
+  const viewRecipe = (recipeid) => {
+    console.log(recipeid);
+    navigate(`/view/recipe/${recipeid}`);
+  }
+
+  const handleBookmark = () => {
+    if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
+      setfavourite(true);
+      setbookmarkStar('★');
+      console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
+    } else { //Un-bookmarked
+      setfavourite(false);
+      setbookmarkStar('☆');
+      console.log('unbookmarked'); //As above
+    }
+  }
+
+  useEffect(() => {
+    loadRecipes();
+  }, []);
 
   return <div>
     {/* left title and search bar */}
@@ -44,27 +84,13 @@ function Dashboard () {
       }).map((post, key) => {
         return (
           <div className="pantry-ingredients" key={key}>
-            <button onClick={() => appendList({post})}>
+            <button>
               {post.name}
             </button>
           </div>
         )
       })}
-      {/*
-        AllIngredients.filer(post => {
-          if (query === ""){
-            //Empty query
-            return post;
-          } else if (post.title.toLowerCase().includes(query.toLowerCase())) {
-            //returns filtered array
-            return post;
-          }
-        }).map((post, index) => (
-          <div className="res" key={index}>
-              <p>{post.name}</p>
-          </div>
-        ))
-      */}
+
       {/* left pantry box */}
       <div className="pantrybox">
         {/* ingredient boxes */}
@@ -96,36 +122,45 @@ function Dashboard () {
     </div>
 
   {/* right title and search bar */}
-    <div
-    style={{
-      width: '75%',
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'scroll',
-    }}
-    >
+    <div className='recipe_screen'>
       <Link to='/profile'>
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
       <h2>F1V3GUY5 RECIPES</h2>
-      <RecipeBar/>
       
       {/* right recipes box */}
-      <div
-      style={{
-          borderStyle: 'solid',
-          borderColor: 'pink',
-          marginTop: 15,
-          width: '95%',
-          height: '100vh',
-          overflow: 'scroll',
-      }}
-      >
-        <button>Meal Type</button>
+      <div className="recipeBox">
+        <RecipeBar/>
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
+          console.log('submitted');
+          var searchRequest = {
+            Mealtype: mealtypeName,
+            Cuisine: cuisineName,
+            Ingredients: ingredientsName
+          }
+          console.log(searchRequest);
+          }}
+        />
         <button>Allergies</button>
-        <button>Cuisine</button>
+        <div className='list_recipes'>
+          {recipes.map((recipe, key) => {
+            if(recipes === []) {
+              return <div>No recipes</div>
+            } else {
+              return (
+                <div className='recipe_box' key={key}>
+                  <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                  <h3>{recipe.name}</h3>
+                  <p>{recipe.id}</p>
+                  <p>{recipe.description}</p>
+                  <p>{recipe.mealtype}</p>
+                  <p>{recipe.servingsize}</p>
+                  <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+                </div>
+              )
+            }
+          })}
+        </div>
       </div>
     </div>
   </div>;

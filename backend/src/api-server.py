@@ -7,6 +7,7 @@ import json
 from flask import (
     Flask,
     request,
+    jsonify
 )
 from flask_jwt_extended import (
     create_access_token,
@@ -28,6 +29,8 @@ SALT = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
+# yckAPfc9MX42N4
+
 try:
     conn = psycopg2.connect(host="45.77.234.200", database="comp3900db", user="comp3900_user", password="yckAPfc9MX42N4")
     cursor = conn.cursor()
@@ -74,6 +77,8 @@ def register():
     data = json.loads(request.get_data())
     response = {}
 
+    # [TODO: When a user registers with an already existing username, an error occurs]
+
     # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
     # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
     # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
@@ -112,6 +117,8 @@ def register():
 
         if doesExist:
             conn.commit()
+            token = create_access_token(identity=email)
+            response['token'] = token
         else:
             response["msg"] = "Error adding user, please try again"
             return (response, 401)
@@ -165,7 +172,7 @@ def reset():
             server.sendmail(sender_email, receiver_email, message)
     pass
 
-@api.route('/search', methods=['POST'])
+@api.route('/search', methods=['POST', 'GET'])
 @cross_origin()
 def search():
     """
@@ -173,7 +180,7 @@ def search():
         This is something that will need to be fixed at a later date. The goal at the moment is to get the search returning valid recipes.
     """
 
-    def _add_to_results(data):
+    def __add_to_results(data):
         for recipe in data:
             name, desc, cuisine, mealT, ss = recipe
             responseval["recipes"].append({
@@ -183,87 +190,161 @@ def search():
                 "Meal Type": mealT,
                 "Serving Size": ss,
             })
-    
-    try:
-        data = json.loads(request.get_data())
-    except json.decoder.JSONDecodeError:
-        return ({'msg': "Invalid request"}, 400)
-    if isinstance(data, dict):
-        try:
-            recS = data['search']
-            ingS = data['ingredients']
-            mltS = data['mealTypes']
-            responseval = {
-                "recipes" : []
-            }
-            # Search based on recipe name
-            if recS:
-                cursor.execute("""
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id = r.mealType
-                    WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
-                """, (recS.lower(),))
-                _add_to_results(cursor.fetchall())
-            
-            # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
-            for ingredient in ingS:
-                if ingredient:
-                    query = """
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id=r.mealType
-                    WHERE EXISTS(
-                        SELECT 1
-                        FROM recipes r, ingredients i
-                        JOIN recipe_ingredients ri ON ri.ingredient=i.id
-                        WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
-                    );
-                    """
-                    cursor.execute(query, (ingredient.lower(), ))
-                    _add_to_results(cursor.fetchall())
 
-            for mealType in mltS:
-                if mealType:
-                    query = """
-                    SELECT r.name, r.description, c.name, m.name, r.servingSize
-                    FROM recipes r
-                        JOIN cuisines c ON c.id=r.cuisine
-                        JOIN mealtypes m ON m.id=r.mealType
-                    WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
-                    """
-                    cursor.execute(query, (mealType.lower(), ))
-                    _add_to_results(cursor.fetchall())
-            return (responseval, 200)
-        except (IndexError, ValueError, KeyError) as e:
-            print(e)
+    if request.method == 'GET':
+        # Grab all ingredients
+        # Grab all meal types
+        # Grab all cuisines
+        response = {}
+
+        cursor.execute("SELECT name FROM ingredients")
+        response['Ingredients'] = [x[0] for x in cursor.fetchall()]
+
+        cursor.execute("SELECT name FROM mealTypes")
+        response['Meal Types'] = [x[0] for x in cursor.fetchall()]
+
+        cursor.execute("SELECT name FROM cuisines")
+        response['Cuisine'] = [x[0] for x in cursor.fetchall()]
+
+        return response, 200
+    elif request.method == 'POST':
+        try:
+            data = json.loads(request.get_data())
+        except json.decoder.JSONDecodeError:
             return ({'msg': "Invalid request"}, 400)
+        if isinstance(data, dict):
+            try:
+
+                """
+                What we're expecting to receive
+                {
+                    "Search Term" : '',
+                    "Ingredients" : [],
+                    "Meal Types" : [],
+                    "Cuisines" : []
+                }
+                """
+
+                recS = data['search']
+                ingS = data['ingredients']
+                mltS = data['mealTypes']
+                responseval = {
+                    "recipes" : []
+                }
+                # Search based on recipe name
+                if recS:
+                    cursor.execute("""
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id = r.mealType
+                        WHERE lower(r.name) LIKE CONCAT('%%',%s,'%%');
+                    """, (recS.lower(),))
+                    __add_to_results(cursor.fetchall())
+                
+                # Search based on ingredients [TODO: This searches for all recipes with any one of the ingredients. Fix this]
+                for ingredient in ingS:
+                    if ingredient:
+                        query = """
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id=r.mealType
+                        WHERE EXISTS(
+                            SELECT 1
+                            FROM recipes r, ingredients i
+                            JOIN recipe_ingredients ri ON ri.ingredient=i.id
+                            WHERE lower(i.name) LIKE CONCAT('%%', %s, '%%')
+                        );
+                        """
+                        cursor.execute(query, (ingredient.lower(), ))
+                        __add_to_results(cursor.fetchall())
+
+                for mealType in mltS:
+                    if mealType:
+                        query = """
+                        SELECT r.name, r.description, c.name, m.name, r.servingSize
+                        FROM recipes r
+                            JOIN cuisines c ON c.id=r.cuisine
+                            JOIN mealtypes m ON m.id=r.mealType
+                        WHERE lower(m.name) LIKE CONCAT('%%',%s,'%%');
+                        """
+                        cursor.execute(query, (mealType.lower(), ))
+                        __add_to_results(cursor.fetchall())
+                return (responseval, 200)
+            except (IndexError, ValueError, KeyError) as e:
+                print(e)
+                return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
 @jwt_required() # Apparently this should check whether or not the jwt is valid?
-@cross_origin
+# Required in request header: {"Authorization":"Bearer <token>}"
+@cross_origin()
 def profile():
-    data = request.get_json()
     response = {}
     if request.method == 'GET':
-        #
-        pass
-    if type(data) is dict:
-        token = data['token']
-        # Verify token
-        isAuthenticated = True # [TODO: Placeholder]
-        if not isAuthenticated:
-            response["msg"] = "User not authenticated"
-            response["isSuccess"] = False
-            return response, 403
-        # Extract what settings were changed and update the SQL database to reflect those changes
-        response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
-        return response
-    response["isSuccess"] = False
-    response["msg"] = "The data provided is not valid"
+        email = get_jwt_identity()
+        query = """
+        SELECT u.id, u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+        try:
+            u_id, username, email, points = cursor.fetchone()
+        except ValueError:
+            return {'msg' : 'Authentication Error'}, 403
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r.name, r.description, c.name, m.name, r.servingSize
+            FROM recipes r
+                JOIN cuisines c ON c.id=r.cuisine
+                JOIN mealtypes m ON m.id = r.mealType
+            WHERE EXISTS (
+                SELECT 1
+                FROM user_bookmarks b
+                    JOIN users u ON u.id = b.u_id
+                    JOIN recipes r ON r.id = b.r_id
+                WHERE u.id = %s
+            );
+        """, (u_id,))
+
+        bookmarks = cursor.fetchall()
+        response = {
+            'Username' : username,
+            'Email' : email,
+            'Points' : points,
+            'Bookmarks' : []
+        }
+
+        for recipe in bookmarks:
+            name,desc,cuisine,mealType,sS = recipe
+            response["Bookmarks"].append({
+                "Name":name,
+                "Description":desc,
+                "Cuisine":cuisine,
+                "Meal Type":mealType,
+                "Serving Size":sS
+            })
+
+        return response, 200
+
+    elif request.method == 'POST':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            token = data['token']
+            # Verify token
+            isAuthenticated = True # [TODO: Placeholder]
+            if not isAuthenticated:
+                response["msg"] = "User not authenticated"
+                response["isSuccess"] = False
+                return response, 403
+            # Extract what settings were changed and update the SQL database to reflect those changes
+            response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
+            return response
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
     return response
 
 ### Search function
@@ -420,6 +501,86 @@ def edit_recipe(r_id):
             response["Ingredients"].append(ingredient_info)
         return response, 200
 
+@api.route('/get_recipe', methods=['GET'])
+@cross_origin()
+def get_recipes():
+    response = []
+    cursor.execute("SELECT * FROM recipes;")
+    results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+
+    for row in results:
+        tempDict = {}
+        tempDict['id'] = row[0]
+        tempDict['name'] = row[1]
+        tempDict['description'] = row[2]
+        tempDict['cuisine'] = row[3]
+        tempDict['mealtype'] = row[4]
+        tempDict['servingsize'] = row[5]
+        tempDict['uploader'] = row[6]
+
+        response.append(tempDict)
+    # Trying multiple recipes
+    return jsonify(response)
+
+    # return jsonify([
+    # {
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    # },
+
+    # {
+    #    "id" : "0",
+    #    "name": "test",
+    #    "description": "test_entry",
+    #    "cuisine" : "0",
+    #    "mealtype" : "0",
+    #    "servingsize" : "0",
+    #    "uploader" : "1"
+    # }])
+
+@api.route('/view/recipe/<id>', methods=['GET'])
+@cross_origin()
+def find_recipe(id):
+    response = []
+    cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
+    row = cursor.fetchone()
+
+    tempDict = {}
+    tempDict['id'] = row[0]
+    tempDict['name'] = row[1]
+    tempDict['description'] = row[2]
+    tempDict['cuisine'] = row[3]
+    tempDict['mealtype'] = row[4]
+    tempDict['servingsize'] = row[5]
+    tempDict['uploader'] = row[6]
+
+    response.append(tempDict)
+
+    return jsonify(response)
+
+@api.route('/reviews/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def reviews(id):
+    response = []
+    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    results = cursor.fetchall()
+
+    for row in results:
+        tempDict = {}
+        #tempDict['c_id'] = row[0]
+        tempDict['r_id'] = row[1]
+        tempDict['u_id'] = row[2]
+        tempDict['description'] = row[3]
+        tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+        response.append(tempDict)
+
+    return jsonify(response)
 
 if __name__ == '__main__':
     api.run()
