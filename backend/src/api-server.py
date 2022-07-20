@@ -201,9 +201,8 @@ def search():
 
         cursor.execute("SELECT name FROM ingredients")
         response['Ingredients'] = [x[0] for x in cursor.fetchall()]
-
         cursor.execute("SELECT name FROM mealTypes")
-        response['Meal Types'] = [x[0] for x in cursor.fetchall()]
+        response['MealTypes'] = [x[0] for x in cursor.fetchall()]
 
         cursor.execute("SELECT name FROM cuisines")
         response['Cuisine'] = [x[0] for x in cursor.fetchall()]
@@ -377,42 +376,25 @@ def refresh_jwt(response: request):
 def get_recipes():
     response = []
     cursor.execute("SELECT * FROM recipes;")
-    results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
+    recipes = cursor.fetchall() # cursor.fetchal() returns a list of tuples
 
-    for row in results:
-        tempDict = {}
-        tempDict['id'] = row[0]
-        tempDict['name'] = row[1]
-        tempDict['description'] = row[2]
-        tempDict['cuisine'] = row[3]
-        tempDict['mealtype'] = row[4]
-        tempDict['servingsize'] = row[5]
-        tempDict['uploader'] = row[6]
+    result = {
+        "Recipes":[]
+    }
 
-        response.append(tempDict)
-    # Trying multiple recipes
-    return jsonify(response)
+    for recipe in recipes:
+        id,name,description,cuisine,mealtype,servingsize,uploader = recipe
+        result["Recipes"].append({
+            "id":id,
+            "name":name,
+            "description":description,
+            "cuisine":cuisine,
+            "mealtype":mealtype,
+            "servingSize":servingsize,
+            "uploader":uploader
+        })
 
-    # return jsonify([
-    # {
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    # },
-
-    # {
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    # }])
+    return result
 
 @api.route('/view/recipe/<id>', methods=['GET'])
 @cross_origin()
