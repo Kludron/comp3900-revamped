@@ -147,7 +147,7 @@ function Dashboard () {
               console.log(response.data.recipes);
               response.data.recipes.forEach((rec) => {
                 console.log(rec);
-                setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+                setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
               })
             }).catch((error) => {
               alert(error);
@@ -160,11 +160,10 @@ function Dashboard () {
               <div className='recipe_box' key={key}>
                 <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
                 <h3>Name: {recipe.name}</h3>
-                <p>ID: {recipe.id}</p>
+                <p>Cuisine: {recipe.cuisine}</p>
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>
                 <p>Serving Size: {recipe.servingsize}</p>
-                <p>Uploader: {recipe.uploader}</p>
                 <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
               </div>
             )

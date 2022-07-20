@@ -14,6 +14,9 @@ function Recipe () {
 		navigate('/dashboard');
 	}
 
+	const goToComments = (recipeid) => {
+		navigate(`/view/recipe/${recipeid}/comments`);
+	};
 	//obtains the recipeID
 	const recipeid = window.location.pathname.split('/')[3];
 
@@ -47,6 +50,7 @@ function Recipe () {
 						<p className='recipe_mealtype'>Mealtype: {r.mealtype}</p>
 						<p className='recipe_servingsize'>Serving Size: {r.servingsize}</p>
 						<p className='recipe_cuisine'>Cuisine: {r.cuisine}</p>
+						<button onClick={() => goToComments()}>See Comments</button>
 					</div>
 				)
 			})}
