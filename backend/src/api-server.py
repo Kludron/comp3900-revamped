@@ -560,6 +560,21 @@ def find_recipe(r_id):
         }
         response["Ingredients"].append(ingredient_info)
 
+    if not response["Ingredients"]: # Default value
+        response["Ingredients"].append({
+            "Name" : "N/A",
+            "Calories" : 0,
+            "Fat" : 0,
+            "Sodium" : 0,
+            "Carbohydrates" : 0,
+            "Fiber" : 0,
+            "Sugars" : 0,
+            "Protein" : 0,
+            "Quantity" : 0,
+            "Grams" : 0,
+            "Millilitres (mL)" : 0,
+        })
+
     return response, 200
 
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
@@ -739,7 +754,7 @@ def post_recipe():
     try:
         r_id = cursor.fetchone()[0]
     except IndexError:
-        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed 
+        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed
     
     for ingredient in ingredients:
         try:
