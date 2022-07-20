@@ -1,0 +1,14 @@
+.main-content {
+    position: relative;
+    left: 15%;
+    width: 85%;
+}
+
+.bookmarked-recipes {
+    display: flex;
+}
+.bookmarked-recipes > * {
+    background-color: blueviolet;
+    margin: 20px;
+}
+
