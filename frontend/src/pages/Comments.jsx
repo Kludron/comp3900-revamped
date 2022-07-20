@@ -9,8 +9,8 @@ function Comments () {
   return <div>
     <CommentBar/>
     <div>
-      {comments.map((post) => (
-        <Comment commenter={post.commenter} comment={post.comment} rating={post.rating}/>
+      {comments.map((post, key) => (
+        <Comment key={key} commenter={post.commenter} comment={post.comment} rating={post.rating}/>
       ))}
     </div>
   </div>
