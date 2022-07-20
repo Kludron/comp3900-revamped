@@ -445,3 +445,63 @@ def reviews(id):
 
 if __name__ == '__main__':
     api.run()
+
+@api.route('/post_recipe', methods=['POST'])
+@jwt_required() # To ensure that the user is logged in
+@cross_origin()
+def post_recipe():
+    data = json.loads(request.get_data())
+    response = {}
+
+    # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
+    # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
+    # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
+    # Feel free to check out psql-test.py to see what I did.
+    if type(data) is dict:
+        # This section is to verify user identity
+        email = get_jwt_identity()
+        query = "SELECT id FROM users WHERE email=%s"
+        cursor.execute(query, (email,))
+        try:
+            uploader = cursor.fetchone()[0]
+        except IndexError:
+            return {'msg' : 'Invalid Credentials'}, 403
+
+        name = data['name']
+        description = data['description']
+        cuisine = data['cuisine']
+        mealtype = data['mealtype']
+        servingsize = data['servingsize']
+        ingredients = data['ingredients']
+
+        cursor.execute(
+            "INSERT INTO recipes(name, description, cuisine, mealType, servingSize, uploader) VALUES (%s, %s,%s, %s, %s, %s);", 
+            (name, description, cuisine, mealtype, servingsize, uploader)
+        )
+
+        cursor.execute("SELECT id FROM recipes ORDER BY id DESC LIMIT 1")
+        try:
+            r_id = cursor.fetchone()[0]
+        except IndexError:
+            return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed 
+        
+        for ingredient in ingredients:
+            name = ingredient['name']
+            # etc...
+
+            # Grabbing ingredient id and validating that the ingredient exists. ingredient names are all unique
+            cursor.execute("SELECT id FROM ingredients WHERE name = %s", (name, ))
+            try:
+                i_id = cursor.fetchone()[0]
+            except IndexError:
+                return {'msg' : 'Invalid ingredient supplied'}, 400
+
+            cursor.execute(
+                "INSERT INTO recipe_ingredients(r_id, ingredient, ...) VALUES (%s, %s, %s, ...) ", (r_id, i_id, ) # [TODO] Finish this query
+            )
+
+        conn.commit()
+
+        
+    response['msg'] = "Recipe successfully added"
+    return (response, 200)

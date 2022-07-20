@@ -1,10 +1,19 @@
 create table Users (
+<<<<<<< HEAD
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     username        varchar(200) unique not null,
     pass_hash       text not null,
     email           text unique not null,
     points          int default 0,
     primary key     (id)
+=======
+    id            int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    username      varchar(200) unique not null,
+    pass_hash     text not null,
+    email         text unique not null,
+    points        int default 0,
+    primary key   (id)
+>>>>>>> 1a860108f47f7651030e8a7af1e9dc39eae897b0
 );
 
 create table Cuisines (
