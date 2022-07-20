@@ -63,11 +63,12 @@ function Profile () {
   const Save = async () => {
     let headers = {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     };
     var body = {
       allergyList
     };
-    axios.put("http://localhost:5000/profile", body, headers)
+    axios.put("http://localhost:5000/profile", body, {headers:headers})
     .then((response) => {
       console.log(response);
     }).catch((error) => {

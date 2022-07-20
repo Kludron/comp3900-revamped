@@ -131,7 +131,7 @@ def register():
 @api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
 @cross_origin()
-def change():
+def change_password():
     try:
         data = json.loads(request.get_data())
     except json.decoder.JSONDecodeError:
@@ -153,7 +153,7 @@ def change():
 @api.route('/auth/change-username', methods=['PUT'])
 @jwt_required()
 @cross_origin()
-def change():
+def change_username():
     try:
         data = json.loads(request.get_data())
     except json.decoder.JSONDecodeError:
@@ -311,7 +311,7 @@ def search():
                 return ({'msg': "Invalid request"}, 400)
 
 # Need to test this
-@api.route('/profile', methods=['GET', 'POST']) # Route tbc later
+@api.route('/profile', methods=['GET', 'PUT']) # Route tbc later
 @jwt_required() # Apparently this should check whether or not the jwt is valid? # Required in request header: {"Authorization":"Bearer <token>}"
 @cross_origin()
 def profile():
@@ -362,20 +362,12 @@ def profile():
 
         return response, 200
 
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(request.get_data())
         if type(data) is dict:
-            token = data['token']
-            # Verify token
-            isAuthenticated = True # [TODO: Placeholder]
-            if not isAuthenticated:
-                response["msg"] = "User not authenticated"
-                response["isSuccess"] = False
-                return response, 403
-            # Extract what settings were changed and update the SQL database to reflect those changes
-            response["isSuccess"] = False # [TODO: Placeholder]. False because no changes were made
-            return response
+            email = get_jwt_identity()
+            
         response["isSuccess"] = False
         response["msg"] = "The data provided is not valid"
     return response
