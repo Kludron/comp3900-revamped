@@ -113,3 +113,6 @@ COPY user_upvotes FROM '/var/lib/postgresql/comp3900/backend/data/user_upvotes.c
 COPY user_bookmarks FROM '/var/lib/postgresql/comp3900/backend/data/user_bookmarks.csv' DELIMITER ',' CSV HEADER;
 COPY user_recentlyViewed FROM '/var/lib/postgresql/comp3900/backend/data/user_recentlyviewed.csv' DELIMITER ',' CSV HEADER;
 COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELIMITER ',' CSV HEADER;
+COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DELIMITER ',' CSV HEADER;
+COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
+COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
