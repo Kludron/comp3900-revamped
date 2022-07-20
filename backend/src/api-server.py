@@ -453,10 +453,6 @@ def post_recipe():
     data = json.loads(request.get_data())
     response = {}
 
-    # Just a heads up, to save you some research time, this is what I did in my testing to add a user SQL style:
-    # cursor.execute("INSERT INTO users(id, username, pass_hash, email) VALUES (%s, %s, %s, %s);", (id, username, sha256(str(password+SALT).encode('utf-8')).hexdigest(), email))
-    # Also, when you insert into the database, be sure to add conn.commit() to commit the changes to the database, otherwise it won't save.
-    # Feel free to check out psql-test.py to see what I did.
     if type(data) is dict:
         # This section is to verify user identity
         email = get_jwt_identity()
@@ -501,7 +497,6 @@ def post_recipe():
             )
 
         conn.commit()
-
         
     response['msg'] = "Recipe successfully added"
     return (response, 200)
