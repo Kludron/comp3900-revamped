@@ -1,5 +1,5 @@
 import React from 'react';
-import ChangePasswordForm from '../components/ChangePasswordForm'; // [TODO] fix this
+import ChangeUsernameForm from '../components/ChangeUsernameForm';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
