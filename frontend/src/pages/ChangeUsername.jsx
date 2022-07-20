@@ -1,5 +1,5 @@
 import React from 'react';
-import ChangePasswordForm from '../components/ChangePasswordForm'; // [TODO] fix this
+import ChangeUsernameForm from '../components/ChangeUsernameForm';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,17 +16,17 @@ function ChangeUsername () {
 			<h1>Change Username</h1>
 			<button onClick={previous}>Go Back</button>
 		</div>
-		<ChangePasswordForm submit={async (newusername) => { //[TODO fix this]
+		<ChangeUsernameForm submit={async (newusername) => {
 			console.log(newusername)
             let authToken = localStorage.getItem('token');
             let headers = {
           		'Content-Type': 'application/json',
-				'Authorisation': `Bearer ${authToken}`
+				'Authorization': `Bearer ${authToken}`
       };
       var body = {
 				newusername
       };
-      axios.put('http://localhost:5000/auth/change-username', body, headers)
+      axios.put('http://localhost:5000/auth/change-username', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
 			}).catch((error) => {
