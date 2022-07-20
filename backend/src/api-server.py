@@ -288,8 +288,7 @@ def search():
 
 # Need to test this
 @api.route('/profile', methods=['GET', 'POST']) # Route tbc later
-@jwt_required() # Apparently this should check whether or not the jwt is valid?
-# Required in request header: {"Authorization":"Bearer <token>}"
+@jwt_required() # Apparently this should check whether or not the jwt is valid? # Required in request header: {"Authorization":"Bearer <token>}"
 @cross_origin()
 def profile():
     response = {}

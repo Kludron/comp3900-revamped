@@ -22,11 +22,11 @@ function Profile () {
 	};
 
   const loadProfile = async () => {
-    let headers = {
-      "Authorization": `Bearer ${token}`,
-    };
-    console.log(headers);
-    const response = await axios.get('http://localhost:5000/profile', headers);
+    var headers = {
+      "Authorization": `Bearer ${token}`
+    }
+      console.log(headers);
+    const response = await axios.get('http://localhost:5000/profile', {headers:headers});
     console.log(response);
   }
 
