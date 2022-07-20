@@ -5,24 +5,28 @@ body {
 
 }
 
-.review {
+.comment {
     padding: 2%;
     display: flex;
     border-bottom-style: double;
 }
 
-.review-user {
+.comment-user {
     display: flex;
     width: 15%;
 }
 
-.review-user-icon {
+.comment-user-icon {
     width: 25px;
     height: 25px;
     margin-right: 5%;
 }
 
-.review-content {
+.comment-content {
     display: flex;
     flex-direction: column;
+}
+
+.CommentBar {
+    width: 50%;
 }

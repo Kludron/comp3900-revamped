@@ -7,10 +7,10 @@ import { Rating, TextField } from "@mui/material";
 
 function Comments () {
   return <div>
-    <ReviewBar/>
+    <CommentBar/>
     <div>
       {comments.map((post) => (
-        <Review commenter={post.commenter} comment={post.comment} rating={post.rating}/>
+        <Comment commenter={post.commenter} comment={post.comment} rating={post.rating}/>
       ))}
     </div>
   </div>
@@ -18,20 +18,20 @@ function Comments () {
 
 export default Comments;
 
-function Review ({commenter, comment, rating}) {
-  return <div className="review">
-    <div className="review-user">
-      <Avatar className="review-user-icon"/>
+function Comment ({commenter, comment, rating}) {
+  return <div className="comment">
+    <div className="comment-user">
+      <Avatar className="comment-user-icon"/>
       {commenter}
     </div>
-    <div className="review-content">
+    <div className="comment-content">
       <Rating value={rating} readOnly/>
       {comment} 
     </div>
   </div>
 }
 
-function ReviewBar () {
+function CommentBar () {
   const [comment, setComment] = React.useState('');
   const [rating, setRating] = React.useState(0);
 
@@ -55,7 +55,9 @@ function ReviewBar () {
 
   return <div>
     <TextField
+      className="CommentBar"
       variant="filled"
+      label="Comment here"
       onChange={e => setComment(e.target.value)}
     />
     <Rating

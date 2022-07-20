@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from './NavBar';
 import './Profile.css';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import AllIngredients from "../ingredients/allingredients.json";
@@ -23,8 +24,9 @@ function Profile () {
 	};
 
   const email = localStorage.getItem('email')
-  const password = localStorage.getItem('password')
-
+  const username = localStorage.getItem('username')
+  const points = localStorage.getItem('points')
+  
   const [query, setQuery] = useState('');
   const [allergyList, setAllergyList] = useState([]);
   const appendList = (allergy) => {
@@ -32,12 +34,24 @@ function Profile () {
     console.log(allergyList)
   };
 
-  const reset = () => {
+  const Reset = () => {
     setAllergyList([]);
   }
 
-  const save = () => {
-    return;
+  const Save = async () => {
+    let headers = {
+        "Content-Type": "application/json",
+    };
+    var body = {
+      allergyList
+    };
+    axios.put("http://localhost:5000/profile", body, headers)
+    .then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+      alert(error)
+    });
   }
 
   return <>
@@ -52,12 +66,14 @@ function Profile () {
             <div>Email Address:</div>
             <div>Username:</div>
             <div>Password:</div>
+            <div>My points</div>
           </div>
 
           <div className='data'>
             <div>{email}</div>
-            <div>username</div>
-            <div>{password}</div>
+            <div>{username}</div>
+            <div>********</div>
+            <div>{points}</div>
           </div>
           
           <div className='change-button'>
@@ -105,8 +121,8 @@ function Profile () {
                 )
                 })}
             </div>
-            <button onClick={reset}>reset</button>
-            <button onClick={save}>save</button>
+            <button onClick={Reset}>Reset</button>
+            <button onClick={Save}>Save</button>
           </div>
         </div>
 

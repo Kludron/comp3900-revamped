@@ -66,9 +66,23 @@ def login():
         if not isValid:
             response["msg"] = "Invalid Email / Password"
             return (response, 401)
-        
+        ######### Changed by Bill ##########
+        query = """
+        SELECT u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+        try:
+            username, email, points = cursor.fetchone()
+        except ValueError:
+            return {'msg' : 'Authentication Error'}, 403
+        ####################################
         token = create_access_token(identity=email)
         response["token"] = token # [TODO: Do we need to send more data back on a successful login?]
+        ######### Changed by Bill ##########
+        response["username"] = username
+        response["email"] = email
+        response["points"] = points
+        ####################################
         return (response, 200) # Automatically responds with 200 code
     response["msg"] = "Invalid Email / Password"
     return (response, 401)

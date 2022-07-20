@@ -34,7 +34,7 @@
 .change-button {
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: center;
     margin-left: 70px;
 }
 
@@ -75,5 +75,6 @@
     height: 250px;
     width: 400px;
     border-style: ridge;
+    display: flex;
 }
 
