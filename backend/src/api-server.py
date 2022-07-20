@@ -488,7 +488,7 @@ def IntakeOverview():
     if(u_id == null):
         return ("msg: user does not exist", 401)
 
-    #Combine with ingredients table. Limit to last 50 meals
+    #to do: Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
 
     return (response, 200)
@@ -505,7 +505,7 @@ def recommend():
 
     response = []
 
-    #Combine with ingredients table. Limit to last 50 meals
+    #to do: Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
     grain, vegetables, fruit, dairy, meat, fatty = getIntakeOverview()
 
@@ -541,8 +541,8 @@ def setGoal():
     if(u_id == null):
         return ("msg: user does not exist", 401)
 
-    #To do: need to add caloric values to ingredients
-    cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (goal, u_id))
+    #To do: need to add goal column
+    cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
 
     return (response, 200)
 
