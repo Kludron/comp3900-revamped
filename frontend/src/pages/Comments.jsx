@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import comments from '../comments/comments.json'
 import './Comments.css'
 import Avatar from '@mui/material/Avatar';
@@ -6,6 +6,23 @@ import axios from 'axios';
 import { Rating, TextField } from "@mui/material";
 
 function Comments () {
+
+  const [commets, setComments] = useState({});
+  
+  const loadComments = async () => {
+    var headers = {
+      "Authorization": `Bearer ${token}`
+    }
+    const response = await axios.get('http://localhost:5000/profile', {headers:headers});
+    console.log(response.data.Email);
+      setComments({
+        commenter: response.data.Email, 
+        comment: response.data.description, 
+        rating: response.data.rating, 
+      });
+      console.log(userData);
+  }
+
   return <div>
     <CommentBar/>
     <div>
