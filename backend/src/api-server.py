@@ -597,15 +597,15 @@ def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
-    try:
-        cursor.execute("""
-            SELECT u.username, c.description, 3
-            FROM users u, comments c
-            WHERE c.r_id = %s;
-        """, (id,))
 
-    except Exception:
+    if not str(id).isdigit:
         return {"msg" : "Recipe not found"}, 404
+        
+    cursor.execute("""
+        SELECT u.username, c.description, 3
+        FROM users u, comments c
+        WHERE c.r_id = %s;
+    """, (id,))
     response = {
         "Comments":list()
     }
