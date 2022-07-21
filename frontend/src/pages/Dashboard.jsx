@@ -133,11 +133,7 @@ function Dashboard () {
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           console.log('submitted');
           var body = {
-<<<<<<< HEAD
             "search": searchQuery,
-=======
-            "search": "sal",
->>>>>>> 90e2b0a16e527be44f15b28fff6263a6b7317df2
             "mealTypes": mealtypeName,
             "cuisines": cuisineName,
             "ingredients": ingredientsName
