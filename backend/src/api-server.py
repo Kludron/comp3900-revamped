@@ -598,9 +598,9 @@ def reviews(id):
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
 
-    if not str(id).isdigit:
+    if not str(id).isdigit():
         return {"msg" : "Recipe not found"}, 404
-        
+
     cursor.execute("""
         SELECT u.username, c.description, 3
         FROM users u, comments c
