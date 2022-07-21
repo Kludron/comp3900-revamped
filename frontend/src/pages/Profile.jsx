@@ -45,9 +45,6 @@ function Profile () {
   React.useEffect(() => {
     loadProfile();
   }, []);
-  const email = localStorage.getItem('email')
-  const username = localStorage.getItem('username')
-  const points = localStorage.getItem('points')
   
   const [query, setQuery] = useState('');
   const [allergyList, setAllergyList] = useState([]);
@@ -90,21 +87,7 @@ function Profile () {
             <p>Points: {userData.points}</p>
           </div>
         </div>
-        <div className="info">
-          <div className='attribute'>
-            <div>Email Address:</div>
-            <div>Username:</div>
-            <div>Password:</div>
-            <div>My points</div>
-          </div>
-
-          <div className='data'>
-            <div>{email}</div>
-            <div>{username}</div>
-            <div>********</div>
-            <div>{points}</div>
-          </div>
-          
+        <div className="info"> 
           <div className='change-button'>
             <button onClick={changeUsername}>Change Username</button>
             <button onClick={changePassword}>Change Password</button>

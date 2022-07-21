@@ -19,6 +19,7 @@ import ChangePassword from './pages/ChangePassword';
 import ChangeUsername from './pages/ChangeUsername';
 import Comments from './pages/Comments';
 import Recipe from './pages/Recipe';
+import CreateRecipe from './pages/CreateRecipe';
 
 function App() {
   return (
@@ -36,7 +37,9 @@ function App() {
           <Route path='/setting' element={<Setting />} />
           <Route path='forgot-password' element={<ForgotPassword />} />
           <Route path='/change-password' element={<ChangePassword />} />
+          <Route path='/change-username' element={<ChangeUsername />} />
           <Route path='/view/recipe/:recipeid' element={<Recipe />} />
+          <Route path='/create-recipe' element={<CreateRecipe />} />
           <Route path='/view/recipe/:recipeid/comments' element={<Comments />} />
         </Routes>
       </BrowserRouter>
