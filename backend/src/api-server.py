@@ -242,10 +242,10 @@ def search():
         if isinstance(data, dict):
             try:
                 # Pull data
-                search_query = data['search']
-                ingredients = data['ingredients']
-                mealTypes = data['mealTypes']
-                cuisines = data['cuisines']
+                search_query : str = data['search']
+                ingredients : list = data['ingredients']
+                mealTypes : list = data['mealTypes']
+                cuisines : list = data['cuisines']
             except KeyError as e:
                 print(e)
                 return {'msg' : 'Invalid search parameters'}, 400    
@@ -276,7 +276,7 @@ def search():
 
                 if search_query:
                     constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
-                    arguments.append(search_query)
+                    arguments.append(search_query.lower())
                 if ingredients:
                     constraints.append(f"""EXISTS(
                                     SELECT 1
@@ -299,6 +299,7 @@ def search():
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 
+                print(query)
                 cursor.execute(query, tuple(arguments))
 
                 __add_to_results(cursor.fetchall())
@@ -343,10 +344,7 @@ def profile():
 
         # Grab Allergens
         cursor.execute("""
-            SELECT a.name
-            FROM allergens a, users u
-                JOIN user_allergens ua ON ua.a_id = a.id
-            WHERE u.id = %s;
+            SELECT a.name FROM allergens a;
         """, (u_id,))
         allergens = cursor.fetchall()
 
@@ -600,12 +598,15 @@ def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
+
+    if not str(id).isdigit():
+        return {"msg" : "Recipe not found"}, 404
+
     cursor.execute("""
         SELECT u.username, c.description, 3
         FROM users u, comments c
         WHERE c.r_id = %s;
     """, (id,))
-
     response = {
         "Comments":list()
     }
@@ -618,7 +619,7 @@ def reviews(id):
             "Content":description,
             "Rating":rating
         })
-
+ 
     return response, 200
 
     # response = []
