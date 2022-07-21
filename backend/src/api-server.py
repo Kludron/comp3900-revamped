@@ -339,13 +339,23 @@ def profile():
                 WHERE u.id = %s
             );
         """, (u_id,))
-
         bookmarks = cursor.fetchall()
+
+        # Grab Allergens
+        cursor.execute("""
+            SELECT a.name
+            FROM allergens a, users u
+                JOIN user_allergens ua ON ua.a_id = a.id
+            WHERE u.id = %s;
+        """, (u_id,))
+        allergens = cursor.fetchall()
+
         response = {
             'Username' : username,
             'Email' : email,
             'Points' : points,
-            'Bookmarks' : []
+            'Bookmarks' : [],
+            'Allergens' : []
         }
 
         for recipe in bookmarks:
@@ -357,6 +367,13 @@ def profile():
                 "Meal Type":mealType,
                 "Serving Size":sS
             })
+        
+        for allergen in allergens:
+            try:
+                response["Allergens"].append(allergen[0])
+            except KeyError:
+                # No allergies found? This might not even be run in that case.
+                pass
 
         return response, 200
 
@@ -560,6 +577,21 @@ def find_recipe(r_id):
         }
         response["Ingredients"].append(ingredient_info)
 
+    if not response["Ingredients"]: # Default value
+        response["Ingredients"].append({
+            "Name" : "N/A",
+            "Calories" : 0,
+            "Fat" : 0,
+            "Sodium" : 0,
+            "Carbohydrates" : 0,
+            "Fiber" : 0,
+            "Sugars" : 0,
+            "Protein" : 0,
+            "Quantity" : 0,
+            "Grams" : 0,
+            "Millilitres (mL)" : 0,
+        })
+
     return response, 200
 
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
@@ -590,7 +622,7 @@ def eaten(id):
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
@@ -613,7 +645,7 @@ def IntakeOverview():
     
     r_id = data["r_id"]
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
     #to do: Combine with ingredients table. Limit to last 50 meals
@@ -739,7 +771,7 @@ def post_recipe():
     try:
         r_id = cursor.fetchone()[0]
     except IndexError:
-        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed 
+        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed
     
     for ingredient in ingredients:
         try:
