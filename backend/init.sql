@@ -101,13 +101,20 @@ create table user_allergens (
     u_id            int references Users(id),
     a_id            int references Allergens(id),
     primary key     (u_id, a_id)
-)
+);
 
 create table meal_history (
-    u_id          int references Users(id) not null,
-    r_id          int references Recipes(id) not null,
-    date          DATE not null,
-    primary key   (u_id)
+    u_id            int references Users(id) not null,
+    r_id            int references Recipes(id) not null,
+    date            DATE not null,
+    primary key     (u_id)
+);
+
+create table recipe_rating (
+    u_id            int references Users(id) not null,
+    r_id            int references Recipes(id) not null,
+    rating          int not null default 0, -- Change this to be inbetween 1-5
+    primary key     (u_id, r_id)
 );
 
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
@@ -131,3 +138,4 @@ COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allerg
 COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
 COPY meal_history FROM '/var/lib/postgresql/comp3900/backend/data/meal_history.csv' DELIMITER ',' CSV HEADER;
 COPY user_allergens FROM '/var/lib/postgresql/comp3900/backend/data/user_allergens.csv' DELIMITER ',' CSV HEADER;
+COPY recipe_rating FROM '/var/lib/postgresql/comp3900/backend/data/recipe_rating.csv' DELIMITER ',' CSV HEADER;

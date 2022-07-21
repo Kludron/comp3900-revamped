@@ -597,21 +597,45 @@ def find_recipe(r_id):
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def reviews(id):
-    response = []
-    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
-    results = cursor.fetchall()
 
-    for row in results:
-        tempDict = {}
-        #tempDict['c_id'] = row[0]
-        tempDict['r_id'] = row[1]
-        tempDict['u_id'] = row[2]
-        tempDict['description'] = row[3]
-        tempDict['parent'] = row[4] #Parent comments will have null in this field
+    # [TODO]: Replace the default '3' with a grab from the rating table
+    # Consider restructuring this section...
+    cursor.execute("""
+        SELECT u.username, c.description, 3
+        FROM users u, comments c
+        WHERE c.r_id = %s;
+    """, (id,))
 
-        response.append(tempDict)
+    response = {
+        "Comments":list()
+    }
 
-    return jsonify(response)
+    comments = cursor.fetchall()
+    for comment in comments:
+        username, description, rating = comment
+        response["Comments"].append({
+            "Username":username,
+            "Content":description,
+            "Rating":rating
+        })
+
+    return response, 200
+
+    # response = []
+    # cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    # results = cursor.fetchall()
+
+    # for row in results:
+    #     tempDict = {}
+    #     #tempDict['c_id'] = row[0]
+    #     tempDict['r_id'] = row[1]
+    #     tempDict['u_id'] = row[2]
+    #     tempDict['description'] = row[3]
+    #     tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+    #     response.append(tempDict)
+
+    # return jsonify(response)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
