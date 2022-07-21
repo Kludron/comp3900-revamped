@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
 const ITEM_HEIGHT = 48;
@@ -55,9 +56,10 @@ export default function MultipleSelect({ submit }) {
   const [cuisineList, setCuisineList] = React.useState([]);
   const [mealtypeList, setMealtypeList] =  React.useState([]);
   const [ingredientsList, setIngredientsList] = React.useState([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const onSubmit = () => {
-    submit(mealtypeName, cuisineName, ingredientsName);
+    submit(mealtypeName, cuisineName, ingredientsName, searchQuery);
   }
 
   const handleChangeMealtype = (event) => {
@@ -104,6 +106,12 @@ export default function MultipleSelect({ submit }) {
 
   return (
     <div>
+      <TextField
+			margin="normal"
+			label="Search for Recipes.."
+			type="text"
+			onChange={e => setSearchQuery(e.target.value)}
+		/>
       <FormControl sx={{ m: 1, width: 200}}>
         <InputLabel id="Mealtype_inputlabel">Select Mealtype(s)...</InputLabel>
         <Select

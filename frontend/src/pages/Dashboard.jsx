@@ -129,11 +129,11 @@ function Dashboard () {
       
       {/* right recipes box */}
       <div className="recipeBox">
-        <RecipeBar/>
-        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
+
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           console.log('submitted');
           var body = {
-            "search": "",
+            "search": searchQuery,
             "mealTypes": mealtypeName,
             "cuisines": cuisineName,
             "ingredients": ingredientsName
