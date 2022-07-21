@@ -1,7 +1,5 @@
-id,username,pass_hash,email,points
 10,Jolateon,e944cfda543d2a7666744ce20ee7ca23bcb2a65448902ff5b4b272225a8d4cf7,edmond.lung@hotmail.com,0
 1,aaaaaa,5bf456840be0fc80450c264ab1b522617d764b3dff04d938ec08e8d80116f218,tianwei_mo@outlook.com,0
-1,Tianwei Mo,5bf456840be0fc80450c264ab1b522617d764b3dff04d938ec08e8d80116f218,tianwei_mo@outlook.com,0
 2,Bill,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,2233925323@qq.com,0
 3,sample,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0
 5,example,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,example@sample.com,0
