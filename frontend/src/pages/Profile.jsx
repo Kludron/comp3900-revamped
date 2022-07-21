@@ -128,8 +128,9 @@ function Profile () {
             <h5>Added Allergies</h5>
             <div className='allergies-box'>
               {allergyList.map((post, key) => {
+                console.log(post["post"]);
                 return (
-                  <div key={key}>{key}</div>
+                  <div className='allergies-box-element'>{post["post"].name}</div>
                 )
                 })}
             </div>
