@@ -242,10 +242,10 @@ def search():
         if isinstance(data, dict):
             try:
                 # Pull data
-                search_query = data['search']
-                ingredients = data['ingredients']
-                mealTypes = data['mealTypes']
-                cuisines = data['cuisines']
+                search_query : str = data['search']
+                ingredients : list = data['ingredients']
+                mealTypes : list = data['mealTypes']
+                cuisines : list = data['cuisines']
             except KeyError as e:
                 print(e)
                 return {'msg' : 'Invalid search parameters'}, 400    
@@ -276,7 +276,7 @@ def search():
 
                 if search_query:
                     constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
-                    arguments.append(search_query)
+                    arguments.append(search_query.lower())
                 if ingredients:
                     constraints.append(f"""EXISTS(
                                     SELECT 1
