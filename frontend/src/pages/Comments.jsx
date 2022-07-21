@@ -8,7 +8,7 @@ import { Rating, TextField } from "@mui/material";
 function Comments () {
 
   const [commets, setComments] = useState({});
-  
+  const token = localStorage.getItem("token")
   const loadComments = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
@@ -20,7 +20,7 @@ function Comments () {
         comment: response.data.description, 
         rating: response.data.rating, 
       });
-      console.log(userData);
+      console.log(comments);
   }
 
   return <div>
