@@ -343,10 +343,7 @@ def profile():
 
         # Grab Allergens
         cursor.execute("""
-            SELECT a.name
-            FROM allergens a, users u
-                JOIN user_allergens ua ON ua.a_id = a.id
-            WHERE u.id = %s;
+            SELECT a.name FROM allergens a;
         """, (u_id,))
         allergens = cursor.fetchall()
 
@@ -618,7 +615,7 @@ def reviews(id):
             "Content":description,
             "Rating":rating
         })
-
+ 
     return response, 200
 
     # response = []
