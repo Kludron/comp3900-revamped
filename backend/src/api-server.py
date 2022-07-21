@@ -599,7 +599,7 @@ def find_recipe(r_id):
 def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
-    # Consider restructuring this section...
+    # Consider restructuring this section
     cursor.execute("""
         SELECT u.username, c.description, 3
         FROM users u, comments c
