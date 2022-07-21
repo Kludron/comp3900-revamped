@@ -7,13 +7,14 @@ import { Rating, TextField } from "@mui/material";
 
 function Comments () {
 
+  const recipeid = window.location.pathname.split('/')[3];
   const [commets, setComments] = useState({});
   const token = localStorage.getItem("token")
   const loadComments = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
     }
-    const response = await axios.get('http://localhost:5000/profile', {headers:headers});
+    const response = await axios.get(`http://localhost:5000/reviews/recipeid=${recipeid}`, {headers:headers});
     console.log(response.data.Email);
       setComments({
         commenter: response.data.Email, 
