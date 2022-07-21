@@ -97,6 +97,12 @@ create table allergen_ingredients (
     primary key     (i_id, a_id)
 );
 
+create table user_allergens (
+    u_id            int references Users(id),
+    a_id            int references Allergens(id),
+    primary key     (u_id, a_id)
+)
+
 create table meal_history (
     u_id          int references Users(id) not null,
     r_id          int references Recipes(id) not null,
@@ -124,3 +130,4 @@ COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DE
 COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
 COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
 COPY meal_history FROM '/var/lib/postgresql/comp3900/backend/data/meal_history.csv' DELIMITER ',' CSV HEADER;
+COPY user_allergens FROM '/var/lib/postgresql/comp3900/backend/data/user_allergens.csv' DELIMITER ',' CSV HEADER;

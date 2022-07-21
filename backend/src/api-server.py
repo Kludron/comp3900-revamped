@@ -339,13 +339,23 @@ def profile():
                 WHERE u.id = %s
             );
         """, (u_id,))
-
         bookmarks = cursor.fetchall()
+
+        # Grab Allergens
+        cursor.execute("""
+            SELECT a.name
+            FROM allergens a, users u
+                JOIN user_allergens ua ON ua.a_id = a.id
+            WHERE u.id = %s;
+        """, (u_id,))
+        allergens = cursor.fetchall()
+
         response = {
             'Username' : username,
             'Email' : email,
             'Points' : points,
-            'Bookmarks' : []
+            'Bookmarks' : [],
+            'Allergens' : []
         }
 
         for recipe in bookmarks:
@@ -357,6 +367,13 @@ def profile():
                 "Meal Type":mealType,
                 "Serving Size":sS
             })
+        
+        for allergen in allergens:
+            try:
+                response["Allergens"].append(allergen[0])
+            except KeyError:
+                # No allergies found? This might not even be run in that case.
+                pass
 
         return response, 200
 
@@ -605,7 +622,7 @@ def eaten(id):
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
@@ -628,7 +645,7 @@ def IntakeOverview():
     
     r_id = data["r_id"]
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
     #to do: Combine with ingredients table. Limit to last 50 meals
