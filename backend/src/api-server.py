@@ -299,6 +299,7 @@ def search():
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 
+                print(query)
                 cursor.execute(query, tuple(arguments))
 
                 __add_to_results(cursor.fetchall())
