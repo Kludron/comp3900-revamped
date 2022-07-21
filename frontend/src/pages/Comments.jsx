@@ -23,6 +23,10 @@ function Comments () {
       console.log(comments);
   }
 
+  React.useEffect(() => {
+    loadComments();
+  })
+
   return <div>
     <CommentBar/>
     <div>
