@@ -673,7 +673,7 @@ def IntakeOverview():
     if not u_id:
         return ("msg: user does not exist", 401)
 
-    #to do: Combine with ingredients table. Limit to last 50 meals
+    #Note: Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
 
     return (response, 200)
