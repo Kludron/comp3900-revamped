@@ -97,6 +97,13 @@ create table allergen_ingredients (
     primary key     (i_id, a_id)
 );
 
+create table meal_history (
+    u_id          int references Users(id) not null,
+    r_id          int references Recipes(id) not null,
+    date          DATE not null,
+    primary key   (u_id)
+);
+
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO comp3900_user;
@@ -116,3 +123,4 @@ COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELI
 COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DELIMITER ',' CSV HEADER;
 COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
 COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
+COPY meal_history FROM '/var/lib/postgresql/comp3900/backend/data/meal_history.csv' DELIMITER ',' CSV HEADER;
