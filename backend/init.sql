@@ -8,13 +8,21 @@ create table Users (
 );
 
 create table Cuisines (
+<<<<<<< HEAD
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+=======
+    id              int unique not null,
+>>>>>>> 3ddb9743a9d7adb5d9734f2855cedb751ae79c1b
     name            text unique not null,
     primary key     (id)
 );
 
 create table MealTypes (
+<<<<<<< HEAD
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+=======
+    id              int unique not null,
+>>>>>>> 3ddb9743a9d7adb5d9734f2855cedb751ae79c1b
     name            text unique not null,
     primary key     (id)
 );
@@ -22,6 +30,7 @@ create table MealTypes (
 create table Ingredients (
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
+<<<<<<< HEAD
     calories        float,  -- Per 100g
     fat             float,  -- Per 100g
     sodium          float,  -- Per 100g
@@ -29,6 +38,19 @@ create table Ingredients (
     fiber           float,  -- Per 100g
     sugars          float,  -- Per 100g
     protein         float,  -- Per 100g
+=======
+    energy          float default 0.0, -- (kJ)
+    protein         float default 0.0, -- (g)
+    fat             float default 0.0, -- (g)
+    fibre           float default 0.0, -- (g)
+    sugars          float default 0.0, -- (g)
+    carbohydrates   float default 0.0, -- (g)
+    calcium         float default 0.0, -- (mg)
+    iron            float default 0.0, -- (mg)
+    magnesium       float default 0.0, -- (mg)
+    manganese       float default 0.0, -- (mg)
+    phosphorus      float default 0.0, -- (mg)
+>>>>>>> 3ddb9743a9d7adb5d9734f2855cedb751ae79c1b
     primary key     (id)
 );
 
@@ -41,12 +63,15 @@ create table Recipes (
     servingSize     int not null,
     uploader        int references Users(id) default 0,
     primary key     (id)
+<<<<<<< HEAD
 );
 
 create table Allergens (
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            varchar(200) not null,
     primary key     (id)
+=======
+>>>>>>> 3ddb9743a9d7adb5d9734f2855cedb751ae79c1b
 );
 
 create table recipe_ingredients (
@@ -83,6 +108,7 @@ create table Comments (
     description     text not null,
     parent          int references Comments(c_id),
     primary key     (c_id)
+<<<<<<< HEAD
 );
 
 create table recipe_instructions (
@@ -115,6 +141,8 @@ create table recipe_rating (
     r_id            int references Recipes(id) not null,
     rating          int not null default 0, -- Change this to be inbetween 1-5
     primary key     (u_id, r_id)
+=======
+>>>>>>> 3ddb9743a9d7adb5d9734f2855cedb751ae79c1b
 );
 
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
