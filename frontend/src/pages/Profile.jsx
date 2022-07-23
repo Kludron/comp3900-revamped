@@ -45,9 +45,6 @@ function Profile () {
   React.useEffect(() => {
     loadProfile();
   }, []);
-  const email = localStorage.getItem('email')
-  const username = localStorage.getItem('username')
-  const points = localStorage.getItem('points')
   
   const [query, setQuery] = useState('');
   const [allergyList, setAllergyList] = useState([]);
@@ -131,8 +128,9 @@ function Profile () {
             <h5>Added Allergies</h5>
             <div className='allergies-box'>
               {allergyList.map((post, key) => {
+                console.log(post["post"]);
                 return (
-                  <div key={key}>{key}</div>
+                  <div className='allergies-box-element'>{post["post"].name}</div>
                 )
                 })}
             </div>

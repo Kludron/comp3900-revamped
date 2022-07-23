@@ -3,18 +3,15 @@ import psycopg2
 import sys
 from datetime import datetime, timedelta, timezone
 import json
-from urllib import response
 from flask import (
     Flask,
     request,
-    jsonify,
-    Response
+    jsonify
 )
 from flask_jwt_extended import (
     create_access_token,
     get_jwt,
     get_jwt_identity,
-    unset_jwt_cookies,
     jwt_required,
     JWTManager
 )
@@ -245,10 +242,10 @@ def search():
         if isinstance(data, dict):
             try:
                 # Pull data
-                search_query = data['search']
-                ingredients = data['ingredients']
-                mealTypes = data['mealTypes']
-                cuisines = data['cuisines']
+                search_query : str = data['search']
+                ingredients : list = data['ingredients']
+                mealTypes : list = data['mealTypes']
+                cuisines : list = data['cuisines']
             except KeyError as e:
                 print(e)
                 return {'msg' : 'Invalid search parameters'}, 400    
@@ -279,7 +276,7 @@ def search():
 
                 if search_query:
                     constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
-                    arguments.append(search_query)
+                    arguments.append(search_query.lower())
                 if ingredients:
                     constraints.append(f"""EXISTS(
                                     SELECT 1
@@ -302,6 +299,7 @@ def search():
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 
+                print(query)
                 cursor.execute(query, tuple(arguments))
 
                 __add_to_results(cursor.fetchall())
@@ -342,13 +340,20 @@ def profile():
                 WHERE u.id = %s
             );
         """, (u_id,))
-
         bookmarks = cursor.fetchall()
+
+        # Grab Allergens
+        cursor.execute("""
+            SELECT a.name FROM allergens a;
+        """, (u_id,))
+        allergens = cursor.fetchall()
+
         response = {
             'Username' : username,
             'Email' : email,
             'Points' : points,
-            'Bookmarks' : []
+            'Bookmarks' : [],
+            'Allergens' : []
         }
 
         for recipe in bookmarks:
@@ -360,6 +365,13 @@ def profile():
                 "Meal Type":mealType,
                 "Serving Size":sS
             })
+        
+        for allergen in allergens:
+            try:
+                response["Allergens"].append(allergen[0])
+            except KeyError:
+                # No allergies found? This might not even be run in that case.
+                pass
 
         return response, 200
 
@@ -396,6 +408,78 @@ def refresh_jwt(response: request):
         # Invalid JWT Token
         return response
 
+def detailed_search():
+    pass
+
+@api.route('/my-recipes/recipeid=<r_id>', methods=['POST', 'GET'])
+@jwt_required()
+@cross_origin()
+def edit_recipe(r_id):
+    if request.method == 'POST':
+        pass
+    elif request.method == 'GET':
+        # Get the users id
+        email = get_jwt_identity()
+        cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+        try:
+            u_id = cursor.fetchone()[0]
+        except IndexError or ValueError:
+            return {'msg' : 'Authentication Failed'}, 403
+        # Get all recipes from that user
+        query = """
+        SELECT r.name, r.description, c.name, m.name, r.servingSize
+        FROM recipes r
+            JOIN cuisines c ON c.id=r.cuisine
+            JOIN mealtypes m ON m.id = r.mealType
+        WHERE r.uploader = %s AND r.id = %s;
+        """
+        cursor.execute(query, (u_id,r_id))
+        
+        try:
+            recipe = cursor.fetchone()[0]
+        except ValueError or IndexError:
+            return {'msg' : 'This user does not own this recipe'}, 403
+            
+        r_name, r_description, c_name, m_name, r_sS = recipe
+       
+        cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
+        ingredients = cursor.fetchall()
+
+        response = {
+            "Name" : r_name,
+            "Description" : r_description,
+            "Cuisine" : c_name,
+            "Meal Type" : m_name,
+            "Serving Size" : r_sS,
+            "Ingredients" : list()
+        }
+
+        for ingredient in ingredients:
+            i_id, quantity, grams, mL = ingredient
+
+            cursor.execute("SELECT name,calories,fat,sodium,carbohydrates,fiber,sugars,protein FROM ingredients WHERE id=%s", (i_id,))
+            try:
+                name,calories,fat,sodium,carbohydrates,fiber,sugars,protein = cursor.cursor.fetchone()[0]
+            except ValueError:
+                # This ingredient doesn't exist
+                pass
+            
+            ingredient_info = {
+                "Name" : name,
+                "Calories" : calories,
+                "Fat" : fat,
+                "Sodium" : sodium,
+                "Carbohydrates" : carbohydrates,
+                "Fiber" : fiber,
+                "Sugars" : sugars,
+                "Protein" : protein,
+                "Quantity" : quantity,
+                "Grams" : grams,
+                "Millilitres (mL)" : mL,
+            }
+            response["Ingredients"].append(ingredient_info)
+        return response, 200
+
 @api.route('/get_recipe', methods=['GET'])
 @cross_origin()
 def get_recipes():
@@ -421,44 +505,138 @@ def get_recipes():
 
     return result
 
-@api.route('/view/recipe/<id>', methods=['GET'])
+@api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
-def find_recipe(id):
-    response = []
-    cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
-    row = cursor.fetchone()
+def find_recipe(r_id):
+    # response = []
+    # cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
+    # row = cursor.fetchone()
 
-    tempDict = {}
-    tempDict['id'] = row[0]
-    tempDict['name'] = row[1]
-    tempDict['description'] = row[2]
-    tempDict['cuisine'] = row[3]
-    tempDict['mealtype'] = row[4]
-    tempDict['servingsize'] = row[5]
-    tempDict['uploader'] = row[6]
+    # tempDict = {}
+    # tempDict['id'] = row[0]
+    # tempDict['name'] = row[1]
+    # tempDict['description'] = row[2]
+    # tempDict['cuisine'] = row[3]
+    # tempDict['mealtype'] = row[4]
+    # tempDict['servingsize'] = row[5]
+    # tempDict['uploader'] = row[6]
 
-    response.append(tempDict)
+    # response.append(tempDict)
 
-    return jsonify(response)
+    query = """
+        SELECT r.name, r.description, c.name, m.name, r.servingSize
+        FROM recipes r
+            JOIN cuisines c ON c.id=r.cuisine
+            JOIN mealtypes m ON m.id = r.mealType
+        WHERE r.id = %s;
+    """
+    cursor.execute(query, (r_id,))
+
+    recipe = cursor.fetchone()
+    if not recipe:
+        return {'msg' : 'Recipe does not exist'}, 401
+        
+    r_name, r_description, c_name, m_name, r_sS = recipe
+    
+    cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
+    ingredients = cursor.fetchall()
+
+    response = {
+        "Name" : r_name,
+        "Description" : r_description,
+        "Cuisine" : c_name,
+        "MealType" : m_name,
+        "ServingSize" : r_sS,
+        "Ingredients" : list()
+    }
+
+    for ingredient in ingredients:
+        i_id, quantity, grams, mL = ingredient
+
+        cursor.execute("SELECT name,calories,fat,sodium,carbohydrates,fiber,sugars,protein FROM ingredients WHERE id=%s", (i_id,))
+        try:
+            name,calories,fat,sodium,carbohydrates,fiber,sugars,protein = cursor.fetchone()
+        except ValueError:
+            # This ingredient doesn't exist
+            pass
+        
+        ingredient_info = {
+            "Name" : name,
+            "Calories" : calories,
+            "Fat" : fat,
+            "Sodium" : sodium,
+            "Carbohydrates" : carbohydrates,
+            "Fiber" : fiber,
+            "Sugars" : sugars,
+            "Protein" : protein,
+            "Quantity" : quantity,
+            "Grams" : grams,
+            "Millilitres (mL)" : mL,
+        }
+        response["Ingredients"].append(ingredient_info)
+
+    if not response["Ingredients"]: # Default value
+        response["Ingredients"].append({
+            "Name" : "N/A",
+            "Calories" : 0,
+            "Fat" : 0,
+            "Sodium" : 0,
+            "Carbohydrates" : 0,
+            "Fiber" : 0,
+            "Sugars" : 0,
+            "Protein" : 0,
+            "Quantity" : 0,
+            "Grams" : 0,
+            "Millilitres (mL)" : 0,
+        })
+
+    return response, 200
 
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def reviews(id):
-    response = []
-    cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
-    results = cursor.fetchall()
 
-    for row in results:
-        tempDict = {}
-        #tempDict['c_id'] = row[0]
-        tempDict['r_id'] = row[1]
-        tempDict['u_id'] = row[2]
-        tempDict['description'] = row[3]
-        tempDict['parent'] = row[4] #Parent comments will have null in this field
+    # [TODO]: Replace the default '3' with a grab from the rating table
+    # Consider restructuring this section
 
-        response.append(tempDict)
+    if not str(id).isdigit():
+        return {"msg" : "Recipe not found"}, 404
 
-    return jsonify(response)
+    cursor.execute("""
+        SELECT u.username, c.description, 3
+        FROM users u, comments c
+        WHERE c.r_id = %s;
+    """, (id,))
+    response = {
+        "Comments":list()
+    }
+
+    comments = cursor.fetchall()
+    for comment in comments:
+        username, description, rating = comment
+        response["Comments"].append({
+            "Username":username,
+            "Content":description,
+            "Rating":rating
+        })
+ 
+    return response, 200
+
+    # response = []
+    # cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
+    # results = cursor.fetchall()
+
+    # for row in results:
+    #     tempDict = {}
+    #     #tempDict['c_id'] = row[0]
+    #     tempDict['r_id'] = row[1]
+    #     tempDict['u_id'] = row[2]
+    #     tempDict['description'] = row[3]
+    #     tempDict['parent'] = row[4] #Parent comments will have null in this field
+
+    #     response.append(tempDict)
+
+    # return jsonify(response)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
@@ -469,7 +647,7 @@ def eaten(id):
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
@@ -492,10 +670,10 @@ def IntakeOverview():
     
     r_id = data["r_id"]
     u_id = getUserId()
-    if(u_id == null):
+    if not u_id:
         return ("msg: user does not exist", 401)
 
-    #to do: Combine with ingredients table. Limit to last 50 meals
+    #Note: Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
 
     return (response, 200)
@@ -564,9 +742,6 @@ def getUserId():
     except IndexError:
         return null
 
-if __name__ == '__main__':
-    api.run()
-
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in
 @cross_origin()
@@ -621,7 +796,7 @@ def post_recipe():
     try:
         r_id = cursor.fetchone()[0]
     except IndexError:
-        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed 
+        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed
     
     for ingredient in ingredients:
         try:
@@ -653,3 +828,6 @@ def post_recipe():
     conn.commit()
     response['msg'] = "Recipe successfully added"
     return (response, 200)
+
+if __name__ == '__main__':
+    api.run()

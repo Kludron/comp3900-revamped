@@ -68,15 +68,19 @@
 
 .added-allergies {
     text-align: center;
-    
 }
+
 .allergies-box {
     height: 250px;
     width: 400px;
     border-style: ridge;
     display: flex;
+    flex-wrap: wrap;
 }
 
+.allergies-box-element {
+    margin: 10px;
+}
 .wrapper .main-content {
     width: 100%;
     margin-left: 20vw;
