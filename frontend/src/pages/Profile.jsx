@@ -39,7 +39,6 @@ function Profile () {
         points: response.data.Points, 
         bookmarks: response.data.Bookmarks
       });
-      console.log(userData);
   }
 
   React.useEffect(() => {

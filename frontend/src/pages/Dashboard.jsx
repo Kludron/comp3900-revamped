@@ -1,9 +1,8 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
 import Meat from "../ingredients/meat.json";
 import Vegetables from "../ingredients/vegetables&greens.json";
@@ -11,7 +10,6 @@ import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
-import Grouped from '../components/Grouped';
 
 /* Dashboard Page */
 function Dashboard () {

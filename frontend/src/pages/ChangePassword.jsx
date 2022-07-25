@@ -38,6 +38,8 @@ function ChangePassword () {
       axios.put('http://localhost:5000/auth/change-password', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
+				alert('You have successfully changed your password');
+				navigate('/profile');
 			}).catch((error) => {
 				console.log(error)
 				alert(error);
