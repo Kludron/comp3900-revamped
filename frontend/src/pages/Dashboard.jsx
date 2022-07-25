@@ -132,7 +132,7 @@ function Dashboard () {
       <div className="recipeBox">
 
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
-          console.log('submitted');
+          console.log('submitted successfully');
           var body = {
             "search": searchQuery,
             "mealTypes": mealtypeName,
@@ -145,6 +145,7 @@ function Dashboard () {
           };
           axios.post("http://localhost:5000/search", body, headers)
             .then((response) => {
+              console.log('submitted');
               response.data.recipes.forEach((rec) => {
                 console.log(rec);
                 setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);

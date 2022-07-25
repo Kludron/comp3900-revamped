@@ -64,30 +64,33 @@ export default function MultipleSelect({ submit }) {
     );
   };
 
-  const handleChangeCuisine = (event) => {
-    const {
-      target: { value },
-    } = event;
+  const handleChangeCuisine = (event, value) => {
     setCuisines(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(',') : value,
     );
   };
 
   const handleChangeIngredients = (event, value) => {
-    value.forEach((i) => {
-      console.log(i.name);
-      let splitEnd = i.name.lastIndexOf('');
-      console.log(i.name[splitEnd-1]);
-      setIngredients(
-        typeof i.name === "string" ? i.name.split('.') : i.name,
-      )
-    })
+    setIngredients(value);
+    console.log(value);
+    /*if(value.target.innerText === undefined) {
+      //Do Nothing
+    } else {
+      if(ingredientsName !== []){
+        ingredientsName.forEach((i) => {
+          if(ingredientsName.ingredient === value.target.innerText){
+            //Do Nothing
+          } else {
+            setIngredients(ingredientsName => [...ingredientsName, {ingredient: value.target.innerText}]);
+          }
+        })
+        setIngredients(ingredientsName => [...ingredientsName, {ingredient: value.target.innerText}]);
+      }
+    }*/
   };
 
   const getCuisines = async () => {
     const configdata = await axios.get('http://localhost:5000/search');
-    console.log(configdata.data);
     setMealtypeList(configdata.data.MealTypes);
     setCuisineList(configdata.data.Cuisine);
     configdata.data.Ingredients.forEach((i) => {
@@ -100,10 +103,11 @@ export default function MultipleSelect({ submit }) {
   }, []);
 
   const options = ingredientsList.map((option) => {
-		const firstLetter = option.name[0].toUpperCase();
+    //console.log(option.name);
+		const firstLetter = option.name.Name[0].toUpperCase();
 		return {
 			firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-			...option,
+			...option.name,
 		};
 	});
 
@@ -160,7 +164,7 @@ export default function MultipleSelect({ submit }) {
         id="grouped"
         options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
         groupBy={(option) => option.firstLetter}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.Name}
         sx={{ m: 1, width: 400 }}
         onChange={handleChangeIngredients}
         renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
