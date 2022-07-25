@@ -630,22 +630,6 @@ def reviews(id):
  
     return response, 200
 
-    # response = []
-    # cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
-    # results = cursor.fetchall()
-
-    # for row in results:
-    #     tempDict = {}
-    #     #tempDict['c_id'] = row[0]
-    #     tempDict['r_id'] = row[1]
-    #     tempDict['u_id'] = row[2]
-    #     tempDict['description'] = row[3]
-    #     tempDict['parent'] = row[4] #Parent comments will have null in this field
-
-    #     response.append(tempDict)
-
-    # return jsonify(response)
-
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
 def eaten(id):
@@ -731,7 +715,7 @@ def setGoal():
         return {"msg: wrong key", 401}
 
     u_id = getUserId()
-    if(u_id == null):
+    if(u_id == None):
         return ("msg: user does not exist", 401)
 
     #To do: need to add goal column
@@ -748,7 +732,7 @@ def getUserId():
         uploader = cursor.fetchone()[0]
         return uploader
     except IndexError:
-        return null
+        return None
 
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in
