@@ -11,6 +11,7 @@ import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
+import Grouped from '../components/Grouped';
 
 /* Dashboard Page */
 function Dashboard () {
@@ -55,9 +56,9 @@ function Dashboard () {
   }
 
   React.useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    }
+    //if (!token) {
+    //  navigate('/login');
+    //}
   });
 
   return <div>
@@ -133,11 +134,7 @@ function Dashboard () {
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           console.log('submitted');
           var body = {
-<<<<<<< HEAD
             "search": searchQuery,
-=======
-            "search": "sal",
->>>>>>> 90e2b0a16e527be44f15b28fff6263a6b7317df2
             "mealTypes": mealtypeName,
             "cuisines": cuisineName,
             "ingredients": ingredientsName
@@ -148,7 +145,6 @@ function Dashboard () {
           };
           axios.post("http://localhost:5000/search", body, headers)
             .then((response) => {
-              console.log(response.data.recipes);
               response.data.recipes.forEach((rec) => {
                 console.log(rec);
                 setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
