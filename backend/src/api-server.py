@@ -627,7 +627,7 @@ def reviews(id):
             "Content":description,
             "Rating":rating
         })
- 
+
     return response, 200
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
