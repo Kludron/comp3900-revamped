@@ -34,7 +34,7 @@ function Login () {
     </Typography>
     <LoginForm submit={async (email, password) => {
       let headers = {
-          "Content-Type": "application/json",
+        "Content-Type": "application/json",
       };
       var body = {
         email,

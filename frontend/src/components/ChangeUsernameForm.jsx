@@ -17,7 +17,6 @@ function ChangeUsernameForm ({ submit }) {
 				required
 				halfwidth="true"
 				label="New Username"
-				type="password"
 				onChange={e => setNewUsername(e.target.value)}
 			/>
 			<br />

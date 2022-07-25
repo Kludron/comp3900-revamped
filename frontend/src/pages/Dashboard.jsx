@@ -21,23 +21,20 @@ function Dashboard () {
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   
   //Gets Authorization token
-  const checkToken = () => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-  }
+  const token = localStorage.getItem('token');
 
   //allows page navigation
   const navigate = useNavigate();
 
   //Gets all Recipe Data
-  const loadRecipes = async () => {
-    const result = await axios.get('http://localhost:5000/get_recipe');
-    /*console.log(result);*/
-    result.data.forEach((rec) => {
-      console.log(rec);
-      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-    });
-  }
+  //const loadRecipes = async () => {
+  //  const result = await axios.get('http://localhost:5000/get_recipe');
+  //  /*console.log(result);*/
+  //  result.data.forEach((rec) => {
+  //    console.log(rec);
+  //    setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+  //  });
+  //}
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid) => {
@@ -57,9 +54,11 @@ function Dashboard () {
     }
   }
 
-  useEffect(() => {
-    loadRecipes();
-  }, []);
+  React.useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  });
 
   return <div>
     {/* left title and search bar */}
@@ -130,35 +129,44 @@ function Dashboard () {
       
       {/* right recipes box */}
       <div className="recipeBox">
-        <RecipeBar/>
-        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
+
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           console.log('submitted');
-          var searchRequest = {
-            Mealtype: mealtypeName,
-            Cuisine: cuisineName,
-            Ingredients: ingredientsName
+          var body = {
+            "search": searchQuery,
+            "mealTypes": mealtypeName,
+            "cuisines": cuisineName,
+            "ingredients": ingredientsName
           }
-          console.log(searchRequest);
+          console.log(body);
+          let headers = {
+            "Content-Type": "application/json",
+          };
+          axios.post("http://localhost:5000/search", body, headers)
+            .then((response) => {
+              console.log(response.data.recipes);
+              response.data.recipes.forEach((rec) => {
+                console.log(rec);
+                setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+              })
+            }).catch((error) => {
+              alert(error);
+            });
           }}
         />
-        <button>Allergies</button>
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
-            if(recipes === []) {
-              return <div>No recipes</div>
-            } else {
-              return (
-                <div className='recipe_box' key={key}>
-                  <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-                  <h3>{recipe.name}</h3>
-                  <p>{recipe.id}</p>
-                  <p>{recipe.description}</p>
-                  <p>{recipe.mealtype}</p>
-                  <p>{recipe.servingsize}</p>
-                  <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-                </div>
-              )
-            }
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <h3>Name: {recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serving Size: {recipe.servingsize}</p>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+              </div>
+            )
           })}
         </div>
       </div>

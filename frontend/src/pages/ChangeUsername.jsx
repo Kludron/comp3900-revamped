@@ -16,17 +16,17 @@ function ChangeUsername () {
 			<h1>Change Username</h1>
 			<button onClick={previous}>Go Back</button>
 		</div>
-		<ChangeUsernameForm submit={async (newUsername) => {
-			console.log(newUsername)
+		<ChangeUsernameForm submit={async (newusername) => {
+			console.log(newusername)
             let authToken = localStorage.getItem('token');
             let headers = {
-          'Content-Type': 'application/json',
-					'Authorisation': `Bearer ${authToken}`
+          		'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authToken}`
       };
       var body = {
-				newUsername,
+				newusername
       };
-      axios.put('http://localhost:5000/auth/change-username', body, headers)
+      axios.put('http://localhost:5000/auth/change-username', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
 			}).catch((error) => {

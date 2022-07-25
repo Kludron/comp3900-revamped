@@ -8,13 +8,13 @@ create table Users (
 );
 
 create table Cuisines (
-    id              int unique not null,
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
     primary key     (id)
 );
 
 create table MealTypes (
-    id              int unique not null,
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
     primary key     (id)
 );
@@ -44,6 +44,12 @@ create table Recipes (
     mealType        int references MealTypes(id),
     servingSize     int not null,
     uploader        int references Users(id) default 0,
+    primary key     (id)
+);
+
+create table Allergens (
+    id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
+    name            varchar(200) not null,
     primary key     (id)
 );
 
@@ -83,6 +89,38 @@ create table Comments (
     primary key     (c_id)
 );
 
+create table recipe_instructions (
+    r_id            int references Recipes(id) not null unique,
+    instructions    text not null,
+    primary key     (r_id)
+);
+
+create table allergen_ingredients (
+    i_id            int references Ingredients(id),
+    a_id            int references Allergens(id),
+    primary key     (i_id, a_id)
+);
+
+create table user_allergens (
+    u_id            int references Users(id),
+    a_id            int references Allergens(id),
+    primary key     (u_id, a_id)
+);
+
+create table meal_history (
+    u_id            int references Users(id) not null,
+    r_id            int references Recipes(id) not null,
+    date            DATE not null,
+    primary key     (u_id)
+);
+
+create table recipe_rating (
+    u_id            int references Users(id) not null,
+    r_id            int references Recipes(id) not null,
+    rating          int not null default 0, -- Change this to be inbetween 1-5
+    primary key     (u_id, r_id)
+);
+
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO comp3900_user;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO comp3900_user;
@@ -99,3 +137,9 @@ COPY user_upvotes FROM '/var/lib/postgresql/comp3900/backend/data/user_upvotes.c
 COPY user_bookmarks FROM '/var/lib/postgresql/comp3900/backend/data/user_bookmarks.csv' DELIMITER ',' CSV HEADER;
 COPY user_recentlyViewed FROM '/var/lib/postgresql/comp3900/backend/data/user_recentlyviewed.csv' DELIMITER ',' CSV HEADER;
 COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELIMITER ',' CSV HEADER;
+COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DELIMITER ',' CSV HEADER;
+COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
+COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
+COPY meal_history FROM '/var/lib/postgresql/comp3900/backend/data/meal_history.csv' DELIMITER ',' CSV HEADER;
+COPY user_allergens FROM '/var/lib/postgresql/comp3900/backend/data/user_allergens.csv' DELIMITER ',' CSV HEADER;
+COPY recipe_rating FROM '/var/lib/postgresql/comp3900/backend/data/recipe_rating.csv' DELIMITER ',' CSV HEADER;
