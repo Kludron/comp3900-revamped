@@ -14,12 +14,22 @@ def eaten(id):
     return (response, 200)
 
 def IntakeOverview():
-    #Grain 
-    #Vegetables
-    #Fruit
-    #Dairy 
-    #Meat
-    #Fatty
+    kj
+    energy         
+
+    g
+    protein         
+    fat             
+    fibre           
+    sugars          
+    carbohydrates   
+
+    mg
+    calcium         
+    iron            
+    magnesium       
+    manganese       
+    phosphorus 
 
     data = json.loads(request.get_data())
     response = {}
@@ -30,7 +40,14 @@ def IntakeOverview():
         return ("msg: user does not exist", 401)
 
     #to do: Combine with ingredients table. Limit to last 50 meals
+    #gets all ingredients eaten in date range
+    #how does it handle duplicate ingredients?
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    
+    #SELECT *
+    #FROM (SELECT * FROM meal_history WHERE u_id = u_id** ORDER BY date LIMIT '2022-06-26', '2022-07-26') AS history
+    #JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
+    #JOIN Ingredients on rlist.ingredient = Ingredients.id;
 
     return (response, 200)
 
