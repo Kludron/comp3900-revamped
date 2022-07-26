@@ -4,8 +4,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 /* Login Form Component */
-
 function LoginForm ({ submit }) {
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 

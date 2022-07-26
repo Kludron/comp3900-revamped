@@ -4,26 +4,28 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecipeDetails.css';
 
+/* Recipe Page */
 function Recipe () {
 
 	const [recipe, setRecipe] = useState({});
 	const [ingredients, setIngredients] = useState([]);
 
+	//React navigate functions
 	const navigate = useNavigate();
 	const goBack = () => {
 		navigate('/dashboard');
 	};
-
 	const goToComments = (recipeid) => {
 		navigate(`/view/recipe/${recipeid}/comments`);
 	};
 	
-	//obtains the recipeID
+	//Obtains recipeID from the URL
 	const recipeid = window.location.pathname.split('/')[3];
 
-	//Obtains authToken of user
+	//Obtains authToken of user that was stored in localStorage
 	const token = localStorage.getItem('token');
 	
+	//Asynchronous function that pulls data from backend server to be displayed to user
 	const getRecipe = async () => {
 		let headers = {
 			'Content-type': 'application/json',
