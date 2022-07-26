@@ -151,88 +151,6 @@ def profile():
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 
 # Haven't tested this yet
-<<<<<<< HEAD
-@api.after_request
-def refresh_jwt(response: request):
-    # If the user is active within 15 minutes after their token expires, refresh their expiry time.
-    timeframe = 15
-    try:
-        expiry = get_jwt()["exp"]
-        now = datetime.now(timezone.utc)
-        target = datetime.timestamp(now + timedelta(minutes=timeframe))
-        if target > expiry:
-            token = create_access_token(identity=get_jwt_identity())
-            data = response.get_json()
-            if type(data) is dict:
-                data["token"] = token
-                response.data = json.dumps(data) # Response is of type flask.request
-        return response
-    except (RuntimeError, KeyError):
-        # Invalid JWT Token
-        return response
-
-@api.route('/get_recipe', methods=['GET'])
-@cross_origin()
-def get_recipes():
-    response = []
-    cursor.execute("SELECT * FROM recipes;")
-    results = cursor.fetchall() # cursor.fetchal() returns a list of tuples
-
-    for row in results:
-        tempDict = {}
-        tempDict['id'] = row[0]
-        tempDict['name'] = row[1]
-        tempDict['description'] = row[2]
-        tempDict['cuisine'] = row[3]
-        tempDict['mealtype'] = row[4]
-        tempDict['servingsize'] = row[5]
-        tempDict['uploader'] = row[6]
-
-        response.append(tempDict)
-    # Trying multiple recipes
-    return jsonify(response)
-
-    # return jsonify([
-    # {
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    # },
-
-    # {
-    #    "id" : "0",
-    #    "name": "test",
-    #    "description": "test_entry",
-    #    "cuisine" : "0",
-    #    "mealtype" : "0",
-    #    "servingsize" : "0",
-    #    "uploader" : "1"
-    # }])
-
-@api.route('/view/recipe/<id>', methods=['GET'])
-@cross_origin()
-def find_recipe(id):
-    response = []
-    cursor.execute("SELECT * FROM recipes where id = %s;", (id,))
-    row = cursor.fetchone()
-
-    tempDict = {}
-    tempDict['id'] = row[0]
-    tempDict['name'] = row[1]
-    tempDict['description'] = row[2]
-    tempDict['cuisine'] = row[3]
-    tempDict['mealtype'] = row[4]
-    tempDict['servingsize'] = row[5]
-    tempDict['uploader'] = row[6]
-
-    response.append(tempDict)
-
-    return jsonify(response)
-=======
 # @api.after_request()
 # @jwt_required()
 # def refresh_jwt(response: request):
@@ -276,7 +194,6 @@ def edit_recipe(r_id):
 @cross_origin()
 def find_recipe(r_id):
     return search_detailed(cursor, r_id)
->>>>>>> cleanup
 
 @api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
