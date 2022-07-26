@@ -39,6 +39,10 @@ function getStylesCuisine(name, cuisineName, theme) {
   };
 }
 
+/* A majority of the code is referenced from MaterialUI(GroupedDemo & MultipleSelect) with the following links:
+  React-Select: www.mui.com/material-ui/react-select
+  Grouped: www.mui.com/material-ui/react-autocomplete
+*/
 export default function MultipleSelect({ submit }) {
 
   const theme = useTheme();
@@ -59,12 +63,14 @@ export default function MultipleSelect({ submit }) {
       target: { value },
     } = event;
     setmealtypes(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(',') : value,
     );
   };
 
-  const handleChangeCuisine = (event, value) => {
+  const handleChangeCuisine = (event) => {
+    const {
+      target: { value },
+    } = event;
     setCuisines(
       typeof value === "string" ? value.split(',') : value,
     );
@@ -73,22 +79,9 @@ export default function MultipleSelect({ submit }) {
   const handleChangeIngredients = (event, value) => {
     setIngredients(value);
     console.log(value);
-    /*if(value.target.innerText === undefined) {
-      //Do Nothing
-    } else {
-      if(ingredientsName !== []){
-        ingredientsName.forEach((i) => {
-          if(ingredientsName.ingredient === value.target.innerText){
-            //Do Nothing
-          } else {
-            setIngredients(ingredientsName => [...ingredientsName, {ingredient: value.target.innerText}]);
-          }
-        })
-        setIngredients(ingredientsName => [...ingredientsName, {ingredient: value.target.innerText}]);
-      }
-    }*/
   };
 
+  //Gets all Mealtype, Cuisine and Ingredients in the database to be displayed in the search bars
   const getCuisines = async () => {
     const configdata = await axios.get('http://localhost:5000/search');
     setMealtypeList(configdata.data.MealTypes);
@@ -101,7 +94,7 @@ export default function MultipleSelect({ submit }) {
   React.useEffect(() => {
     getCuisines();
   }, []);
-
+  
   const options = ingredientsList.map((option) => {
     //console.log(option.name);
 		const firstLetter = option.name.Name[0].toUpperCase();

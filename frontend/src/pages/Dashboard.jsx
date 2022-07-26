@@ -54,9 +54,9 @@ function Dashboard () {
   }
 
   React.useEffect(() => {
-    //if (!token) {
-    //  navigate('/login');
-    //}
+    if (!token) {
+      navigate('/login');
+    }
   });
 
   return <div>
@@ -125,11 +125,11 @@ function Dashboard () {
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
       <h2>F1V3GUY5 RECIPES</h2>
-      
       {/* right recipes box */}
       <div className="recipeBox">
 
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
+          setRecipes([]);
           console.log('submitted successfully');
           var body = {
             "search": searchQuery,
@@ -144,10 +144,12 @@ function Dashboard () {
           axios.post("http://localhost:5000/search", body, headers)
             .then((response) => {
               console.log('submitted');
+              console.log(response.data);
               response.data.recipes.forEach((rec) => {
                 console.log(rec);
                 setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
               })
+              console.log(recipes);
             }).catch((error) => {
               alert(error);
             });
@@ -171,6 +173,7 @@ function Dashboard () {
       </div>
     </div>
   </div>;
+
 }
 
 export default Dashboard;
