@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
 
 const ITEM_HEIGHT = 48;
@@ -38,15 +39,10 @@ function getStylesCuisine(name, cuisineName, theme) {
   };
 }
 
-function getStylesIngredients(name, ingredientsName, theme) {
-  return {
-    fontWeight:
-      ingredientsName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
+/* A majority of the code is referenced from MaterialUI(GroupedDemo & MultipleSelect) with the following links:
+  React-Select: www.mui.com/material-ui/react-select
+  Grouped: www.mui.com/material-ui/react-autocomplete
+*/
 export default function MultipleSelect({ submit }) {
 
   const theme = useTheme();
@@ -67,7 +63,6 @@ export default function MultipleSelect({ submit }) {
       target: { value },
     } = event;
     setmealtypes(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(',') : value,
     );
   };
@@ -77,41 +72,46 @@ export default function MultipleSelect({ submit }) {
       target: { value },
     } = event;
     setCuisines(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(',') : value,
     );
   };
 
-  const handleChangeIngredients = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setIngredients(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(',') : value,
-    );
+  const handleChangeIngredients = (event, value) => {
+    setIngredients(value);
+    console.log(value);
   };
 
+  //Gets all Mealtype, Cuisine and Ingredients in the database to be displayed in the search bars
   const getCuisines = async () => {
     const configdata = await axios.get('http://localhost:5000/search');
-    console.log(configdata.data);
     setMealtypeList(configdata.data.MealTypes);
     setCuisineList(configdata.data.Cuisine);
-    setIngredientsList(configdata.data.Ingredients);
+    configdata.data.Ingredients.forEach((i) => {
+      setIngredientsList(ingredientsList => [...ingredientsList, {name: i}]);
+    })
   };
 
   React.useEffect(() => {
     getCuisines();
   }, []);
+  
+  const options = ingredientsList.map((option) => {
+    //console.log(option.name);
+		const firstLetter = option.name.Name[0].toUpperCase();
+		return {
+			firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+			...option.name,
+		};
+	});
 
   return (
     <div>
-      <TextField
+      <TextField sx={{ m: 1, width: 400}}
 			margin="normal"
 			label="Search for Recipes.."
 			type="text"
 			onChange={e => setSearchQuery(e.target.value)}
-		/>
+		  />
       <FormControl sx={{ m: 1, width: 200}}>
         <InputLabel id="Mealtype_inputlabel">Select Mealtype(s)...</InputLabel>
         <Select
@@ -141,37 +141,27 @@ export default function MultipleSelect({ submit }) {
           input={<OutlinedInput label="Cuisines" />}
           MenuProps={MenuProps}
         >
-          {cuisineList.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStylesCuisine(name, cuisineName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
+        {cuisineList.map((name) => (
+          <MenuItem
+            key={name}
+            value={name}
+            style={getStylesCuisine(name, cuisineName, theme)}
+          >
+            {name}
+          </MenuItem>
+        ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ m: 1, width: 200}}>
-        <InputLabel id="Ingredient_selectbox">Select ingredient(s)...</InputLabel>
-        <Select
-          multiple
-          value={ingredientsName}
-          onChange={handleChangeIngredients}
-          input={<OutlinedInput label="Ingredients" />}
-          MenuProps={MenuProps}
-        >
-          {ingredientsList.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStylesIngredients(name, ingredientsName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        multiple
+        id="grouped"
+        options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+        groupBy={(option) => option.firstLetter}
+        getOptionLabel={(option) => option.Name}
+        sx={{ m: 1, width: 400 }}
+        onChange={handleChangeIngredients}
+        renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
+      />
       <Button variant="outlined"
         sx={{ mt: 3, mb: 2 }}
         type="submit" 

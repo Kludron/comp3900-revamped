@@ -8,6 +8,7 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+/* Create Recipe Form */
 function CreateRecipeForm ({ submit }) {
 
 	const onSubmit = () => {
