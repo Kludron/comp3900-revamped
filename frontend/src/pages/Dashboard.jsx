@@ -1,9 +1,8 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
 import Meat from "../ingredients/meat.json";
 import Vegetables from "../ingredients/vegetables&greens.json";
@@ -20,21 +19,11 @@ function Dashboard () {
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   
-  //Gets Authorization token
+  //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
-  //allows page navigation
+  //React Navigation Function
   const navigate = useNavigate();
-
-  //Gets all Recipe Data
-  const loadRecipes = async () => {
-    const result = await axios.get('http://localhost:5000/get_recipe');
-    /*console.log(result);*/
-    result.data.forEach((rec) => {
-      console.log(rec);
-      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-    });
-  }
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid) => {
@@ -42,6 +31,7 @@ function Dashboard () {
     navigate(`/view/recipe/${recipeid}`);
   }
 
+  // Bookmark function for recipes
   const handleBookmark = () => {
     if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
       setfavourite(true);
@@ -54,9 +44,11 @@ function Dashboard () {
     }
   }
 
-  useEffect(() => {
-    loadRecipes();
-  }, []);
+  React.useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  });
 
   return <div>
     {/* left title and search bar */}
@@ -124,48 +116,55 @@ function Dashboard () {
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
       <h2>F1V3GUY5 RECIPES</h2>
-      
       {/* right recipes box */}
       <div className="recipeBox">
-        <RecipeBar/>
-        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName) => {
-          console.log('submitted');
+
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
+          setRecipes([]);
+          console.log('submitted successfully');
           var body = {
-            MealTypes: mealtypeName,
-            Cuisine: cuisineName,
-            Ingredients: ingredientsName
+            "search": searchQuery,
+            "mealTypes": mealtypeName,
+            "cuisines": cuisineName,
+            "ingredients": ingredientsName
           }
           console.log(body);
           let headers = {
-            'Content-type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
           };
-          const response = axios.post('http://localhost:5000/search', body, headers);
-          console.log(response);
+          axios.post("http://localhost:5000/search", body, headers)
+            .then((response) => {
+              console.log('submitted');
+              console.log(response.data);
+              response.data.recipes.forEach((rec) => {
+                console.log(rec);
+                setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+              })
+              console.log(recipes);
+            }).catch((error) => {
+              alert(error);
+            });
           }}
         />
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
-            if(recipes === []) {
-              return <div>No recipes</div>
-            } else {
-              return (
-                <div className='recipe_box' key={key}>
-                  <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-                  <h3>Name: {recipe.name}</h3>
-                  <p>ID: {recipe.id}</p>
-                  <p>Description: {recipe.description}</p>
-                  <p>Mealtype: {recipe.mealtype}</p>
-                  <p>Serving Size: {recipe.servingsize}</p>
-                  <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-                </div>
-              )
-            }
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <h3>Name: {recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serving Size: {recipe.servingsize}</p>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+              </div>
+            )
           })}
         </div>
       </div>
     </div>
   </div>;
+
 }
 
 export default Dashboard;

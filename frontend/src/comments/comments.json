@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "commenter": "Andrew123", 
+        "comment": "Excellent recipe!",
+        "rating": 5
+    },
+    {
+        "id": 2,
+        "commenter": "Bill Mo", 
+        "comment": "I won't recommend this recipe because it tastes so weird.",
+        "rating": 2
+    },
+    {
+        "id": 3,
+        "commenter": "Somebody", 
+        "comment": "I followed the recipe but failed.",
+        "rating": 1
+    }
+]

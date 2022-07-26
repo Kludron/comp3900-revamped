@@ -4,52 +4,83 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecipeDetails.css';
 
+/* Recipe Page */
 function Recipe () {
 
-	const [recipe, setRecipe] = useState([]);
+	const [recipe, setRecipe] = useState({});
+	const [ingredients, setIngredients] = useState([]);
 
+	//React navigate functions
 	const navigate = useNavigate();
-
 	const goBack = () => {
 		navigate('/dashboard');
-	}
-
-	//obtains the recipeID
+	};
+	const goToComments = (recipeid) => {
+		navigate(`/view/recipe/${recipeid}/comments`);
+	};
+	
+	//Obtains recipeID from the URL
 	const recipeid = window.location.pathname.split('/')[3];
 
-	//Obtains authToken of user
+	//Obtains authToken of user that was stored in localStorage
 	const token = localStorage.getItem('token');
-
+	
+	//Asynchronous function that pulls data from backend server to be displayed to user
 	const getRecipe = async () => {
 		let headers = {
 			'Content-type': 'application/json',
 			Authorization: `Bearer ${token}`,
 		}
-		const result = await axios.get(`http://localhost:5000/view/recipe/${recipeid}`, headers);
-		console.log(result.data);
-		result.data.forEach((rec) => {
-      setRecipe(recipe => [...recipe, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
+		const response = await axios.get(`http://localhost:5000/view/recipe/${recipeid}`, headers);
+		console.log(response.data);
+		setRecipe({
+			name: response.data.Name,
+			description: response.data.Description, 
+			ingredients: response.data.Ingredients, 
+			cuisine: response.data.Cuisine, 
+			mealtype: response.data.MealType, 
+			servingsize: response.data.ServingSize
 		});
-	}
+		setIngredients(response.data.Ingredients);
+		console.log(response.data.Ingredients);
+	};
 
 	React.useEffect(() => {
 		getRecipe();
 	}, []);
 
 	return (
-		<div>
-			{recipe.map((r, key) => {
-				return (
-					<div className='recipe_details' key={key}>
-						<button onClick={() => goBack()}>←Go Back</button>
-						<h2 className='recipe_name'>Recipe Name: {r.name}</h2>
-						<p className='recipe_description'>Description: {r.description}</p>
-						<p className='recipe_mealtype'>Mealtype: {r.mealtype}</p>
-						<p className='recipe_servingsize'>Serving Size: {r.servingsize}</p>
-						<p className='recipe_cuisine'>Cuisine: {r.cuisine}</p>
-					</div>
-				)
-			})}
+		<div className='recipe_details'>
+			<button onClick={() => goBack()}>←Go Back</button>
+			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
+			<p className='recipe_description'>Description: {recipe.description}</p>
+			<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
+			<p className='recipe_servingsize'>Serving Size: {recipe.servingsize}</p>
+			<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
+			<div className='recipe_ingredients'>Ingredients: 
+				{ingredients.map((i,key) => {
+					return (
+						<div key={key}>
+							<p>Name: {i.Name}</p>
+							<p>Energy: {i.Energy} kJ</p>
+							<p>Carbohydrates: {i.Carbohydrates}g</p>
+							<p>Fat: {i.Fat}g</p>
+							<p>Fibre: {i.Fibre}g</p>
+							<p>Protein: {i.Protein}g</p>
+							<p>Sugars: {i.Sugars}g</p>
+							<p>Calcium: {i.Calcium}mg</p>
+							<p>Iron: {i.Iron}mg</p>
+							<p>Magnesium: {i.Magnesium}mg</p>
+							<p>Manganese: {i.Manganese}mg</p>
+							<p>Phosphorus: {i.Phosphorus}mg</p>
+							<p>Grams: {i.Grams}g</p>
+							<p>Quantity: {i.Quantity}</p>
+							<p>Millilitres: {i.Millilitres}mL</p>
+						</div>
+					)
+				})}
+			</div>
+			<button onClick={() => goToComments()}>See Comments</button>
 		</div>
 	);
 }
