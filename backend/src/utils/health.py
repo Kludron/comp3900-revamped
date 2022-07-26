@@ -1,5 +1,3 @@
-@api.route('/eaten/recipeid=<id>', methods=['POST'])
-@cross_origin()
 def eaten(id):
     data = json.loads(request.get_data())
     response = {}
@@ -15,8 +13,6 @@ def eaten(id):
 
     return (response, 200)
 
-@api.route('/intake_overview', methods=['GET'])
-@cross_origin()
 def IntakeOverview():
     #Grain 
     #Vegetables
@@ -38,8 +34,6 @@ def IntakeOverview():
 
     return (response, 200)
 
-@api.route('/recommend', methods=['GET'])
-@cross_origin()
 def recommend():
     grainGoal =  33
     vegetablesGoal = 16
@@ -71,8 +65,6 @@ def recommend():
     #Returning a list of food categories that need improvement on
     return response
 
-@api.route('/setGoal', methods=['POST'])
-@cross_origin()
 def setGoal():
     data = json.loads(request.get_data())
     response = {}
@@ -90,3 +82,14 @@ def setGoal():
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
 
     return (response, 200)
+
+def getUserId():
+    # This section is to verify user identity
+    email = get_jwt_identity()
+    query = "SELECT id FROM users WHERE email=%s"
+    cursor.execute(query, (email,))
+    try:
+        uploader = cursor.fetchone()[0]
+        return uploader
+    except IndexError:
+        return null
