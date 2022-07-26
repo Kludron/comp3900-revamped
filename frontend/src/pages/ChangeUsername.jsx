@@ -29,6 +29,8 @@ function ChangeUsername () {
       axios.put('http://localhost:5000/auth/change-username', body, {headers:headers})
 			.then((response) => {
 				console.log(response);
+				alert('You have successfully changed your username');
+				navigate('/profile');
 			}).catch((error) => {
 				console.log(error)
 				alert(error);
