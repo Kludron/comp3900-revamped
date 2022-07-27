@@ -551,44 +551,52 @@ def find_recipe(r_id):
     }
 
     for ingredient in ingredients:
-        i_id, quantity, grams, mL = ingredient
+        i_id, Quantity, Grams, Millilitres = ingredient
 
-        cursor.execute("SELECT name,calories,fat,sodium,carbohydrates,fiber,sugars,protein FROM ingredients WHERE id=%s", (i_id,))
+        cursor.execute("SELECT name,energy,protein,fat,fibre,sugars,carbohydrates,calcium,iron,magnesium,manganese,phosphorus FROM ingredients WHERE id=%s", (i_id,))
         try:
-            name,calories,fat,sodium,carbohydrates,fiber,sugars,protein = cursor.fetchone()
+            Name,Energy,Protein,Fat,Fibre,Sugars,Carbohydrates,Calcium,Iron,Magnesium,Manganese,Phosphorus = cursor.fetchone()
         except ValueError:
             # This ingredient doesn't exist
             pass
         
-        ingredient_info = {
-            "Name" : name,
-            "Calories" : calories,
-            "Fat" : fat,
-            "Sodium" : sodium,
-            "Carbohydrates" : carbohydrates,
-            "Fiber" : fiber,
-            "Sugars" : sugars,
-            "Protein" : protein,
-            "Quantity" : quantity,
-            "Grams" : grams,
-            "Millilitres (mL)" : mL,
-        }
+        ingredient_info = dict(
+            Name,
+            Energy,
+            Protein,
+            Fat,
+            Fibre,
+            Sugars,
+            Carbohydrates,
+            Calcium,
+            Iron,
+            Magnesium,
+            Manganese,
+            Phosphorus,
+            Quantity,
+            Grams,
+            Millilitres
+        )
         response["Ingredients"].append(ingredient_info)
 
     if not response["Ingredients"]: # Default value
-        response["Ingredients"].append({
-            "Name" : "N/A",
-            "Calories" : 0,
-            "Fat" : 0,
-            "Sodium" : 0,
-            "Carbohydrates" : 0,
-            "Fiber" : 0,
-            "Sugars" : 0,
-            "Protein" : 0,
-            "Quantity" : 0,
-            "Grams" : 0,
-            "Millilitres (mL)" : 0,
-        })
+        response["Ingredients"].append(dict(
+            Name="N/A",
+            Energy=0,
+            Protein=0.0,
+            Fat=0.0,
+            Fibre=0.0,
+            Sugars=0.0,
+            Carbohydrates=0.0,
+            Calcium=0.0,
+            Iron=0.0,
+            Magnesium=0.0,
+            Manganese=0.0,
+            Phosphorus=0.0,
+            Quantity=0,
+            Grams=0,
+            Millilitres=0.0
+        ))
 
     return response, 200
 
@@ -619,24 +627,8 @@ def reviews(id):
             "Content":description,
             "Rating":rating
         })
- 
+
     return response, 200
-
-    # response = []
-    # cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
-    # results = cursor.fetchall()
-
-    # for row in results:
-    #     tempDict = {}
-    #     #tempDict['c_id'] = row[0]
-    #     tempDict['r_id'] = row[1]
-    #     tempDict['u_id'] = row[2]
-    #     tempDict['description'] = row[3]
-    #     tempDict['parent'] = row[4] #Parent comments will have null in this field
-
-    #     response.append(tempDict)
-
-    # return jsonify(response)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
@@ -723,7 +715,7 @@ def setGoal():
         return {"msg: wrong key", 401}
 
     u_id = getUserId()
-    if(u_id == null):
+    if(u_id == None):
         return ("msg: user does not exist", 401)
 
     #To do: need to add goal column
@@ -740,7 +732,7 @@ def getUserId():
         uploader = cursor.fetchone()[0]
         return uploader
     except IndexError:
-        return null
+        return None
 
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in

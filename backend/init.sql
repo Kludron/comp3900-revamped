@@ -22,13 +22,17 @@ create table MealTypes (
 create table Ingredients (
     id              int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     name            text unique not null,
-    calories        float,  -- Per 100g
-    fat             float,  -- Per 100g
-    sodium          float,  -- Per 100g
-    carbohydrates   float,  -- Per 100g
-    fiber           float,  -- Per 100g
-    sugars          float,  -- Per 100g
-    protein         float,  -- Per 100g
+    energy          float default 0.0, -- (kJ)
+    protein         float default 0.0, -- (g)
+    fat             float default 0.0, -- (g)
+    fibre           float default 0.0, -- (g)
+    sugars          float default 0.0, -- (g)
+    carbohydrates   float default 0.0, -- (g)
+    calcium         float default 0.0, -- (mg)
+    iron            float default 0.0, -- (mg)
+    magnesium       float default 0.0, -- (mg)
+    manganese       float default 0.0, -- (mg)
+    phosphorus      float default 0.0, -- (mg)
     primary key     (id)
 );
 
