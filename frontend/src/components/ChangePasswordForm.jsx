@@ -31,7 +31,7 @@ function ChangePasswordForm ({ submit }) {
 			/><br />
 			<Button
 				sx={{ mt: 3, mb: 2 }}
-				id='login'
+				id='changepasswordbtn'
 				variant="contained" onClick={onSubmit}>Submit
 			</Button>
 		</>)
