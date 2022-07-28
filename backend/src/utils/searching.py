@@ -1,7 +1,7 @@
 
 import json
 
-def search_general(method, data, cursor):
+def search_general(method, data, cursor) -> tuple(dict, int):
     def __add_to_results(data):
         for recipe in data:
             id, name, desc, cuisine, mealT, ss = recipe
@@ -106,7 +106,7 @@ def search_general(method, data, cursor):
                 print(e)
                 return ({'msg': "Invalid request"}, 400)
 
-def search_detailed(cursor, r_id):
+def search_detailed(cursor, r_id) -> tuple(dict, int):
     query = """
         SELECT r.name, r.description, c.name, m.name, r.servingSize
         FROM recipes r
@@ -183,3 +183,13 @@ def search_detailed(cursor, r_id):
         ))
 
     return response, 200
+
+def grab_ingredients(cursor, r_id) -> list(tuple) or None:
+    cursor.execute("""
+        SELECT i.name,r.quantity,r.grams,r.millilitres 
+        FROM recipe_ingredients r
+        JOIN
+            ingredients i on i.id = r.ingredient
+        WHERE r_id=%s";
+    """, (r_id, ))
+    return cursor.fetchall()

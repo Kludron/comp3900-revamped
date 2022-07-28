@@ -202,7 +202,7 @@ def auth_recipe_uploader(email, cursor, r_id) -> bool:
         u_id = cursor.fetchone()[0]
     except (ValueError, TypeError, psycopg2.ProgrammingError):
         return False
-    # Get all recipes from that user
+    # Check that the user id matches the recipe's uploader id
     query = """
     SELECT 1
     FROM recipes r
