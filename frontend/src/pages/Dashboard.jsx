@@ -53,6 +53,24 @@ function Dashboard () {
     }
   }
 
+  const eatenRecipe = async (recipeid) => {
+    let headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+    let body = {
+      r_id: recipeid,
+    }
+    console.log(recipeid + ': eaten');
+    const response = await axios.post(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
+    console.log(response.status);
+    if(response.status === '200'){
+      alert('You have marked the recipe as eaten.');
+    } else {
+      alert('An issue has occurred marking the recipe as eaten. Please try again.')
+    }
+  }
+
   React.useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -143,13 +161,11 @@ function Dashboard () {
           };
           axios.post("http://localhost:5000/search", body, headers)
             .then((response) => {
-              console.log('submitted');
-              console.log(response.data);
+              console.log(response);
               response.data.recipes.forEach((rec) => {
                 console.log(rec);
                 setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
               })
-              console.log(recipes);
             }).catch((error) => {
               alert(error);
             });
@@ -160,6 +176,7 @@ function Dashboard () {
             return (
               <div className='recipe_box' key={key}>
                 <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
                 <h3>Name: {recipe.name}</h3>
                 <p>Cuisine: {recipe.cuisine}</p>
                 <p>Description: {recipe.description}</p>

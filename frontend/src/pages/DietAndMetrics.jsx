@@ -94,7 +94,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			const response = await axios.post('http://localhost:5000/setGoal', {headers:headers}, body);
+			const response = await axios.post("http://localhost:5000/search", {headers:headers}, body);
 			console.log(response);
 		} else {
 			const body = {
@@ -106,7 +106,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			const response = await axios.post('http://localhost:5000/setGoal', {headers:headers}, body);
+			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
 			console.log(response);
 		}
 	}
