@@ -84,7 +84,7 @@ def search_general(method, data, cursor) -> tuple:
                                     WHERE i.name in ({','.join(['%s' for _ in range(len(ingredients))])})
                                 )""")
                     for ingredient in ingredients:
-                        arguments.append(ingredient)
+                        arguments.append(ingredient["Name"])
                 if mealTypes:
                     constraints.append(f"m.name in ({','.join(['%s' for _ in range(len(mealTypes))])})")
                     for mealType in mealTypes:
@@ -98,7 +98,7 @@ def search_general(method, data, cursor) -> tuple:
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 cursor.execute(query, tuple(arguments))
-
+                print(query)
                 __add_to_results(cursor.fetchall())
 
                 return (responseval, 200)
