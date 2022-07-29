@@ -18,26 +18,24 @@ function Dashboard () {
   const [recipes, setRecipes] = useState([]);
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
-  
+
   //Gets Authorization token
   const token = localStorage.getItem('token');
 
   //allows page navigation
   const navigate = useNavigate();
 
-  //Gets all Recipe Data
-  //const loadRecipes = async () => {
-  //  const result = await axios.get('http://localhost:5000/get_recipe');
-  //  /*console.log(result);*/
-  //  result.data.forEach((rec) => {
-  //    console.log(rec);
-  //    setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-  //  });
-  //}
-
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
-  const viewRecipe = (recipeid) => {
-    console.log(recipeid);
+  const viewRecipe = (recipeid, key) => {
+    //Checks if there is any existing recipes
+    var existing = JSON.parse(localStorage.getItem('recent'));
+    console.log(existing);
+    if(existing == null) existing = [];
+    let recent = {
+      r_id: recipeid
+    };
+    existing.push(recent);
+    localStorage.setItem('recent', JSON.stringify(existing));
     navigate(`/view/recipe/${recipeid}`);
   }
 
@@ -182,7 +180,7 @@ function Dashboard () {
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>
                 <p>Serving Size: {recipe.servingsize}</p>
-                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
               </div>
             )
           })}

@@ -16,6 +16,9 @@ function MyRecipes() {
 		navigate('/create-recipe');
 	}
 	
+	React.useEffect(() => {
+	}, [])
+
 	return <>
 		<div className="wrapper">
 			<NavBar/>
@@ -30,6 +33,10 @@ function MyRecipes() {
 					onClick={() => navigateRecipeForm()}>
 					Create Recipe
 				</Button>
+				<div className="recent_viewed">
+					<h2>Recently Viewed</h2>
+
+				</div>
 			</div>
 		</div>
 	</>
