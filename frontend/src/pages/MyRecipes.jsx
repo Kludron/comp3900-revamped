@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from "react-router";
 import './MyRecipes.css';
 import Button from '@mui/material/Button';
+import axios from "axios";
 function MyRecipes() {
 
 	const [myRecipes, setMyRecipes] = React.useState('You have created no recipes, please create one via the button below.')
@@ -14,9 +15,14 @@ function MyRecipes() {
 
 	const navigateRecipeForm = () => {
 		navigate('/create-recipe');
-	}
+	};
 	
+	const getMyRecipes = async () => {
+		const response = await axios.get('http://localhost:5000/my-recipes/');
+	};
+
 	React.useEffect(() => {
+		getMyRecipes();
 	}, [])
 
 	return <>
