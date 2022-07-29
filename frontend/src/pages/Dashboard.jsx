@@ -62,7 +62,7 @@ function Dashboard () {
       r_id: recipeid,
     }
     console.log(recipeid + ': eaten');
-    const response = await axios.post(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
+    const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
     console.log(response.status);
     if(response.status === '200'){
       alert('You have marked the recipe as eaten.');
