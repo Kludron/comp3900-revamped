@@ -14,19 +14,19 @@ function Profile () {
   //Gets Auth Token
   const token = localStorage.getItem('token');
 
+  //React navigate functions
   const navigate = useNavigate();
   const changePassword = () => {
     navigate('/change-password');
   };
-
   const changeUsername = () => {
     navigate('/change-username');
   };
-
   const previous = () => {
 		navigate('/dashboard');
 	};
 
+  //Pulls user's profile details using their token to be displayed on the page
   const loadProfile = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
@@ -39,7 +39,6 @@ function Profile () {
         points: response.data.Points, 
         bookmarks: response.data.Bookmarks
       });
-      console.log(userData);
   }
 
   React.useEffect(() => {

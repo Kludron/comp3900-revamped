@@ -5,11 +5,17 @@ import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 import { Rating, TextField } from "@mui/material";
 
+/* Recipe Comments Page */
 function Comments () {
 
+  //Obtains recipeID from URL
   const recipeid = window.location.pathname.split('/')[3];
+
   const [commets, setComments] = useState({});
-  const token = localStorage.getItem("token")
+
+  const token = localStorage.getItem("token");
+
+  //Loads Recipe comments from backend
   const loadComments = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`

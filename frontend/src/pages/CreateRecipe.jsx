@@ -3,12 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import CreateRecipeForm from '../components/CreateRecipeForm';
 
+/* Create Recipe Page */
 function CreateRecipe() {
-
 
 	const empty = '';
 	const token = localStorage.getItem('token');
 
+	//React Navigation functions
 	const navigate = useNavigate();
 	const previous = () => {
 		navigate('/myRecipes');

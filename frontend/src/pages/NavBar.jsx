@@ -2,9 +2,10 @@ import { useMatch, useResolvedPath, Link } from 'react-router-dom';
 import './NavBar.css';
 import React from 'react';
 
+/* Side NavBar */
 function NavBar() {
   return <div>
-  <ul className='navBar'>
+    <ul className='navBar'>
       <CustomLink to='/profile'>Profile</CustomLink>
       <CustomLink to='/favourite'>Favourite Recipes</CustomLink>
       <CustomLink to='/dietAndMetrics'>Diet/Metrics Page</CustomLink>

@@ -44,6 +44,7 @@ create table Recipes (
     mealType        int references MealTypes(id),
     servingSize     int not null,
     uploader        int references Users(id) default 0,
+    instructions    text not null,
     primary key     (id)
 );
 
@@ -87,12 +88,6 @@ create table Comments (
     description     text not null,
     parent          int references Comments(c_id),
     primary key     (c_id)
-);
-
-create table recipe_instructions (
-    r_id            int references Recipes(id) not null unique,
-    instructions    text not null,
-    primary key     (r_id)
 );
 
 create table allergen_ingredients (

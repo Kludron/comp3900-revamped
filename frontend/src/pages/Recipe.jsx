@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecipeDetails.css';
 
+/* Recipe Page */
 function Recipe () {
 
 	const [recipe, setRecipe] = useState({});
+	const [ingredients, setIngredients] = useState([]);
 
+	//React navigate functions
 	const navigate = useNavigate();
 	const goBack = () => {
 		navigate('/dashboard');
@@ -15,12 +18,14 @@ function Recipe () {
 	const goToComments = (recipeid) => {
 		navigate(`/view/recipe/${recipeid}/comments`);
 	};
-	//obtains the recipeID
+	
+	//Obtains recipeID from the URL
 	const recipeid = window.location.pathname.split('/')[3];
 
-	//Obtains authToken of user
+	//Obtains authToken of user that was stored in localStorage
 	const token = localStorage.getItem('token');
 	
+	//Asynchronous function that pulls data from backend server to be displayed to user
 	const getRecipe = async () => {
 		let headers = {
 			'Content-type': 'application/json',
@@ -31,31 +36,17 @@ function Recipe () {
 		setRecipe({
 			name: response.data.Name,
 			description: response.data.Description, 
-			ingredients: response.data.Ingredients[0], 
+			ingredients: response.data.Ingredients, 
 			cuisine: response.data.Cuisine, 
 			mealtype: response.data.MealType, 
 			servingsize: response.data.ServingSize
 		});
-		console.log(response.data.Ingredients[0].Calories);
-		const calories = localStorage.setItem('energy', response.data.Ingredients[0].Energy);
-		const carbs = localStorage.setItem('carbohydrates', response.data.Ingredients[0].Carbohydrates);
-		const fat = localStorage.setItem('fat', response.data.Ingredients[0].Fat);
-		const fiber = localStorage.setItem('fibre', response.data.Ingredients[0].Fibre);
-		const grams = localStorage.setItem('grams', response.data.Ingredients[0].Grams);
-		const Name = localStorage.setItem('Name', response.data.Ingredients[0].Name);
-		const protein = localStorage.setItem('protein', response.data.Ingredients[0].Protein);
-		const quantity = localStorage.setItem('quantity', response.data.Ingredients[0].Quantity);
-		const sugars = localStorage.setItem('sugars', response.data.Ingredients[0].Sugars);
-		const calcium = localStorage.setItem('calcium', response.data.Ingredients[0].Calcium);
-		const iron = localStorage.setItem('iron', response.data.Ingredients[0].Iron);
-		const magnesium = localStorage.setItem('magnesium', response.data.Ingredients[0].Magnesium);
-		const manganese = localStorage.setItem('manganese', response.data.Ingredients[0].Manganese);
-		const phosphorus = localStorage.setItem('phosphorus', response.data.Ingredients[0].Phosphorus);
-		const millilitres = localStorage.setItem('millilitres', response.data.Ingredients[0].Millilitres);
-	}
+		setIngredients(response.data.Ingredients);
+		console.log(response.data.Ingredients);
+	};
 
 	React.useEffect(() => {
-		getRecipe()
+		getRecipe();
 	}, []);
 
 	return (
@@ -67,21 +58,27 @@ function Recipe () {
 			<p className='recipe_servingsize'>Serving Size: {recipe.servingsize}</p>
 			<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
 			<div className='recipe_ingredients'>Ingredients: 
-				<p>Name: {localStorage.getItem('Name')}</p>
-				<p>Energy: {localStorage.getItem('energy')} kJ</p>
-				<p>Carbohydrates: {localStorage.getItem('carbohydrates')}g</p>
-				<p>Fat: {localStorage.getItem('fat')}g</p>
-				<p>Fiber: {localStorage.getItem('fiber')}g</p>
-				<p>Protein: {localStorage.getItem('protein')}g</p>
-				<p>Sugars: {localStorage.getItem('sugars')}g</p>
-				<p>Calcium: {localStorage.getItem('calcium')}mg</p>
-				<p>Iron: {localStorage.getItem('iron')}mg</p>
-				<p>Magnesium: {localStorage.getItem('magnesium')}mg</p>
-				<p>Manganese: {localStorage.getItem('manganese')}mg</p>
-				<p>Phosphorus: {localStorage.getItem('phosphorus')}mg</p>
-				<p>Grams: {localStorage.getItem('grams')}</p>
-				<p>Quantity: {localStorage.getItem('quantity')}</p>
-				<p>Millilitres: {localStorage.getItem('millilitres')}</p>
+				{ingredients.map((i,key) => {
+					return (
+						<div key={key}>
+							<p>Name: {i.Name}</p>
+							<p>Energy: {i.Energy} kJ</p>
+							<p>Carbohydrates: {i.Carbohydrates}g</p>
+							<p>Fat: {i.Fat}g</p>
+							<p>Fibre: {i.Fibre}g</p>
+							<p>Protein: {i.Protein}g</p>
+							<p>Sugars: {i.Sugars}g</p>
+							<p>Calcium: {i.Calcium}mg</p>
+							<p>Iron: {i.Iron}mg</p>
+							<p>Magnesium: {i.Magnesium}mg</p>
+							<p>Manganese: {i.Manganese}mg</p>
+							<p>Phosphorus: {i.Phosphorus}mg</p>
+							<p>Grams: {i.Grams}g</p>
+							<p>Quantity: {i.Quantity}</p>
+							<p>Millilitres: {i.Millilitres}mL</p>
+						</div>
+					)
+				})}
 			</div>
 			<button onClick={() => goToComments()}>See Comments</button>
 		</div>
