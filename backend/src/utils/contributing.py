@@ -1,6 +1,6 @@
 
 import json
-from searching import grab_ingredients
+from utils.searching import grab_ingredients
 
 def contrib_post_recipe(email, data, cursor, conn):
     
