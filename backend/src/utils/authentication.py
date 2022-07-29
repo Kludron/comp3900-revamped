@@ -252,14 +252,15 @@ def auth_get_profile(email, cursor):
     cursor.execute("""
         SELECT a.name FROM allergens a;
     """, (u_id,))
-    allergens = cursor.fetchall()
+    allAllergens = cursor.fetchall()
 
     response = {
         'Username' : username,
         'Email' : email,
         'Points' : points,
         'Bookmarks' : [],
-        'Allergens' : []
+        'allAllergens' : [], 
+        'usersAllergens': [], 
     }
 
     for recipe in bookmarks:
@@ -272,9 +273,9 @@ def auth_get_profile(email, cursor):
             "Serving Size":sS
         })
     
-    for allergen in allergens:
+    for allergen in allAllergens:
         try:
-            response["Allergens"].append(allergen[0])
+            response["allAllergens"].append(allergen[0])
         except KeyError:
             # No allergies found? This might not even be run in that case.
             pass
