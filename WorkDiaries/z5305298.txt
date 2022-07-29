@@ -1,13 +1,21 @@
 Week 1:
-    We made up the team and discussed the topic of project. At last we chose recipe recommendation system.
+    We made up the team and discussed the topic of the project. At last we chose the recipe recommendation system.
 
 Week 2:
-    I Did some researches on recipe recommendation system. Found webside supercook.com and diet traking system: FatSecret, YAZIO. I did the flow diagram, which contains basic functionality of recipe recommendation, login system and recipe contribution.
+    I Did some research on the recipe recommendation systems. Found websites supercook.com and diet tracking system: FatSecret, YAZIO. I did the flow diagram, which contains the basic functionality of recipe recommendation, login system and recipe contribution.
 Week 3:
-    In tuesday meeting, we discussed how to revise the flow diagram. "My Recipe" page should be aggregate with "Recipe Contribution" page. Diet tracking functionality should be added.Color should be added to differenciate user's access.
-    After meeting, I did what we discussed in meeting. Besides, I add new functionalities. Users can post.Users can add friends and see their posts. Users can add exercise they did. The system can calculate users' calorie according to their diet and exercise. However, I discarded some of them after discussion.
-    I made two system architecture diagram, one discribing interaction between layers, one discribing the main library we are going to use.
+    In Tuesday's meeting, we discussed how to revise the flow diagram. The "My Recipe" page should be aggregated with the "Recipe Contribution" page. Diet tracking functionality should be added. Color should be added to differentiate users' access.
+    After the meeting, I did what we discussed in the meeting. Besides, I add new functionalities. Users can post. Users can add friends and see their posts. Users can add exercises they did. The system can calculate users' calories according to their diet and exercise. However, I discarded some of them after discussion.
+    I made two system architecture diagrams, one describing the interaction between layers, and one describing the main library we are going to use.
 Week 4:
-    Tasks for sprint one was allocated. I was in charge of frontend. However, I did not have any experience of frontend. So I spend the most of time on study HTML, CSS and JavaScript. In terms of contribution to group project, I create the dashboard and searchbars for our recipe recommender system.
+    Tasks for sprint one were allocated. I was in charge of frontend. However, I did not have any experience of frontend. So I spend most of time on study HTML, CSS and JavaScript. In terms of contribution to the group project, I create the dashboard and search bars for our recipe recommender system.
 Week 5:
-    I kept learning React. For the project, I create personal pages and a navigation bar which can access personal pages. After lab, we held the retrospective and reflect what we did well and what need to be improved.
+    I kept learning React. For the project, I create personal pages and a navigation bar that can access personal pages. After the lab, we held the retrospective and reflect on what we did well and what need to be improved.
+Week 6:
+    This week I implemented the user's profile page and allergens styled it. Change username and password are also been completed. However, I didn't figure out how to show allergens correctly.
+Week 7:
+    For this week I finished the comment pages. The comments and ratings can be displayed correctly. The backend hadn't been implemented, so I use some dummy data for testing frontend. 
+Week 8: 
+    I tried to create a favourite recipes page for bookmarked recipes. Allergens function was fixed, they can be added and displayed correctly. Also tried to collaborate frontend with backend. After the demo, we had the retrospective. In all, I think I did better than in the last sprint.
+Week 9:
+    I implemented favourite recipe page on both frontend and backend.
