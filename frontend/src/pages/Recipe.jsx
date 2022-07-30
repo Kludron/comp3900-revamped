@@ -38,6 +38,7 @@ function Recipe () {
 		setRecipe({
 			name: response.data.Name,
 			description: response.data.Description, 
+			instructions: response.data.Instructions,
 			ingredients: response.data.Ingredients, 
 			cuisine: response.data.Cuisine, 
 			mealtype: response.data.MealType, 
@@ -56,28 +57,29 @@ function Recipe () {
 			<button onClick={() => goBack()}>←Go Back</button>
 			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
 			<p className='recipe_description'>Description: {recipe.description}</p>
+			<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
 			<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
 			<p className='recipe_servingsize'>Serving Size: {recipe.servingsize}</p>
 			<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
 			<div className='recipe_ingredients'>Ingredients: 
 				{ingredients.map((i,key) => {
 					return (
-						<div key={key}>
-							<p>Name: {i.Name}</p>
-							<p>Energy: {i.Energy} kJ</p>
-							<p>Carbohydrates: {i.Carbohydrates}g</p>
-							<p>Fat: {i.Fat}g</p>
-							<p>Fibre: {i.Fibre}g</p>
-							<p>Protein: {i.Protein}g</p>
-							<p>Sugars: {i.Sugars}g</p>
-							<p>Calcium: {i.Calcium}mg</p>
-							<p>Iron: {i.Iron}mg</p>
-							<p>Magnesium: {i.Magnesium}mg</p>
-							<p>Manganese: {i.Manganese}mg</p>
-							<p>Phosphorus: {i.Phosphorus}mg</p>
-							<p>Grams: {i.Grams}g</p>
-							<p>Quantity: {i.Quantity}</p>
-							<p>Millilitres: {i.Millilitres}mL</p>
+						<div className="ingredient_values" key={key}>
+							<li>Name: {i.Name}</li>
+							<li>Energy: {i.Energy} kJ</li>
+							<li>Carbohydrates: {i.Carbohydrates}g</li>
+							<li>Fat: {i.Fat}g</li>
+							<li>Fibre: {i.Fibre}g</li>
+							<li>Protein: {i.Protein}g</li>
+							<li>Sugars: {i.Sugars}g</li>
+							<li>Calcium: {i.Calcium}mg</li>
+							<li>Iron: {i.Iron}mg</li>
+							<li>Magnesium: {i.Magnesium}mg</li>
+							<li>Manganese: {i.Manganese}mg</li>
+							<li>Phosphorus: {i.Phosphorus}mg</li>
+							<li>Grams: {i.Grams}g</li>
+							<li>Quantity: {i.Quantity}</li>
+							<li>Millilitres: {i.Millilitres}mL</li>
 						</div>
 					)
 				})}

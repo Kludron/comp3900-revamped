@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from "react-router";
 import './MyRecipes.css';
 import Button from '@mui/material/Button';
+import axios from "axios";
 
 /* MyRecipes Page */
 function MyRecipes() {
@@ -18,6 +19,38 @@ function MyRecipes() {
 		navigate('/create-recipe');
 	};
 	
+	const getMyRecipes = async () => {
+		axios.get('http://localhost:5000/my-recipes/')
+		.then((response) => {
+			console.log(response);
+		}).catch(err => {
+			alert(err);
+		})
+	};
+
+	const getRecentlyViewed = async () => {
+		//Retrieves list of recent recipes that user has viewed
+		const recent = JSON.parse(localStorage.getItem('recent'));
+		const token = localStorage.getItem('token');
+		let body = {recentlyViewed: recent};
+		console.log(body);
+		let headers = {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+		axios.post('http://localhost:5000/recentlyviewed', body, {headers:headers})
+		.then((response) => {
+			console.log(response);
+		}).catch(err => {
+			alert(err);
+		})
+	}
+
+	React.useEffect(() => {
+		getMyRecipes();
+		getRecentlyViewed();
+	}, [])
+
 	return <>
 		<div className="wrapper">
 			<NavBar/>
@@ -32,6 +65,10 @@ function MyRecipes() {
 					onClick={() => navigateRecipeForm()}>
 					Create Recipe
 				</Button>
+				<div className="recent_viewed">
+					<h2>Recently Viewed</h2>
+
+				</div>
 			</div>
 		</div>
 	</>

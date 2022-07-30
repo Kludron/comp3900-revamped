@@ -238,3 +238,26 @@ def grab_ingredients(cursor, r_id) -> list or None:
         WHERE r_id=%s";
     """, (r_id, ))
     return cursor.fetchall()
+
+def search_users_recipes(email, cursor) -> tuple:
+    u_id = auth_get_uid()
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
+
+    cursor.execute("SELECT id FROM recipes WHERE uploader=%s", (u_id,))
+    try:
+        recipes = [row[-1] for row in cursor.fetchall()]
+    except TypeError:
+        # Does this occur when user hasn't uploaded?
+        return {'msg' : 'Something went wrong retrieving recipes'}, 500
+
+    if not recipes:
+        return {'msg' : 'No recipes found'}, 200
+
+    response={'Recipes' : list()}
+    for r_id in recipes:
+        result, status_code = search_detailed(cursor, r_id)
+        if not status_code == 200: continue
+        response['Recipes'].append(result)
+
+    return response, 200

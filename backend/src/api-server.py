@@ -101,6 +101,12 @@ def profile():
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
+@api.route('/recentlyviewed', methods=['GET'])
+@jwt_required()
+@cross_origin()
+def recently_viewed():
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+
 ################Created by Bill################
 @api.route('/favourite', methods=['GET', 'PUT'])
 @jwt_required()
@@ -166,6 +172,11 @@ def favourite():
 def detailed_search():
     pass
 
+@api.route('/my-recipes', methods=['GET'])
+@jwt_required()
+@cross_origin()
+def get_my_recipes():
+    return search_users_recipes(get_jwt_identity(), cursor)
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
@@ -203,6 +214,12 @@ def reviews(id):
             })
         return response, 200
 
+
+@api.route('/eaten/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def dietMetrics():
+    pass
+
 #############################################
 #                                           #
 #           Contributing Routes             #
@@ -238,9 +255,6 @@ def edit_recipe(r_id):
 def review(r_id):
     data = request.get_data()
     return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
-
-
-
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
