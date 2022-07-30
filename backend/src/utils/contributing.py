@@ -239,12 +239,12 @@ def contrib_review_recipe(email, r_id, data, cursor, conn) -> tuple:
         cursor.execute("UPDATE recipe_rating SET rating=%s WHERE u_id=%s AND r_id=%s", (rating, u_id, r_id))
     else:
         # User has not rated the recipe
-        cursor.execute("INSERTINTO recipe_rating(u_id, r_id, rating) VALUES (%s, %s, %s)", (u_id, r_id, rating))
+        cursor.execute("INSERT INTO recipe_rating(u_id, r_id, rating) VALUES (%s, %s, %s)", (u_id, r_id, rating))
 
     # Add the comment
     if comment:
         try:
-            cursor.execute("INSERT INTO comments(r_id, u_id, description) VALUES (%s,%s,%s)", r_id, u_id, comment)
+            cursor.execute("INSERT INTO comments(r_id, u_id, description) VALUES (%s,%s,%s)", (r_id, u_id, comment))
         except psycopg2.ProgrammingError:
             return {'msg' : 'An error occured while posting the comment'}, 500
 
