@@ -101,6 +101,12 @@ def profile():
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
+@api.route('/recentlyviewed', methods=['GET'])
+@jwt_required()
+@cross_origin()
+def recently_viewed():
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+
 ################Created by Bill################
 @api.route('/favourite', methods=['GET', 'PUT'])
 @jwt_required()
@@ -166,20 +172,11 @@ def favourite():
 def detailed_search():
     pass
 
-@api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
+@api.route('/my-recipes', methods=['GET'])
 @jwt_required()
 @cross_origin()
-def edit_recipe(r_id):
-    if request.method == 'PUT':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return contrib_edit_recipe(data, cursor, conn, r_id)
-        else:
-            return dict(msg="User does not own this recipe.")
-    elif request.method == 'GET':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return search_detailed(cursor, r_id)
-        else:
-            return dict(msg="User does not own this recipe.")
+def get_my_recipes():
+    return search_users_recipes(get_jwt_identity(), cursor)
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
@@ -215,6 +212,48 @@ def reviews(id):
         })
 
     return response, 200
+
+
+@api.route('/eaten/recipeid=<id>', methods=['GET'])
+@cross_origin()
+def dietMetrics():
+    pass
+
+#############################################
+#                                           #
+#           Contributing Routes             #
+#                                           #
+#############################################
+
+
+@api.route('/post_recipe', methods=['POST'])
+@jwt_required() # To ensure that the user is logged in
+@cross_origin()
+def post_recipe():
+    return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
+
+@api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
+@jwt_required()
+@cross_origin()
+def edit_recipe(r_id):
+    if request.method == 'PUT':
+        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
+            return contrib_edit_recipe(data, cursor, conn, r_id)
+        else:
+            return dict(msg="User does not own this recipe.")
+    elif request.method == 'GET':
+        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
+            return search_detailed(cursor, r_id)
+        else:
+            return dict(msg="User does not own this recipe.")
+
+
+@api.route('/contrib/review/recipe=<r_id>', methods=['POST', 'PUT'])
+@jwt_required()
+@cross_origin()
+def review(r_id):
+    data = request.get_data()
+    return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
@@ -320,11 +359,6 @@ def getUserId():
     except IndexError:
         return None
 
-@api.route('/post_recipe', methods=['POST'])
-@jwt_required() # To ensure that the user is logged in
-@cross_origin()
-def post_recipe():
-    return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
 
 if __name__ == '__main__':
     api.run()
