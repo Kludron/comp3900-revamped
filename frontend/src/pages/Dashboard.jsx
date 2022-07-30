@@ -54,20 +54,24 @@ function Dashboard () {
   }
 
   const eatenRecipe = async (recipeid) => {
-    let headers = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-    let body = {
-      r_id: recipeid,
-    }
-    console.log(recipeid + ': eaten');
-    const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
-    console.log(response.status);
-    if(response.status === '200'){
-      alert('You have marked the recipe as eaten.');
+    if(localStorage.getItem('token') != null){
+      let headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+      let body = {
+        r_id: recipeid,
+      }
+      console.log(body);
+      const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
+      console.log(response.status);
+      if(response.status === '200'){
+        alert('You have marked the recipe as eaten.');
+      } else {
+        alert('An issue has occurred marking the recipe as eaten. Please try again.')
+      }
     } else {
-      alert('An issue has occurred marking the recipe as eaten. Please try again.')
+      alert('Please create an account to access the Eaten functionality and being tracking your dietary intake.')
     }
   }
 
