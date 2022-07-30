@@ -88,7 +88,7 @@ def profile():
     if request.method == 'GET':
         return auth_get_profile(get_jwt_identity(), cursor)
     elif request.method == 'PUT':
-        return customise_profile(request.get_data(), get_jwt_identity())
+        return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
 
 #############################################
 #                                           #

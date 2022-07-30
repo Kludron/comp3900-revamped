@@ -38,7 +38,7 @@ function Profile() {
 
   React.useEffect(() => {
     loadProfile();
-  });
+  }, []);
 
   console.log(userData);
   return <>
@@ -95,8 +95,10 @@ function Allergens({ allAllergens, usersAllergens, setUsersAllergens }) {
 function SelectAllergens({ allAllergens, usersAllergens, setUsersAllergens }) {
 
   const appendList = (allergy) => {
-    setUsersAllergens(usersAllergens => [...usersAllergens, allergy]);
-    console.log(usersAllergens)
+    if (!usersAllergens.includes(allergy)) {
+      setUsersAllergens(usersAllergens => [...usersAllergens, allergy]);
+      console.log(usersAllergens)
+    }
   };
 
   return <div className='select-allergens'>
@@ -104,7 +106,7 @@ function SelectAllergens({ allAllergens, usersAllergens, setUsersAllergens }) {
     <div className='selections'>
       {allAllergens.map((allergen, key) => {
         return (
-          <button className='selection' onClick={() => appendList({ allergen })}>
+          <button key={key} className='selection' onClick={() => appendList(allergen)}>
             {allergen}
           </button>
         )
@@ -134,6 +136,7 @@ function UsersAllergen({ usersAllergens, setUsersAllergens }) {
         console.log(error);
         alert(error)
       });
+    alert("Allergens saved!");
   };
 
   return <div className='users-allergen'>
@@ -142,7 +145,7 @@ function UsersAllergen({ usersAllergens, setUsersAllergens }) {
       {usersAllergens.map((allergen, key) => {
           console.log(allergen);
           return (
-            <div className='allergies-box-element'>{allergen}</div>
+            <div key={key} className='allergies-box-element'>{allergen}</div>
             )
           })}
     </div>

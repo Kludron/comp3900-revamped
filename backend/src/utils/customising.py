@@ -8,11 +8,29 @@ def customise_profile(data, email, cursor, conn):
         data = json.loads(data)
         if type(data) is dict:
             cursor.execute('''
-                SELECT u.id
+                SELECT id
                 FROM users 
                 WHERE email = %s;
             ''', (email,))
-            id = cursor.fetchone()
+            user_id = cursor.fetchone()[0]
             usersAllergens = data["usersAllergens"]
-            pass
-        return {'msg': 'This is not yet implemented'}, 404
+
+            cursor.execute('''
+                DELETE FROM user_allergens
+                WHERE u_id = %s;
+            ''', (user_id,))
+            for allergen in usersAllergens:
+                cursor.execute('''
+                    SELECT id 
+                    FROM Allergens
+                    WHERE name = %s;
+                ''', (allergen,))
+                allergen_id = cursor.fetchone()[0]
+
+                cursor.execute('''
+                    INSERT INTO user_allergens
+                    VALUES (%s, %s);
+                ''', (user_id, allergen_id))
+                conn.commit()
+            return {'msg': 'Success'}, 200
+        return {'msg': 'Data error'}, 404

@@ -232,52 +232,38 @@ def auth_get_profile(email, cursor):
     except (ValueError, psycopg2.ProgrammingError, TypeError):
         return {'msg' : 'Authentication Error'}, 403
 
-    # Grab Bookmarks
-    cursor.execute("""
-        SELECT r.name, r.description, c.name, m.name, r.servingSize
-        FROM recipes r
-            JOIN cuisines c ON c.id=r.cuisine
-            JOIN mealtypes m ON m.id = r.mealType
-        WHERE EXISTS (
-            SELECT 1
-            FROM user_bookmarks b
-                JOIN users u ON u.id = b.u_id
-                JOIN recipes r ON r.id = b.r_id
-            WHERE u.id = %s
-        );
-    """, (u_id,))
-    bookmarks = cursor.fetchall()
-
     # Grab Allergens
     cursor.execute("""
         SELECT a.name FROM allergens a;
     """, (u_id,))
     allAllergens = cursor.fetchall()
 
+    cursor.execute("""
+        SELECT a.name
+        FROM user_allergens ua, allergens a
+        WHERE ua.a_id = a.id
+        AND ua.u_id = %s;
+    """, (u_id,))
+    usersAllergens = cursor.fetchall()
     response = {
         'Username' : username,
         'Email' : email,
         'Points' : points,
-        'Bookmarks' : [],
         'allAllergens' : [], 
         'usersAllergens': [], 
     }
-
-    for recipe in bookmarks:
-        name,desc,cuisine,mealType,sS = recipe
-        response["Bookmarks"].append({
-            "Name":name,
-            "Description":desc,
-            "Cuisine":cuisine,
-            "Meal Type":mealType,
-            "Serving Size":sS
-        })
     
     for allergen in allAllergens:
         try:
             response["allAllergens"].append(allergen[0])
         except KeyError:
             # No allergies found? This might not even be run in that case.
+            pass
+    
+    for allergen in usersAllergens:
+        try:
+            response["usersAllergens"].append(allergen[0])
+        except KeyError:
             pass
 
     return response, 200
