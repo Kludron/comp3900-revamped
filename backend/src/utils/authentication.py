@@ -232,5 +232,6 @@ def auth_update_viewed(data, email, cursor, conn):
     # Insert recently viewed recipes into the db
     for recipe in recipes:
         r_id = recipe['r_id']
+        cursor.execute("INSERT INTO ")
 
 
