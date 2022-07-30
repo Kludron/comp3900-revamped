@@ -239,7 +239,7 @@ def grab_ingredients(cursor, r_id) -> list or None:
     """, (r_id, ))
     return cursor.fetchall()
 
-def search_users_recipes(email):
+def search_users_recipes(email, cursor) -> tuple:
     u_id = auth_get_uid()
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
