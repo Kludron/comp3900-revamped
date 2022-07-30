@@ -229,7 +229,7 @@ def contrib_review_recipe(email, r_id, data, cursor, conn) -> tuple:
         if rating < 0 or rating > 5:
             raise ValueError
     except ValueError:
-        return {'msg' : 'Rating is not a valid number'}
+        return {'msg' : 'Rating is not a valid number'}, 400
 
     # Check if they've already rated the recipe
     
