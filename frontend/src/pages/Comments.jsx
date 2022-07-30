@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Rating, TextField } from "@mui/material";
 
+const token = localStorage.getItem("token");
+
 /* Recipe Comments Page */
 function Comments () {
 
@@ -16,9 +18,8 @@ function Comments () {
   //Obtains recipeID from URL
   const recipeid = window.location.pathname.split('/')[3];
   const [comments, setComments] = useState([]);
-
-  const token = localStorage.getItem("token");
-
+  
+  
   //Loads Recipe comments from backend
   const loadComments = async () => {
     var headers = {
@@ -26,20 +27,20 @@ function Comments () {
     }
     // TODO : change the path
     const response = await axios.get(`http://localhost:5000/reviews/recipeid=${recipeid}`, {headers:headers});
-      setComments(response.data.Comments);
-    }
-
+    setComments(response.data.Comments);
+  }
+  
   React.useEffect(() => {
     loadComments();
   }, [])
-
+  
   return <div>
     <button className="comment-go-back" onClick={goBack}>←Go Back</button>
-    <CommentBar/>
+    <CommentBar recipeid={recipeid}/>
     <div>
       {comments.map((comment, key) => (
         <Comment key={key} commenter={comment.commenter} comment={comment.comment} rating={comment.rating}/>
-      ))}
+        ))}
     </div>
   </div>
 }
@@ -59,20 +60,21 @@ function Comment ({commenter, comment, rating}) {
   </div>
 }
 
-function CommentBar () {
+function CommentBar ({ recipeid }) {
   const [comment, setComment] = React.useState('');
   const [rating, setRating] = React.useState(0);
-
-
+  
+  
   const submitComment = async () => {
-    let headers = {
-        "Content-Type": "application/json",
-    };
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
     var body = {
       comment,
       rating
     };
-    axios.post(`http://localhost:5000/reviews/recipeid=${recipeid}`, body, headers)
+    axios.post(`http://localhost:5000/contrib/review/recipe=${recipeid}`, body, { headers: headers })
     .then((response) => {
       console.log(response);
     }).catch((error) => {
