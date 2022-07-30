@@ -18,7 +18,12 @@ function MyRecipes() {
 	};
 	
 	const getMyRecipes = async () => {
-		const response = await axios.get('http://localhost:5000/my-recipes/');
+		axios.get('http://localhost:5000/my-recipes/')
+		.then((response) => {
+			console.log(response);
+		}).catch(err => {
+			alert(err);
+		})
 	};
 
 	const getRecentlyViewed = async () => {
@@ -28,9 +33,10 @@ function MyRecipes() {
 		let body = {recentlyViewed: recent};
 		console.log(body);
 		let headers = {
+			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${token}`
 		}
-		axios.post('http://localhost:5000/recentlyviewed', body, headers)
+		axios.post('http://localhost:5000/recentlyviewed', body, {headers:headers})
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
