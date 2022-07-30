@@ -145,12 +145,11 @@ def reviews(id):
 
     return response, 200
 
-###################################################
-#
-#
-#       Contributing Routes
-#
-###################################################
+#############################################
+#                                           #
+#           Contributing Routes             #
+#                                           #
+#############################################
 
 
 @api.route('/post_recipe', methods=['POST'])
@@ -180,9 +179,7 @@ def edit_recipe(r_id):
 @cross_origin()
 def review(r_id):
     data = request.get_data()
-    if method == 'POST':
-        # This is for posting a rating / posting a comment
-        return contrib_review_recipe(r_id)
+    return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
 
 
 

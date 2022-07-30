@@ -1,6 +1,7 @@
 
 import json
 from utils.searching import grab_ingredients
+import psycopg2
 
 def contrib_post_recipe(email, data, cursor, conn):
     
@@ -185,7 +186,7 @@ def contrib_edit_recipe(data, cursor, conn, r_id):
                         "INSERT INTO recipe_ingredients(r_id, ingredient, quantity, grams, millilitres) VALUES (%s, %s, %s, %s, %s) "
                         , (r_id, i_id, i_quantity, i_grams, i_millilitres) 
                     )
-                except (KeyError, psycopg2.ProgrammingError, ValueError()):
+                except (KeyError, psycopg2.ProgrammingError, ValueError):
                     return {'msg' : 'Invalid request parameters (ingredients)'}, 403
 
         # Remove old ingredients from the database
@@ -205,14 +206,55 @@ def contrib_edit_recipe(data, cursor, conn, r_id):
     except Exception:
         return {'msg' : 'An error occured while editing the recipe'}, 400
 
-def contrib_review_recipe(r_id) -> tuple:
-    data = json.loads(data)
+def contrib_review_recipe(email, r_id, data, cursor, conn) -> tuple:
+
+    # Get the users u_id
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     try:
+        u_id = cursor.fetchone()[0]
+    except TypeError:
+        return {'msg', 'Error retrieving user from the database'}, 403
+
+    try:
+        data = json.loads(data)
         comment = data["comment"]
         rating = data["rating"]
-        toDelete = data["toDelete"]
-    except KeyError:
+        # toDelete = data["toDelete"]
+    except (KeyError, json.decoder.JSONDecodeError):
         return {'msg', 'Invalid parameters'}, 400
 
+    # Ensure rating is valid
+    try:
+        rating = int(rating)
+        if rating < 0 or rating > 5:
+            raise ValueError
+    except ValueError:
+        return {'msg' : 'Rating is not a valid number'}
+
     # Check if they've already rated the recipe
-    # Check if they've already commented on the recipe
+    
+    cursor.execute("SELECT 1 FROM recipe_rating WHERE u_id=%s AND r_id=%s", (u_id, r_id))
+    if cursor.fetchone():
+        # User has rated the recipe. Update their rating
+        cursor.execute("UPDATE recipe_rating SET rating=%s WHERE u_id=%s AND r_id=%s", (rating, u_id, r_id))
+    else:
+        # User has not rated the recipe
+        cursor.execute("INSERTINTO recipe_rating(u_id, r_id, rating) VALUES (%s, %s, %s)", (u_id, r_id, rating))
+
+    # Add the comment
+    if comment:
+        try:
+            cursor.execute("INSERT INTO comments(r_id, u_id, description) VALUES (%s,%s,%s)", r_id, u_id, comment)
+        except psycopg2.ProgrammingError:
+            return {'msg' : 'An error occured while posting the comment'}, 500
+
+    conn.commit()
+    return {'msg' : 'Successfully reviewed the recipe'}, 200
+
+
+    
+
+
+
+
+
