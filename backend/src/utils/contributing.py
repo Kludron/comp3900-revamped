@@ -207,7 +207,6 @@ def contrib_edit_recipe(data, cursor, conn, r_id):
         return {'msg' : 'An error occured while editing the recipe'}, 400
 
 def contrib_review_recipe(email, r_id, data, cursor, conn) -> tuple:
-
     # Get the users u_id
     cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     try:

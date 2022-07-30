@@ -77,7 +77,7 @@ function CommentBar ({ recipeid }) {
     };
     axios.post(`http://localhost:5000/contrib/review/recipe=${recipeid}`, body, { headers: headers })
     .then((response) => {
-      console.log(response);
+      alert("Comment successfully!")
     }).catch((error) => {
       console.log(error);
       alert(error)
