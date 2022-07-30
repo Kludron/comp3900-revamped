@@ -204,3 +204,15 @@ def contrib_edit_recipe(data, cursor, conn, r_id):
         conn.commit()
     except Exception:
         return {'msg' : 'An error occured while editing the recipe'}, 400
+
+def contrib_review_recipe(r_id) -> tuple:
+    data = json.loads(data)
+    try:
+        comment = data["comment"]
+        rating = data["rating"]
+        toDelete = data["toDelete"]
+    except KeyError:
+        return {'msg', 'Invalid parameters'}, 400
+
+    # Check if they've already rated the recipe
+    # Check if they've already commented on the recipe
