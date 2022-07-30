@@ -14,9 +14,7 @@ function Welcome () {
       <div className="left">
         <Link to='/register'>Sign up</Link>
       </div>
-      <div className="space">
-        
-      </div>
+      <div className="space"></div>
       <div className="right">
         <Link to='/login'>Log in</Link>
       </div>
