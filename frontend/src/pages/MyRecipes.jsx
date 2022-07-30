@@ -21,8 +21,26 @@ function MyRecipes() {
 		const response = await axios.get('http://localhost:5000/my-recipes/');
 	};
 
+	const getRecentlyViewed = async () => {
+		//Retrieves list of recent recipes that user has viewed
+		const recent = JSON.parse(localStorage.getItem('recent'));
+		const token = localStorage.getItem('token');
+		let body = {recentlyViewed: recent};
+		console.log(body);
+		let headers = {
+			'Authorization': `Bearer ${token}`
+		}
+		axios.post('http://localhost:5000/recentlyviewed', body, headers)
+		.then((response) => {
+			console.log(response);
+		}).catch(err => {
+			alert(err);
+		})
+	}
+
 	React.useEffect(() => {
 		getMyRecipes();
+		getRecentlyViewed();
 	}, [])
 
 	return <>
