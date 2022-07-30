@@ -4,15 +4,17 @@ import { useNavigate } from "react-router";
 import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
+
+/* MyRecipes Page */
 function MyRecipes() {
 
 	const [myRecipes, setMyRecipes] = React.useState('You have created no recipes, please create one via the button below.')
 	
+	//React navigate functions
 	const navigate = useNavigate();
 	const previous = () => {
 		navigate('/dashboard');
 	};
-
 	const navigateRecipeForm = () => {
 		navigate('/create-recipe');
 	};

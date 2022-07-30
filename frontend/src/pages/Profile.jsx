@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import AllIngredients from "../ingredients/allingredients.json";
+import Button from '@mui/material/Button';
 
 /* Profile Page */
 function Profile () {
@@ -14,19 +15,23 @@ function Profile () {
   //Gets Auth Token
   const token = localStorage.getItem('token');
 
+  //React navigate functions
   const navigate = useNavigate();
   const changePassword = () => {
     navigate('/change-password');
   };
-
   const changeUsername = () => {
     navigate('/change-username');
   };
-
   const previous = () => {
 		navigate('/dashboard');
 	};
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
 
+  //Pulls user's profile details using their token to be displayed on the page
   const loadProfile = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
@@ -69,7 +74,7 @@ function Profile () {
       console.log(response);
     }).catch((error) => {
       console.log(error);
-      alert(error)
+      alert(error);
     });
   }
 
@@ -78,6 +83,7 @@ function Profile () {
       <NavBar/>
       <div className="main-content">
       <button onClick={previous}>Go Back</button>
+      <Button variant='outlined' onClick={logout}>Logout</Button>
         <div className="header">
           <h2>My Profile</h2>
           <div className='userdata_field' >

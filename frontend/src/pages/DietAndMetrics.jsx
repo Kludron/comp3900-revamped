@@ -9,8 +9,8 @@ import { Typography } from "@mui/material";
 import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
 
+/* Diet and Metrics Page */
 function DietAndMetrics() {
-
 	const marksDaily = [
 		{
 			value: 1400,
@@ -181,7 +181,6 @@ function DietAndMetrics() {
 					}
 				</div>
 			</div>
-	</div>
 }
 
 export default DietAndMetrics;
