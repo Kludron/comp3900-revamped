@@ -225,13 +225,19 @@ def auth_update_viewed(data, email, cursor, conn):
         return {'msg' : 'An error occured when grabbing users recently viewed recipes'}, 500
 
     # Calculate number of items to delete
-    nDelete = min(RVSTORAGE - nStored - len(recipes), 0)
+    nDelete = max(0, len(recipes) + nStored - RVSTORAGE)
     # Delete n recentlyViewed from the database
-    cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, abs(nDelete)))
+    cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
 
     # Insert recently viewed recipes into the db
     for recipe in recipes:
-        r_id = recipe['r_id']
-        cursor.execute("INSERT INTO ")
+        try:
+            r_id = recipe['r_id']
+        except KeyError: # Invalid recipe entry. Ignore it
+            pass
+        cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s)", (u_id, r_id))
+
+    conn.commit()
+    return {'msg' : 'Successfully updated recently viewed table'}, 200
 
 
