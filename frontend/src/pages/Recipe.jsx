@@ -36,6 +36,7 @@ function Recipe () {
 		setRecipe({
 			name: response.data.Name,
 			description: response.data.Description, 
+			instructions: response.data.Instructions,
 			ingredients: response.data.Ingredients, 
 			cuisine: response.data.Cuisine, 
 			mealtype: response.data.MealType, 
@@ -54,6 +55,7 @@ function Recipe () {
 			<button onClick={() => goBack()}>←Go Back</button>
 			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
 			<p className='recipe_description'>Description: {recipe.description}</p>
+			<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
 			<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
 			<p className='recipe_servingsize'>Serving Size: {recipe.servingsize}</p>
 			<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
