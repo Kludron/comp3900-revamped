@@ -65,11 +65,11 @@ p {
     justify-content: space-around;
     align-content: center;
     flex-wrap: wrap;
+    flex-direction: row;
     padding: 15px;
 }
 
 .recipe_box {
-
     border: 2px solid black;
     border-radius: 10px;
     background-color: aqua;
