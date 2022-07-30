@@ -101,6 +101,12 @@ def profile():
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
+@api.route('/recentlyviewed', methods=['GET'])
+@jwt_required()
+@cross_origin()
+def recently_viewed():
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 

@@ -204,6 +204,7 @@ def auth_get_uid(email, cursor):
     except TypeError:
         return None
 
+
 def auth_update_viewed(data, email, cursor, conn):
 
     # Grab the users u_id

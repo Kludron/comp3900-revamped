@@ -181,6 +181,7 @@ function DietAndMetrics() {
 					}
 				</div>
 			</div>
+        </div>
 }
 
 export default DietAndMetrics;

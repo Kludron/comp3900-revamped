@@ -67,7 +67,6 @@ function Dashboard () {
     };
   }
 
-<<<<<<< HEAD
   const eatenRecipe = async (recipeid) => {
     let headers = {
       "Content-Type": "application/json",
@@ -91,10 +90,6 @@ function Dashboard () {
       navigate('/login');
     }
   });
-=======
-  /*React.useEffect(() => {
-  });*/
->>>>>>> 3b2a32435ef5bd85e34aaf270e830f39685a86cc
 
   return <div>
     {/* left title and search bar */}
