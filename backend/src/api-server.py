@@ -242,10 +242,10 @@ def search():
         if isinstance(data, dict):
             try:
                 # Pull data
-                search_query = data['search']
-                ingredients = data['ingredients']
-                mealTypes = data['mealTypes']
-                cuisines = data['cuisines']
+                search_query : str = data['search']
+                ingredients : list = data['ingredients']
+                mealTypes : list = data['mealTypes']
+                cuisines : list = data['cuisines']
             except KeyError as e:
                 print(e)
                 return {'msg' : 'Invalid search parameters'}, 400    
@@ -276,7 +276,7 @@ def search():
 
                 if search_query:
                     constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
-                    arguments.append(search_query)
+                    arguments.append(search_query.lower())
                 if ingredients:
                     constraints.append(f"""EXISTS(
                                     SELECT 1
@@ -299,6 +299,7 @@ def search():
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 
+                print(query)
                 cursor.execute(query, tuple(arguments))
 
                 __add_to_results(cursor.fetchall())
@@ -343,10 +344,7 @@ def profile():
 
         # Grab Allergens
         cursor.execute("""
-            SELECT a.name
-            FROM allergens a, users u
-                JOIN user_allergens ua ON ua.a_id = a.id
-            WHERE u.id = %s;
+            SELECT a.name FROM allergens a;
         """, (u_id,))
         allergens = cursor.fetchall()
 
@@ -387,6 +385,63 @@ def profile():
         response["msg"] = "The data provided is not valid"
     return response
 
+################Created by Bill################
+@api.route('/favourite', methods=['GET', 'PUT'])
+@jwt_required()
+@cross_origin()
+def favourite():
+    response = {}
+    if request.method == 'GET':
+        email = get_jwt_identity()
+        query = """
+        SELECT u.id FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+        try:
+            u_id = cursor.fetchone()
+        except TypeError:
+            return {'msg' : 'Authentication Error'}, 403
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r.id, r.name, r.description, c.name, m.name, r.servingSize
+            FROM recipes r
+                JOIN cuisines c ON c.id=r.cuisine
+                JOIN mealtypes m ON m.id = r.mealType
+            WHERE r.id IN (
+                SELECT r_id
+                FROM user_bookmarks
+                WHERE u_id = %s
+            );
+        """, (u_id,))
+        bookmarks = cursor.fetchall()
+        response = {
+            'Bookmarks' : []
+        }
+
+        for recipe in bookmarks:
+            id,name,desc,cuisine,mealType,sS = recipe
+            response["Bookmarks"].append({
+                "id" : id,
+                "name":name,
+                "description":desc,
+                "cuisine":cuisine,
+                "mealType":mealType,
+                "servingSize":sS
+            })
+
+        return response, 200
+
+    elif request.method == 'PUT':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            email = get_jwt_identity()
+            
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
+    return response
+###############################################
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 
@@ -553,44 +608,52 @@ def find_recipe(r_id):
     }
 
     for ingredient in ingredients:
-        i_id, quantity, grams, mL = ingredient
+        i_id, Quantity, Grams, Millilitres = ingredient
 
-        cursor.execute("SELECT name,calories,fat,sodium,carbohydrates,fiber,sugars,protein FROM ingredients WHERE id=%s", (i_id,))
+        cursor.execute("SELECT name,energy,protein,fat,fibre,sugars,carbohydrates,calcium,iron,magnesium,manganese,phosphorus FROM ingredients WHERE id=%s", (i_id,))
         try:
-            name,calories,fat,sodium,carbohydrates,fiber,sugars,protein = cursor.fetchone()
+            Name,Energy,Protein,Fat,Fibre,Sugars,Carbohydrates,Calcium,Iron,Magnesium,Manganese,Phosphorus = cursor.fetchone()
         except ValueError:
             # This ingredient doesn't exist
             pass
         
-        ingredient_info = {
-            "Name" : name,
-            "Calories" : calories,
-            "Fat" : fat,
-            "Sodium" : sodium,
-            "Carbohydrates" : carbohydrates,
-            "Fiber" : fiber,
-            "Sugars" : sugars,
-            "Protein" : protein,
-            "Quantity" : quantity,
-            "Grams" : grams,
-            "Millilitres (mL)" : mL,
-        }
+        ingredient_info = dict(
+            Name,
+            Energy,
+            Protein,
+            Fat,
+            Fibre,
+            Sugars,
+            Carbohydrates,
+            Calcium,
+            Iron,
+            Magnesium,
+            Manganese,
+            Phosphorus,
+            Quantity,
+            Grams,
+            Millilitres
+        )
         response["Ingredients"].append(ingredient_info)
 
     if not response["Ingredients"]: # Default value
-        response["Ingredients"].append({
-            "Name" : "N/A",
-            "Calories" : 0,
-            "Fat" : 0,
-            "Sodium" : 0,
-            "Carbohydrates" : 0,
-            "Fiber" : 0,
-            "Sugars" : 0,
-            "Protein" : 0,
-            "Quantity" : 0,
-            "Grams" : 0,
-            "Millilitres (mL)" : 0,
-        })
+        response["Ingredients"].append(dict(
+            Name="N/A",
+            Energy=0,
+            Protein=0.0,
+            Fat=0.0,
+            Fibre=0.0,
+            Sugars=0.0,
+            Carbohydrates=0.0,
+            Calcium=0.0,
+            Iron=0.0,
+            Magnesium=0.0,
+            Manganese=0.0,
+            Phosphorus=0.0,
+            Quantity=0,
+            Grams=0,
+            Millilitres=0.0
+        ))
 
     return response, 200
 
@@ -600,12 +663,15 @@ def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
+
+    if not str(id).isdigit():
+        return {"msg" : "Recipe not found"}, 404
+
     cursor.execute("""
         SELECT u.username, c.description, 3
         FROM users u, comments c
         WHERE c.r_id = %s;
     """, (id,))
-
     response = {
         "Comments":list()
     }
@@ -620,22 +686,6 @@ def reviews(id):
         })
 
     return response, 200
-
-    # response = []
-    # cursor.execute("SELECT * FROM comments where r_id = %s;", (id,))
-    # results = cursor.fetchall()
-
-    # for row in results:
-    #     tempDict = {}
-    #     #tempDict['c_id'] = row[0]
-    #     tempDict['r_id'] = row[1]
-    #     tempDict['u_id'] = row[2]
-    #     tempDict['description'] = row[3]
-    #     tempDict['parent'] = row[4] #Parent comments will have null in this field
-
-    #     response.append(tempDict)
-
-    # return jsonify(response)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
@@ -672,7 +722,7 @@ def IntakeOverview():
     if not u_id:
         return ("msg: user does not exist", 401)
 
-    #to do: Combine with ingredients table. Limit to last 50 meals
+    #Note: Combine with ingredients table. Limit to last 50 meals
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
 
     return (response, 200)
@@ -722,7 +772,7 @@ def setGoal():
         return {"msg: wrong key", 401}
 
     u_id = getUserId()
-    if(u_id == null):
+    if(u_id == None):
         return ("msg: user does not exist", 401)
 
     #To do: need to add goal column
@@ -739,7 +789,7 @@ def getUserId():
         uploader = cursor.fetchone()[0]
         return uploader
     except IndexError:
-        return null
+        return None
 
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in
