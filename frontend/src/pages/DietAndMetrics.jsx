@@ -84,22 +84,26 @@ function DietAndMetrics() {
 	const [caloricIntakeWeekly, setCalorieIntakeWeekly] = React.useState(12600);
 
 	const handleSubmit = async () => {
+		var today = new Date();
+		var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
 		if(isWeekly){
 			const body = {
 				goal: caloricIntakeWeekly,
 				timeframe: 'Weekly',
+				date: date
 			};
 			console.log(body);
 			let headers = {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			const response = await axios.post("http://localhost:5000/setGoal", {headers:headers}, body);
+			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
 			console.log(response);
 		} else {
 			const body = {
 				goal: caloricIntakeDaily,
 				timeframe: 'Daily',
+				date: date
 			};
 			console.log(body);
 			let headers = {
@@ -120,11 +124,27 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
+	const recommend = async () => {
+		let headers = {
+			"Authorization": `Bearer ${token}`
+		};
+		axios.get('http://localhost:5000/recommend', headers)
+		.then((response) => {
+			console.log(response);
+		}).catch((err) => {
+			alert(err);
+		})
+	}
+
+	React.useEffect(() => {
+		recommend();
+	}, [])
 	return <div className="wrapper">
 			<NavBar/>
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>
-				<h2 className="title">Diet/Metrics</h2>
+				<h1 className="title">Diet/Metrics</h1>
+				<h2 className="title">Set Calorie Goal</h2>
 				<div className='calorie_bar'>
 					Daily
 					<Switch
@@ -179,6 +199,10 @@ function DietAndMetrics() {
 								onClick={handleSubmit}>Save</Button>
 						</Box>
 					}
+				</div>
+				<div className='recommend_section'>
+					<h2>Recommendations</h2>
+
 				</div>
 			</div>
 	</div>
