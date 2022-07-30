@@ -54,10 +54,10 @@ function RegisterForm ({ submit }) {
       onChange={e => setRepassword(e.target.value)}
     />
     <Button variant="contained"
-    sx={{ mt: 3, mb: 2 }}
-    type="submit"
-    id="register"
-    onClick={onSubmit}>Register</Button>
+      sx={{ mt: 3, mb: 2 }}
+      type="submit"
+      id="register"
+      onClick={onSubmit}>Register</Button>
   </>)
 }
 
