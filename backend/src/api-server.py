@@ -199,7 +199,6 @@ def reviews(id):
                 "Content":description,
                 "Rating":rating
             })
-        print(response)
         return response, 200
 
     elif request.method == 'POST':
