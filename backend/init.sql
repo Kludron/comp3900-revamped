@@ -63,12 +63,6 @@ create table recipe_ingredients (
     primary key     (r_id, ingredient)
 );
 
-create table user_upvotes (
-    u_id            int references Users(id) not null,
-    r_id            int references Recipes(id) not null,
-    primary key     (r_id, u_id)
-);
-
 create table user_bookmarks (
     u_id            int references Users(id) not null,
     r_id            int references Recipes(id) not null,
@@ -128,13 +122,11 @@ COPY MealTypes FROM '/var/lib/postgresql/comp3900/backend/data/mealtypes.csv' DE
 COPY Ingredients FROM '/var/lib/postgresql/comp3900/backend/data/ingredients.csv' DELIMITER ',' CSV HEADER;
 COPY Recipes FROM '/var/lib/postgresql/comp3900/backend/data/recipes.csv' DELIMITER ',' CSV HEADER;
 COPY recipe_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/recipe_ingredients.csv' DELIMITER ',' CSV HEADER;
-COPY user_upvotes FROM '/var/lib/postgresql/comp3900/backend/data/user_upvotes.csv' DELIMITER ',' CSV HEADER;
 COPY user_bookmarks FROM '/var/lib/postgresql/comp3900/backend/data/user_bookmarks.csv' DELIMITER ',' CSV HEADER;
 COPY user_recentlyViewed FROM '/var/lib/postgresql/comp3900/backend/data/user_recentlyviewed.csv' DELIMITER ',' CSV HEADER;
 COPY Comments FROM '/var/lib/postgresql/comp3900/backend/data/comments.csv' DELIMITER ',' CSV HEADER;
 COPY Allergens FROM '/var/lib/postgresql/comp3900/backend/data/allergens.csv' DELIMITER ',' CSV HEADER;
 COPY allergen_ingredients FROM '/var/lib/postgresql/comp3900/backend/data/allergen_ingredients.csv' DELIMITER ',' CSV HEADER;
-COPY recipe_instructions FROM '/var/lib/postgresql/comp3900/backend/data/recipe_instructions.csv' DELIMITER ',' CSV HEADER;
 COPY meal_history FROM '/var/lib/postgresql/comp3900/backend/data/meal_history.csv' DELIMITER ',' CSV HEADER;
 COPY user_allergens FROM '/var/lib/postgresql/comp3900/backend/data/user_allergens.csv' DELIMITER ',' CSV HEADER;
 COPY recipe_rating FROM '/var/lib/postgresql/comp3900/backend/data/recipe_rating.csv' DELIMITER ',' CSV HEADER;

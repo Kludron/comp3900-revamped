@@ -107,6 +107,63 @@ def search():
 def recently_viewed():
     return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
 
+################Created by Bill################
+@api.route('/favourite', methods=['GET', 'PUT'])
+@jwt_required()
+@cross_origin()
+def favourite():
+    response = {}
+    if request.method == 'GET':
+        email = get_jwt_identity()
+        query = """
+        SELECT u.id FROM users u WHERE lower(u.email)=%s;
+        """
+        cursor.execute(query, (email,))
+        try:
+            u_id = cursor.fetchone()
+        except TypeError:
+            return {'msg' : 'Authentication Error'}, 403
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r.id, r.name, r.description, c.name, m.name, r.servingSize
+            FROM recipes r
+                JOIN cuisines c ON c.id=r.cuisine
+                JOIN mealtypes m ON m.id = r.mealType
+            WHERE r.id IN (
+                SELECT r_id
+                FROM user_bookmarks
+                WHERE u_id = %s
+            );
+        """, (u_id,))
+        bookmarks = cursor.fetchall()
+        response = {
+            'Bookmarks' : []
+        }
+
+        for recipe in bookmarks:
+            id,name,desc,cuisine,mealType,sS = recipe
+            response["Bookmarks"].append({
+                "id" : id,
+                "name":name,
+                "description":desc,
+                "cuisine":cuisine,
+                "mealType":mealType,
+                "servingSize":sS
+            })
+
+        return response, 200
+
+    elif request.method == 'PUT':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            email = get_jwt_identity()
+            
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
+    return response
+###############################################
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 
@@ -120,21 +177,6 @@ def detailed_search():
 @cross_origin()
 def get_my_recipes():
     return search_users_recipes(get_jwt_identity(), cursor)
-
-@api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
-@jwt_required()
-@cross_origin()
-def edit_recipe():
-    if request.method == 'PUT':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return contrib_edit_recipe(data, cursor, conn, r_id)
-        else:
-            return dict(msg="User does not own this recipe.")
-    elif request.method == 'GET':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return search_detailed(cursor, r_id)
-        else:
-            return dict(msg="User does not own this recipe.")
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
