@@ -215,10 +215,15 @@ def reviews(id):
         return response, 200
 
 
-@api.route('/eaten/recipeid=<id>', methods=['GET'])
-@cross_origin()
-def dietMetrics():
-    pass
+        comments = cursor.fetchall()
+        for comment in comments:
+            username, description, rating = comment
+            response["Comments"].append({
+                "Username":username,
+                "Content":description,
+                "Rating":rating
+            })
+        return response, 200
 
 #############################################
 #                                           #
