@@ -11,6 +11,7 @@ import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
 import Button from '@mui/material/Button';
+import { paperClasses } from '@mui/material';
 
 /* Dashboard Page */
 function Dashboard () {
@@ -36,7 +37,7 @@ function Dashboard () {
     localStorage.clear();
     navigate('/');
   }
-  
+
   // Bookmark function for recipes
   const handleBookmark = () => {
     if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
@@ -48,13 +49,18 @@ function Dashboard () {
       setbookmarkStar('☆');
       console.log('unbookmarked'); //As above
     }
+  };
+
+  const handleClick = () => {
+    if(localStorage.getItem('token') == null){
+      alert('Please create an account to access your profile and our other services.');
+    } else {
+      navigate('/profile');
+    };
   }
 
-  React.useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    }
-  });
+  /*React.useEffect(() => {
+  });*/
 
   return <div>
     {/* left title and search bar */}
@@ -119,9 +125,7 @@ function Dashboard () {
   {/* right title and search bar */}
     <div className='recipe_screen'>
       <Button variant='outlined' onClick={logout}>Logout</Button>
-      <Link to='/profile'>
-        <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
-      </Link>
+      <Avatar onClick={handleClick} sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       <h2>F1V3GUY5 RECIPES</h2>
       {/* right recipes box */}
       <div className="recipeBox">
