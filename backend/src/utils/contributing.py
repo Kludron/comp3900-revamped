@@ -27,6 +27,7 @@ def contrib_post_recipe(email, data, cursor, conn):
         mealtype = data['mealtype']
         servingsize = data['servingsize']
         ingredients = data['ingredients']
+        instructions = data['instructions']
     except KeyError:
         return {'msg' : 'Incorrect Parameters'}, 401
 

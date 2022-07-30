@@ -1,3 +1,10 @@
+#################################
+#
+#   Search functions used for 
+#   COMP3900 F1v3guy5 recipe
+#   recommendation system.
+#
+#################################
 
 import json
 
@@ -107,8 +114,44 @@ def search_general(method, data, cursor) -> tuple:
                 return ({'msg': "Invalid request"}, 400)
 
 def search_detailed(cursor, r_id) -> tuple:
+    """
+    parameters:
+        :cursor: psycopg2 sql cursor
+        :r_id: recipe id -> int
+    details:
+        This function returns detailed information about the specified
+        recipe. This information includes:
+            {
+                Name,
+                Description,
+                Cuisine,
+                MealType,
+                ServingSize,
+                Ingredients : [
+                    {
+                        Name,
+                        Energy,
+                        Protein,
+                        Fat,
+                        Fibre,
+                        Sugars,
+                        Carbohydrates,
+                        Calcium,
+                        Iron,
+                        Magnesium,
+                        Manganese,
+                        Phosphorus,
+                        Quantity,
+                        Grams,
+                        Millilitres
+                    },
+                ],
+                Instructions
+            }
+    """
+
     query = """
-        SELECT r.name, r.description, c.name, m.name, r.servingSize
+        SELECT r.name, r.description, c.name, m.name, r.servingSize, r.instructions
         FROM recipes r
             JOIN cuisines c ON c.id=r.cuisine
             JOIN mealtypes m ON m.id = r.mealType
@@ -120,8 +163,9 @@ def search_detailed(cursor, r_id) -> tuple:
     if not recipe:
         return {'msg' : 'Recipe does not exist'}, 401
         
-    r_name, r_description, c_name, m_name, r_sS = recipe
+    r_name, r_description, c_name, m_name, r_sS, r_instructions = recipe
     
+    # Adjust this to use the grab_ingredients function.
     cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
     ingredients = cursor.fetchall()
 
@@ -131,7 +175,8 @@ def search_detailed(cursor, r_id) -> tuple:
         "Cuisine" : c_name,
         "MealType" : m_name,
         "ServingSize" : r_sS,
-        "Ingredients" : list()
+        "Instructions" : r_instructions,
+        "Ingredients" : list(),
     }
 
     for ingredient in ingredients:
