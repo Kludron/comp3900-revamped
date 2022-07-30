@@ -28,7 +28,7 @@ def customise_profile(data, email, cursor, conn):
                 allergen_id = cursor.fetchone()[0]
 
                 cursor.execute('''
-                    INSERT INTO user_allergens
+                    INSERT INTO user_allergens (u_id, a_id)
                     VALUES (%s, %s);
                 ''', (user_id, allergen_id))
                 conn.commit()

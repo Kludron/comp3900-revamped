@@ -16,6 +16,7 @@ function Recipe () {
 		navigate('/dashboard');
 	};
 	const goToComments = (recipeid) => {
+		console.log(recipeid);
 		navigate(`/view/recipe/${recipeid}/comments`);
 	};
 	
@@ -32,7 +33,8 @@ function Recipe () {
 			Authorization: `Bearer ${token}`,
 		}
 		const response = await axios.get(`http://localhost:5000/view/recipe/${recipeid}`, headers);
-		console.log(response.data);
+		// console.log(response.data);
+		// console.log(recipeid)
 		setRecipe({
 			name: response.data.Name,
 			description: response.data.Description, 
@@ -80,7 +82,7 @@ function Recipe () {
 					)
 				})}
 			</div>
-			<button onClick={() => goToComments()}>See Comments</button>
+			<button onClick={() => goToComments(recipeid)}>See Comments</button>
 		</div>
 	);
 }

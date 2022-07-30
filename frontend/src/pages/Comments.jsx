@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import comments from '../comments/comments.json'
 import './Comments.css'
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Rating, TextField } from "@mui/material";
 
 /* Recipe Comments Page */
 function Comments () {
 
+  const navigate = useNavigate();
+  const goBack = () => {
+		navigate(`/view/recipe/${recipeid}`);
+	};
+
   //Obtains recipeID from URL
   const recipeid = window.location.pathname.split('/')[3];
-
-  const [commets, setComments] = useState({});
+  const [comments, setComments] = useState([]);
 
   const token = localStorage.getItem("token");
 
@@ -22,24 +26,19 @@ function Comments () {
     }
     // TODO : change the path
     const response = await axios.get(`http://localhost:5000/reviews/recipeid=${recipeid}`, {headers:headers});
-    console.log(response.data.Email);
-      setComments({
-        commenter: response.data.Email, 
-        comment: response.data.description, 
-        rating: response.data.rating, 
-      });
-      console.log(comments);
-  }
+      setComments(response.data.Comments);
+    }
 
   React.useEffect(() => {
     loadComments();
-  })
+  }, [])
 
   return <div>
+    <button className="comment-go-back" onClick={goBack}>←Go Back</button>
     <CommentBar/>
     <div>
-      {comments.map((post, key) => (
-        <Comment key={key} commenter={post.commenter} comment={post.comment} rating={post.rating}/>
+      {comments.map((comment, key) => (
+        <Comment key={key} commenter={comment.commenter} comment={comment.comment} rating={comment.rating}/>
       ))}
     </div>
   </div>
@@ -73,7 +72,7 @@ function CommentBar () {
       comment,
       rating
     };
-    axios.post("http://localhost:5000/comment", body, headers)
+    axios.post(`http://localhost:5000/reviews/recipeid=${recipeid}`, body, headers)
     .then((response) => {
       console.log(response);
     }).catch((error) => {

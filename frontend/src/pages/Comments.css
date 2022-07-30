@@ -5,6 +5,10 @@ body {
 
 }
 
+.comment-go-back {
+    margin-bottom: 15px;
+}
+
 .comment {
     padding: 2%;
     display: flex;

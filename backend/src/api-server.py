@@ -186,35 +186,53 @@ def edit_recipe(r_id):
 def find_recipe(r_id):
     return search_detailed(cursor, r_id)
 
-@api.route('/reviews/recipeid=<id>', methods=['GET'])
+@api.route('/reviews/recipeid=<id>', methods=['GET', 'POST'])
 @cross_origin()
 def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
+    if request.method == 'GET':
+        if not str(id).isdigit():
+            return {"msg" : "Recipe not found"}, 404
 
-    if not str(id).isdigit():
-        return {"msg" : "Recipe not found"}, 404
+        cursor.execute("""
+            SELECT u.username, c.description, 3
+            FROM users u, comments c
+            WHERE c.r_id = %s;
+        """, (id,))
+        response = {
+            "Comments":list()
+        }
 
-    cursor.execute("""
-        SELECT u.username, c.description, 3
-        FROM users u, comments c
-        WHERE c.r_id = %s;
-    """, (id,))
-    response = {
-        "Comments":list()
-    }
+        comments = cursor.fetchall()
+        for comment in comments:
+            username, description, rating = comment
+            response["Comments"].append({
+                "Username":username,
+                "Content":description,
+                "Rating":rating
+            })
+        print(response)
+        return response, 200
 
-    comments = cursor.fetchall()
-    for comment in comments:
-        username, description, rating = comment
-        response["Comments"].append({
-            "Username":username,
-            "Content":description,
-            "Rating":rating
-        })
+    elif request.method == 'POST':
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            description = data['comment']
+            u_id = getUserId()
+            r_id = id
 
-    return response, 200
+            cursor.execute('''
+                INSERT INTO comments (r_id, u_id, description)
+                VALUES (%s, %s, %s);
+            ''', (r_id, u_id, description))
+
+            rating = data['rating']
+            cursor.execute('''
+                DELETE FROM user_allergens
+                WHERE u_id = %s;
+            ''', (u_id,))
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
