@@ -112,15 +112,21 @@ def detailed_search():
 @api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
 @jwt_required()
 @cross_origin()
-def edit_recipe(r_id):
+def edit_recipe(r_id=None):
     if request.method == 'PUT':
         if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
             return contrib_edit_recipe(data, cursor, conn, r_id)
         else:
             return dict(msg="User does not own this recipe.")
     elif request.method == 'GET':
+        if not r_id:
+            return search_users_recipes(get_jwt_identity())
         if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return search_detailed(cursor, r_id)
+            response, status_code = search_detailed(cursor, r_id)
+            if status_code != 200:
+                return response, status_code
+            else:
+                return {"Recipes" : [response]}
         else:
             return dict(msg="User does not own this recipe.")
 
