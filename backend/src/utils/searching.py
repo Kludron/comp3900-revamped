@@ -183,3 +183,6 @@ def search_detailed(cursor, r_id):
         ))
 
     return response, 200
+
+def search_recently_viewed():
+    pass

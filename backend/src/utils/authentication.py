@@ -26,6 +26,8 @@ DB_NAME = 'comp3900db'
 DB_USER = 'comp3900_user'
 DB_PASS =  'yckAPfc9MX42N4'
 
+RVSTORAGE = 10 # Recently Viewed Storage
+
 def auth_login(data, cursor) -> tuple:
     """
     :param data:
@@ -194,3 +196,41 @@ def auth_jwt_refresh(expiry, identity, response) -> tuple:
         return response
     except (RuntimeError, KeyError):
         return response
+
+def auth_get_uid(email, cursor):
+    cursor.execute("SELECT id FROM users WHERE email=%s;", (email,))
+    try:
+        return cursor.fetchone()[0]
+    except TypeError:
+        return None
+
+def auth_update_viewed(data, email, cursor, conn):
+
+    # Grab the users u_id
+    u_id = auth_get_uid(email, cursor)
+    if not u_id:
+        return {'msg' : 'Authentication failed'}, 403
+
+    try:
+        data = json.loads(data)
+        recipes = data["recentlyViewed"]
+    except (KeyError, json.decoder.JSONDecodeError):
+        return {'msg' : 'Invalid parameters'}, 400
+
+    # Get a count of the number of recently viewed recipes are stored for that user
+    cursor.execute("SELECT COUNT(u_id) FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
+    try:
+        nStored = cursor.fetchone()[0]
+    except TypeError:
+        return {'msg' : 'An error occured when grabbing users recently viewed recipes'}, 500
+
+    # Calculate number of items to delete
+    nDelete = min(RVSTORAGE - nStored - len(recipes), 0)
+    # Delete n recentlyViewed from the database
+    cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, abs(nDelete)))
+
+    # Insert recently viewed recipes into the db
+    for recipe in recipes:
+        r_id = recipe['r_id']
+
+
