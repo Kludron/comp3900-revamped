@@ -33,13 +33,14 @@ function Comments () {
   React.useEffect(() => {
     loadComments();
   }, [])
+  console.log(comments);
   
   return <div>
     <button className="comment-go-back" onClick={goBack}>←Go Back</button>
     <CommentBar recipeid={recipeid}/>
     <div>
       {comments.map((comment, key) => (
-        <Comment key={key} commenter={comment.commenter} comment={comment.comment} rating={comment.rating}/>
+        <Comment key={key} username={comment.Username} comment={comment.Content} rating={comment.Rating}/>
         ))}
     </div>
   </div>
@@ -47,14 +48,14 @@ function Comments () {
 
 export default Comments;
 
-function Comment ({commenter, comment, rating}) {
+function Comment ({username, comment, rating}) {
   return <div className="comment">
     <div className="comment-user">
       <Avatar className="comment-user-icon"/>
-      {commenter}
+      {username}
     </div>
     <div className="comment-content">
-      <Rating value={rating} readOnly/>
+      {/* <Rating value={rating} readOnly/> */}
       {comment} 
     </div>
   </div>

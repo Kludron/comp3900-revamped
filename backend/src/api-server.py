@@ -183,9 +183,11 @@ def reviews(id):
             return {"msg" : "Recipe not found"}, 404
 
         cursor.execute("""
-            SELECT u.username, c.description, 3
-            FROM users u, comments c
-            WHERE c.r_id = %s;
+            SELECT u.username, c.description, rr.rating
+            FROM users u, comments c, recipe_rating rr
+            WHERE c.r_id = %s
+            AND rr.r_id = c.r_id
+            AND u.id = rr.u_id;
         """, (id,))
         response = {
             "Comments":list()
@@ -200,24 +202,6 @@ def reviews(id):
                 "Rating":rating
             })
         return response, 200
-
-    elif request.method == 'POST':
-        data = json.loads(request.get_data())
-        if type(data) is dict:
-            description = data['comment']
-            u_id = getUserId()
-            r_id = id
-
-            cursor.execute('''
-                INSERT INTO comments (r_id, u_id, description)
-                VALUES (%s, %s, %s);
-            ''', (r_id, u_id, description))
-
-            rating = data['rating']
-            cursor.execute('''
-                DELETE FROM user_allergens
-                WHERE u_id = %s;
-            ''', (u_id,))
 
 #############################################
 #                                           #
