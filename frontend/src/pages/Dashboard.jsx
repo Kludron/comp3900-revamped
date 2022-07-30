@@ -10,6 +10,7 @@ import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
+import Button from '@mui/material/Button';
 
 /* Dashboard Page */
 function Dashboard () {
@@ -31,6 +32,11 @@ function Dashboard () {
     navigate(`/view/recipe/${recipeid}`);
   }
 
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
+  }
+  
   // Bookmark function for recipes
   const handleBookmark = () => {
     if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
@@ -112,6 +118,7 @@ function Dashboard () {
 
   {/* right title and search bar */}
     <div className='recipe_screen'>
+      <Button variant='outlined' onClick={logout}>Logout</Button>
       <Link to='/profile'>
         <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       </Link>
