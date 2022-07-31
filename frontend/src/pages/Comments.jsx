@@ -25,7 +25,6 @@ function Comments () {
     var headers = {
       "Authorization": `Bearer ${token}`
     }
-    // TODO : change the path
     const response = await axios.get(`http://localhost:5000/reviews/recipeid=${recipeid}`, {headers:headers});
     setComments(response.data.Comments);
   }

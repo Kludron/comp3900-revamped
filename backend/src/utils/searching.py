@@ -105,7 +105,7 @@ def search_general(method, data, cursor) -> tuple:
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 cursor.execute(query, tuple(arguments))
-                print(query)
+                # print(query)
                 __add_to_results(cursor.fetchall())
 
                 return (responseval, 200)
