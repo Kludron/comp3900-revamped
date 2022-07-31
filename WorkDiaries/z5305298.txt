@@ -18,4 +18,4 @@ Week 7:
 Week 8: 
     I tried to create a favourite recipes page for bookmarked recipes. Allergens function was fixed, they can be added and displayed correctly. Also tried to collaborate frontend with backend. After the demo, we had the retrospective. In all, I think I did better than in the last sprint.
 Week 9:
-    I implemented favourite recipe page on both frontend and backend.
+    I implemented favourite recipe page and bookmark recipe function on both frontend and backend. Code for rofile had been refactored. Allergen funciton was fixed
