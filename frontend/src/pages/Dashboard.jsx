@@ -10,6 +10,8 @@ import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
+import Button from '@mui/material/Button';
+import { paperClasses } from '@mui/material';
 
 /* Dashboard Page */
 function Dashboard () {
@@ -19,28 +21,34 @@ function Dashboard () {
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   
-  //Gets Authorization token
+  const user = localStorage.getItem('username');
+
+  //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
-  //allows page navigation
+  //React Navigation Function
   const navigate = useNavigate();
 
-  //Gets all Recipe Data
-  //const loadRecipes = async () => {
-  //  const result = await axios.get('http://localhost:5000/get_recipe');
-  //  /*console.log(result);*/
-  //  result.data.forEach((rec) => {
-  //    console.log(rec);
-  //    setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-  //  });
-  //}
-
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
-  const viewRecipe = (recipeid) => {
-    console.log(recipeid);
+  const viewRecipe = (recipeid, key) => {
+    //Checks if there is any existing recipes
+    var existing = JSON.parse(localStorage.getItem('recent'));
+    console.log(existing);
+    if(existing == null) existing = [];
+    let recent = {
+      r_id: recipeid
+    };
+    existing.push(recent);
+    localStorage.setItem('recent', JSON.stringify(existing));
     navigate(`/view/recipe/${recipeid}`);
   }
 
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
+  }
+
+  // Bookmark function for recipes
   const handleBookmark = () => {
     if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
       setfavourite(true);
@@ -51,6 +59,14 @@ function Dashboard () {
       setbookmarkStar('☆');
       console.log('unbookmarked'); //As above
     }
+  };
+
+  const handleClick = () => {
+    if(localStorage.getItem('token') == null){
+      alert('Please create an account to access your profile and our other services.');
+    } else {
+      navigate('/profile');
+    };
   }
 
   const eatenRecipe = async (recipeid) => {
@@ -76,9 +92,9 @@ function Dashboard () {
   }
 
   React.useEffect(() => {
-    if (!token) {
+    /*if (!token) {
       navigate('/login');
-    }
+    }*/
   });
 
   return <div>
@@ -143,13 +159,11 @@ function Dashboard () {
 
   {/* right title and search bar */}
     <div className='recipe_screen'>
-      <Link to='/profile'>
-        <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
-      </Link>
-      <h2>F1V3GUY5 RECIPES</h2>
+      <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
+      <Avatar onClick={handleClick} sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
+      <h2>Welcome {user}, to F1V3GUY5 RECIPES</h2>
       {/* right recipes box */}
       <div className="recipeBox">
-
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           setRecipes([]);
           console.log('submitted successfully');
@@ -186,7 +200,7 @@ function Dashboard () {
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>
                 <p>Serving Size: {recipe.servingsize}</p>
-                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
               </div>
             )
           })}

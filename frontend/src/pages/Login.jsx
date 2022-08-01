@@ -11,9 +11,11 @@ import ForgotPassword from '../components/ForgotPassword';
 
 /* Login Page */
 function Login () {
-  const navigate = useNavigate();
 
   const [authenticated, setAuthenticated] = useState(false);
+
+  //React navigate functions
+  const navigate = useNavigate();
   // Navigate to register page
   const register = () => {
     navigate('/register');

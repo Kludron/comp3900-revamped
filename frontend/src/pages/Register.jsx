@@ -9,10 +9,13 @@ import axios from 'axios';
 
 /* Register Page */
 function Register () {
+  //Clear localstorage
   localStorage.clear();
+
+  //React navigate function
   const navigate = useNavigate();
 
-  // Navigate to Login page
+  //Navigate to Login page
   const login = () => {
     navigate('/login');
   }
@@ -54,8 +57,7 @@ function Register () {
           axios.post("http://localhost:5000/auth/register", body, headers)
           .then((response) => {
             console.log(response);
-            //Need a popup box here
-            alert("You have successfully registered. You have been moved to the login page.")
+            alert("Registration Successful! You will now be moved to the log-in page.")
             navigate('/login');
           }).catch((error) => {
             console.log(error);

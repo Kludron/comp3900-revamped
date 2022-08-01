@@ -46,33 +46,37 @@
     margin-bottom: 0;
 }
 
-.allergies {
+.allergens {
     margin-top: 0px;
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
 }
 
-.search-allergies {
+.selections {
     margin-top: 20px;
-    text-align: center;
+    height: 250px;
+    width: 400px;
+    border-style: ridge;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.search-results {
-    margin-top: 20px;
-    height: 200px;
-    width: 200px;
-    border-style: ridge;
-    overflow: auto;
+.selection {
+    align-self: center;
 }
 
 .added-allergies {
     text-align: center;
 }
 
+.users-allergen {
+    text-align: center;
+}
+
 .allergies-box {
-    height: 250px;
-    width: 400px;
+    height: 200px;
+    width: 350px;
     border-style: ridge;
     display: flex;
     flex-wrap: wrap;

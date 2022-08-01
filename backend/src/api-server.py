@@ -18,6 +18,8 @@ from flask_jwt_extended import (
 import smtplib, ssl
 from flask_cors import CORS, cross_origin
 
+from utils.customising import *
+from utils.contributing import *
 from utils.authentication import *
 from utils.searching import *
 
@@ -39,6 +41,12 @@ except Exception as e:
 
 jwt = JWTManager(api)
 
+#############################################
+#                                           #
+#           Authentication Routes           #
+#                                           # 
+#############################################
+
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
 def login():
@@ -48,6 +56,7 @@ def login():
 @cross_origin()
 def register():
     return auth_register(request.get_data(), cursor, conn)
+
 
 @api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
@@ -66,74 +75,82 @@ def change_username():
 def reset():
     auth_forgot_password(request.get_data())
 
+# Haven't tested this yet
+# @api.after_request()
+# @jwt_required()
+# def refresh_jwt(response: request):
+#     return auth_jwt_refresh(get_jwt()["exp"], get_jwt_identity(), response)
+
+@api.route('/profile', methods=['GET', 'PUT']) # Route tbc later
+@jwt_required() # Required in request header: "Authorization : Bearer <token>"
+@cross_origin()
+def profile():
+    if request.method == 'GET':
+        return auth_get_profile(get_jwt_identity(), cursor)
+    elif request.method == 'PUT':
+        return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
+
+#############################################
+#                                           #
+#              Searching Routes             #
+#                                           #
+#############################################
+
 @api.route('/search', methods=['POST', 'GET'])
 @cross_origin()
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
-# Need to test this
-@api.route('/profile', methods=['GET', 'PUT']) # Route tbc later
-@jwt_required() # Apparently this should check whether or not the jwt is valid? # Required in request header: {"Authorization":"Bearer <token>}"
+@api.route('/recentlyviewed', methods=['GET'])
+@jwt_required()
 @cross_origin()
-def profile():
+def recently_viewed():
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+
+################Created by Bill################
+@api.route('/favourite', methods=['GET', 'PUT'])
+@jwt_required()
+@cross_origin()
+def favourite():
     response = {}
     if request.method == 'GET':
         email = get_jwt_identity()
         query = """
-        SELECT u.id, u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+        SELECT u.id FROM users u WHERE lower(u.email)=%s;
         """
         cursor.execute(query, (email,))
         try:
-            u_id, username, email, points = cursor.fetchone()
+            u_id = cursor.fetchone()
         except TypeError:
             return {'msg' : 'Authentication Error'}, 403
 
         # Grab Bookmarks
         cursor.execute("""
-            SELECT r.name, r.description, c.name, m.name, r.servingSize
+            SELECT r.id, r.name, r.description, c.name, m.name, r.servingSize
             FROM recipes r
                 JOIN cuisines c ON c.id=r.cuisine
                 JOIN mealtypes m ON m.id = r.mealType
-            WHERE EXISTS (
-                SELECT 1
-                FROM user_bookmarks b
-                    JOIN users u ON u.id = b.u_id
-                    JOIN recipes r ON r.id = b.r_id
-                WHERE u.id = %s
+            WHERE r.id IN (
+                SELECT r_id
+                FROM user_bookmarks
+                WHERE u_id = %s
             );
         """, (u_id,))
         bookmarks = cursor.fetchall()
-
-        # Grab Allergens
-        cursor.execute("""
-            SELECT a.name FROM allergens a;
-        """, (u_id,))
-        allergens = cursor.fetchall()
-
         response = {
-            'Username' : username,
-            'Email' : email,
-            'Points' : points,
-            'Bookmarks' : [],
-            'Allergens' : []
+            'Bookmarks' : []
         }
 
         for recipe in bookmarks:
-            name,desc,cuisine,mealType,sS = recipe
+            id,name,desc,cuisine,mealType,sS = recipe
             response["Bookmarks"].append({
-                "Name":name,
-                "Description":desc,
-                "Cuisine":cuisine,
-                "Meal Type":mealType,
-                "Serving Size":sS
+                "id" : id,
+                "name":name,
+                "description":desc,
+                "cuisine":cuisine,
+                "mealType":mealType,
+                "servingSize":sS
             })
-        
-        for allergen in allergens:
-            try:
-                response["Allergens"].append(allergen[0])
-            except KeyError:
-                # No allergies found? This might not even be run in that case.
-                pass
 
         return response, 200
 
@@ -146,92 +163,103 @@ def profile():
         response["isSuccess"] = False
         response["msg"] = "The data provided is not valid"
     return response
-
+###############################################
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 
-# Haven't tested this yet
-# @api.after_request()
-# @jwt_required()
-# def refresh_jwt(response: request):
-#     return auth_jwt_refresh(get_jwt()["exp"], get_jwt_identity(), response)
+
 
 def detailed_search():
     pass
 
-@api.route('/my-recipes/recipeid=<r_id>', methods=['POST', 'GET'])
+@api.route('/my-recipes', methods=['GET'])
 @jwt_required()
 @cross_origin()
-def edit_recipe(r_id):
-    if request.method == 'POST':
-        pass
-    elif request.method == 'GET':
-        # Get the users id
-        email = get_jwt_identity()
-        cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
-        try:
-            u_id = cursor.fetchone()[0]
-        except IndexError or ValueError:
-            return {'msg' : 'Authentication Failed'}, 403
-        # Get all recipes from that user
-        query = """
-        SELECT 1
-        FROM recipes r
-            JOIN cuisines c ON c.id=r.cuisine
-            JOIN mealtypes m ON m.id = r.mealType
-        WHERE r.uploader = %s AND r.id = %s;
-        """
-        cursor.execute(query, (u_id,r_id))
-        
-        try:
-            recipe = cursor.fetchone()[0]
-        except ValueError or IndexError:
-            return {'msg' : 'This user does not own this recipe'}, 403
-            
-        return search_detailed(cursor, r_id)
+def get_my_recipes():
+    return search_users_recipes(get_jwt_identity(), cursor)
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
 def find_recipe(r_id):
     return search_detailed(cursor, r_id)
 
-@api.route('/reviews/recipeid=<id>', methods=['GET'])
+@api.route('/reviews/recipeid=<id>', methods=['GET', 'POST'])
 @cross_origin()
 def reviews(id):
 
     # [TODO]: Replace the default '3' with a grab from the rating table
     # Consider restructuring this section
+    if request.method == 'GET':
+        if not str(id).isdigit():
+            return {"msg" : "Recipe not found"}, 404
 
-    if not str(id).isdigit():
-        return {"msg" : "Recipe not found"}, 404
+        cursor.execute("""
+            SELECT u.username, c.description, rr.rating
+            FROM users u, comments c, recipe_rating rr
+            WHERE c.r_id = %s
+            AND rr.r_id = c.r_id
+            AND u.id = rr.u_id;
+        """, (id,))
+        response = {
+            "Comments":list()
+        }
 
-    cursor.execute("""
-        SELECT u.username, c.description, 3
-        FROM users u, comments c
-        WHERE c.r_id = %s;
-    """, (id,))
-    response = {
-        "Comments":list()
-    }
-
-    comments = cursor.fetchall()
-    for comment in comments:
-        username, description, rating = comment
-        response["Comments"].append({
-            "Username":username,
-            "Content":description,
-            "Rating":rating
-        })
-
-    return response, 200
+        comments = cursor.fetchall()
+        for comment in comments:
+            username, description, rating = comment
+            response["Comments"].append({
+                "Username":username,
+                "Content":description,
+                "Rating":rating
+            })
+        return response, 200
 
 
-@api.route('/getdietmetrics', methods=['GET'])
+        comments = cursor.fetchall()
+        for comment in comments:
+            username, description, rating = comment
+            response["Comments"].append({
+                "Username":username,
+                "Content":description,
+                "Rating":rating
+            })
+        return response, 200
+
+#############################################
+#                                           #
+#           Contributing Routes             #
+#                                           #
+#############################################
+
+
+@api.route('/post_recipe', methods=['POST'])
+@jwt_required() # To ensure that the user is logged in
 @cross_origin()
-def dietMetrics():
-    #Header: token
-    pass
+def post_recipe():
+    return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
 
+@api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
+@jwt_required()
+@cross_origin()
+def edit_recipe(r_id):
+    if request.method == 'PUT':
+        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
+            return contrib_edit_recipe(data, cursor, conn, r_id)
+        else:
+            return dict(msg="User does not own this recipe.")
+    elif request.method == 'GET':
+        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
+            return search_detailed(cursor, r_id)
+        else:
+            return dict(msg="User does not own this recipe.")
+
+
+@api.route('/contrib/review/recipe=<r_id>', methods=['POST', 'PUT'])
+@jwt_required()
+@cross_origin()
+def review(r_id):
+    data = request.get_data()
+    return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
@@ -386,92 +414,6 @@ def getUserId():
     except IndexError:
         return None
 
-@api.route('/post_recipe', methods=['POST'])
-@jwt_required() # To ensure that the user is logged in
-@cross_origin()
-def post_recipe():
-
-    #[TODO] Include the guide on how to make the recipe...
-
-    try:
-        data = json.loads(request.get_data())
-    except json.decoder.JSONDecodeError:
-        return {'msg' : 'Invalid data format'}, 401
-    response = {}
-
-    # This section is to verify user identity
-    email = get_jwt_identity()
-    query = "SELECT id FROM users WHERE email=%s"
-    cursor.execute(query, (email,))
-    try:
-        uploader = cursor.fetchone()[0]
-    except IndexError:
-        return {'msg' : 'Invalid Credentials'}, 403
-
-    try:
-        name = data['name']
-        description = data['description']
-        cuisine = data['cuisine']
-        mealtype = data['mealtype']
-        servingsize = data['servingsize']
-        ingredients = data['ingredients']
-    except KeyError:
-        return {'msg' : 'Incorrect Parameters'}, 401
-
-    cursor.execute("SELECT id FROM cuisines WHERE name=%s", (cuisine,))
-    try:
-        c_id = cursor.fetchone()[0]
-    except TypeError:
-        return {"msg" : "Cuisine not found"}, 401
-
-    cursor.execute("SELECT id FROM mealtypes WHERE name=%s", (mealtype,))
-    try:
-        m_id = cursor.fetchone()[0]
-    except TypeError:
-        return {"msg" : "MealType not found"}, 401
-
-    cursor.execute(
-        # Need cuisine id &  mealtype id
-        "INSERT INTO recipes(name, description, cuisine, mealType, servingSize, uploader) VALUES (%s, %s,%s, %s, %s, %s);", 
-        (name, description, c_id, m_id, servingsize, uploader)
-    )
-
-    cursor.execute("SELECT id FROM recipes ORDER BY id DESC LIMIT 1")
-    try:
-        r_id = cursor.fetchone()[0]
-    except IndexError:
-        return {'msg': 'An error has occurred while uploading your recipe'}, 400 # [TODO] This error code will need to be changed
-    
-    for ingredient in ingredients:
-        try:
-            name = ingredient['name']
-            quantity = ingredient['quantity']
-            grams = ingredient['grams']
-            millilitres = ingredient['millilitres']
-        except KeyError:
-            return {'msg' : 'Incorrect Parameters'}, 401
-
-        # Grabbing ingredient id and validating that the ingredient exists. ingredient names are all unique
-        cursor.execute("SELECT id FROM ingredients WHERE name = %s", (name, ))
-        try:
-            i_id = cursor.fetchone()[0]
-        except IndexError:
-            return {'msg' : 'Invalid ingredient supplied'}, 401
-
-        cursor.execute(
-            "INSERT INTO recipe_ingredients(r_id, ingredient, quantity, grams, millilitres) VALUES (%s, %s, %s, %s, %s) ", (r_id, i_id, quantity, grams, millilitres) 
-        )
-        # Checking that the recipe and ingredient were added.
-        cursor.execute(
-            "SELECT * FROM recipe_ingredients WHERE r_id=%s AND ingredient=%s", (r_id, i_id)
-        )
-
-        if not cursor.fetchone():
-            return {'msg' : 'Error adding ingredient'}, 400
-
-    conn.commit()
-    response['msg'] = "Recipe successfully added"
-    return (response, 200)
 
 if __name__ == '__main__':
     api.run()
