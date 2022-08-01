@@ -110,8 +110,12 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
-			console.log(response);
+			axios.post("http://localhost:5000/setGoal", headers, body)
+			.then(response => {
+				console.log(response);
+			}).catch(err => {
+				console.log(err);
+			})
 		}
 	}
 
