@@ -216,6 +216,14 @@ def reviews(id):
 
     return response, 200
 
+
+@api.route('/getdietmetrics', methods=['GET'])
+@cross_origin()
+def dietMetrics():
+    #Header: token
+    pass
+
+
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
 @cross_origin()
 def eaten(id):
