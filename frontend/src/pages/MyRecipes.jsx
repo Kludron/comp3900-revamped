@@ -5,6 +5,8 @@ import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
 
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
 /* MyRecipes Page */
 function MyRecipes() {
 
@@ -25,7 +27,7 @@ function MyRecipes() {
 		let headers = {
 			'Authorization': `Bearer ${token}`
 		}
-		axios.get('http://localhost:5000/my-recipes', headers)
+		axios.get('http://localhost:5000/my-recipes', headers=headers)
 		.then((response) => {
 			console.log(response);
 			if(response.data === null){

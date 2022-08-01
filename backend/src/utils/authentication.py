@@ -198,10 +198,10 @@ def auth_jwt_refresh(expiry, identity, response) -> tuple:
         return response
 
 def auth_get_uid(email, cursor):
-    cursor.execute("SELECT id FROM users WHERE email=%s;", (email,))
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     try:
         return cursor.fetchone()[0]
-    except TypeError:
+    except (TypeError,psycopg2.ProgrammingError):
         return None
 
 
@@ -216,6 +216,8 @@ def auth_update_viewed(data, email, cursor, conn):
         data = json.loads(data)
         recipes = data["recentlyViewed"]
     except (KeyError, json.decoder.JSONDecodeError):
+        if isinstance(data, bytes):
+            return {'mgs' : 'No recently viewed recipes passed through'}, 200
         return {'msg' : 'Invalid parameters'}, 400
 
     # Get a count of the number of recently viewed recipes are stored for that user

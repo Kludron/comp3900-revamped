@@ -40,6 +40,8 @@ except Exception as e:
     sys.stderr.write("An error occurred while connecting to the database:\n{}\n".format(e))
 
 jwt = JWTManager(api)
+cors = CORS(api)
+# api.config['CORS_HEADERS'] = 'Content-Type'
 
 #############################################
 #                                           #
@@ -169,8 +171,8 @@ def favourite():
 
 
 
-def detailed_search():
-    pass
+# def detailed_search():
+#     pass
 
 @api.route('/my-recipes', methods=['GET'])
 @jwt_required()
