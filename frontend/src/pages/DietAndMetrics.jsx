@@ -128,7 +128,19 @@ function DietAndMetrics() {
 		let headers = {
 			"Authorization": `Bearer ${token}`
 		};
-		axios.get('http://localhost:5000/recommend', headers)
+		axios.get('http://localhost:5000/recommend')
+		.then((response) => {
+			console.log(response);
+		}).catch((err) => {
+			alert(err);
+		})
+	}
+
+	const intakeOverview = async () => {
+		let headers = {
+			"Authorization": `Bearer ${token}`
+		};
+		axios.get('http://localhost:5000/intake_overview')
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -138,7 +150,9 @@ function DietAndMetrics() {
 
 	React.useEffect(() => {
 		recommend();
-	}, [])
+		intakeOverview();
+	}, []);
+
 	return <div className="wrapper">
 			<NavBar/>
 			<div className="main-content">
@@ -202,7 +216,9 @@ function DietAndMetrics() {
 				</div>
 				<div className='recommend_section'>
 					<h2>Recommendations</h2>
-
+				</div>
+				<div className='intakeoverview_section'>
+					<h2>Intake Overview</h2>
 				</div>
 			</div>
 	</div>
