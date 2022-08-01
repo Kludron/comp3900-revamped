@@ -387,12 +387,15 @@ def recommend():
 @cross_origin()
 def setGoal():
     data = json.loads(request.get_data())
+    print(data.keys())
+    print(data['Content-Type'])
+    print(data['Authorization'])
     response = {}
     
     try:
-        caloricGoal = data['Goal']
-    except KeyError():
-        return {"msg: wrong key", 401}
+        caloricGoal = data['goal']
+    except KeyError:
+        return ("msg: wrong key", 401)
 
     u_id = getUserId()
     if(u_id == null):
@@ -400,6 +403,8 @@ def setGoal():
 
     #To do: need to add goal column
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
+
+    
 
     return (response, 200)
 
