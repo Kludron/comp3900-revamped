@@ -5,7 +5,7 @@ import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
 
-// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
 
 /* MyRecipes Page */
 function MyRecipes() {
@@ -46,12 +46,8 @@ function MyRecipes() {
 		const token = localStorage.getItem('token');
 		let body = {"recentlyViewed": recent};
 		console.log(body);
-		let headers = {
-			"Content-Type": 'application/json',
-			"Authorization": `Bearer ${token}`
-		}
 		// axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
-		axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
+		axios.get('http://localhost:5000/recentlyviewed', body)
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
