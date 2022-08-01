@@ -1,6 +1,7 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -10,9 +11,11 @@ import ForgotPassword from '../components/ForgotPassword';
 
 /* Login Page */
 function Login () {
-  localStorage.clear();
-  const navigate = useNavigate();
 
+  const [authenticated, setAuthenticated] = useState(false);
+
+  //React navigate functions
+  const navigate = useNavigate();
   // Navigate to register page
   const register = () => {
     navigate('/register');
@@ -33,7 +36,7 @@ function Login () {
     </Typography>
     <LoginForm submit={async (email, password) => {
       let headers = {
-          "Content-Type": "application/json",
+        "Content-Type": "application/json",
       };
       var body = {
         email,
@@ -41,9 +44,15 @@ function Login () {
       };
       axios.post("http://localhost:5000/auth/login", body, headers)
       .then((response) => {
-        console.log(response);
-        localStorage.setItem('token', response.token);
-        navigate('/dashboard');
+        console.log(response.data.token);
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.username);
+        localStorage.setItem('email', response.data.email);
+        localStorage.setItem('points', response.data.points);
+        if(response.status === 200 && response.data.token != null) {        
+          setAuthenticated(true);
+          navigate('/dashboard');
+        }
       }).catch((error) => {
         console.log(error);
         alert(error)

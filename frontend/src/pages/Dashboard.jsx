@@ -1,45 +1,95 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import RecipeBar from '../components/RecipeBar';
 import './Dashboard.css'
 import Meat from "../ingredients/meat.json";
 import Vegetables from "../ingredients/vegetables&greens.json";
 import Seafood from "../ingredients/seafood.json";
 import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
-
+import MultipleSelect from '../components/MultipleSelect';
+import Button from '@mui/material/Button';
+import { paperClasses } from '@mui/material';
 
 /* Dashboard Page */
 function Dashboard () {
 
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
-
-  //Gets Authorization token
+  const [favourite, setfavourite] = useState(false);
+  const [bookmarkStar, setbookmarkStar] = useState('☆');
+  
+  //Gets user's authorisation token
   const token = localStorage.getItem('token');
+
+  //React Navigation Function
   const navigate = useNavigate();
 
-  //Gets all Recipe Data
-  const loadRecipes = async () => {
-    const result = await axios.get('http://localhost:5000/get_recipe');
-    /*console.log(result);*/
-    result.data.forEach((rec) => {
-      console.log(rec);
-      setRecipes(recipes => [...recipes, {id: rec.id, name: rec.name, description: rec.description, cuisine: rec.cuisine, mealtype: rec.mealtype, servingsize: rec.servingsize, uploader: rec.uploader}]);
-    });
+  //Navigates to a dynamically rendered page for a specific recipe with recipeID
+  const viewRecipe = (recipeid, key) => {
+    //Checks if there is any existing recipes
+    var existing = JSON.parse(localStorage.getItem('recent'));
+    console.log(existing);
+    if(existing == null) existing = [];
+    let recent = {
+      r_id: recipeid
+    };
+    existing.push(recent);
+    localStorage.setItem('recent', JSON.stringify(existing));
+    navigate(`/view/recipe/${recipeid}`);
   }
 
-  const viewRecipe = (recipeID) => {
-    console.log(recipeID);
-    navigate(`/view/recipe/${recipeID}`);
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
   }
 
-  useEffect(() => {
-    loadRecipes();
-  }, []);
+  // Bookmark function for recipes
+  const handleBookmark = () => {
+    if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
+      setfavourite(true);
+      setbookmarkStar('★');
+      console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
+    } else { //Un-bookmarked
+      setfavourite(false);
+      setbookmarkStar('☆');
+      console.log('unbookmarked'); //As above
+    }
+  };
+
+  const handleClick = () => {
+    if(localStorage.getItem('token') == null){
+      alert('Please create an account to access your profile and our other services.');
+    } else {
+      navigate('/profile');
+    };
+  }
+
+  const eatenRecipe = async (recipeid) => {
+    let headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+    let body = {
+      r_id: recipeid,
+    }
+    console.log(recipeid + ': eaten');
+    const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
+    console.log(response.status);
+    if(response.status === '200'){
+      alert('You have marked the recipe as eaten.');
+    } else {
+      alert('An issue has occurred marking the recipe as eaten. Please try again.')
+    }
+  }
+
+  React.useEffect(() => {
+    /*if (!token) {
+      navigate('/login');
+    }*/
+  });
 
   return <div>
     {/* left title and search bar */}
@@ -103,34 +153,57 @@ function Dashboard () {
 
   {/* right title and search bar */}
     <div className='recipe_screen'>
-      <Link to='/profile'>
-        <Avatar sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
-      </Link>
+      <Button variant='outlined' onClick={logout}>Logout</Button>
+      <Avatar onClick={handleClick} sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
       <h2>F1V3GUY5 RECIPES</h2>
-      
       {/* right recipes box */}
       <div className="recipeBox">
-      <RecipeBar/>
-        <button>Meal Type</button>
-        <button>Allergies</button>
-        <button>Cuisine</button>
+
+        <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
+          setRecipes([]);
+          console.log('submitted successfully');
+          var body = {
+            "search": searchQuery,
+            "mealTypes": mealtypeName,
+            "cuisines": cuisineName,
+            "ingredients": ingredientsName
+          }
+          console.log(body);
+          let headers = {
+            "Content-Type": "application/json",
+          };
+          axios.post("http://localhost:5000/search", body, headers)
+            .then((response) => {
+              console.log(response);
+              response.data.recipes.forEach((rec) => {
+                console.log(rec);
+                setRecipes(recipes => [...recipes, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+              })
+            }).catch((error) => {
+              alert(error);
+            });
+          }}
+        />
         <div className='list_recipes'>
-        {recipes.map((recipe, key) => {
-          return (
-            <div className='recipe_box' key={key}>
-              <h3>{recipe.name}</h3>
-              <p>{recipe.id}</p>
-              <p>{recipe.description}</p>
-              <p>{recipe.mealtype}</p>
-              <p>{recipe.servingsize}</p>
-              <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id)}>See Recipe→</button>
-            </div>
-          )
-        })}
-      </div>
+          {recipes.map((recipe, key) => {
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
+                <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
+                <h3>Name: {recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serving Size: {recipe.servingsize}</p>
+                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   </div>;
+
 }
 
 export default Dashboard;

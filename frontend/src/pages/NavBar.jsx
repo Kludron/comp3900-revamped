@@ -2,19 +2,10 @@ import { useMatch, useResolvedPath, Link } from 'react-router-dom';
 import './NavBar.css';
 import React from 'react';
 
+/* Side NavBar */
 function NavBar() {
   return <div>
-  <ul
-    style={{
-      listStyleType: 'none',
-      margin: 0,
-      padding: 0,
-      width: '15%',
-      position: 'fixed',
-      height: '100%',
-      overflow: 'auto',
-    }}
-    >
+    <ul className='navBar'>
       <CustomLink to='/profile'>Profile</CustomLink>
       <CustomLink to='/favourite'>Favourite Recipes</CustomLink>
       <CustomLink to='/dietAndMetrics'>Diet/Metrics Page</CustomLink>
@@ -30,7 +21,7 @@ function CustomLink( {to, children, ...props }) {
   const resolvedPath = useResolvedPath(to)
   const ifActive = useMatch( {path: resolvedPath.pathname} )
 
-  return <li className={ ifActive ? 'currentTag' : '' }>
+  return <li className={ ifActive ? 'active' : '' }>
     <Link to={ to } { ...props }>
       { children }
     </Link>

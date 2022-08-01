@@ -1,5 +1,6 @@
 import React from "react";
 
+/* Forgot Password Page */
 function ForgotPassword () {
 
 	return(<>
