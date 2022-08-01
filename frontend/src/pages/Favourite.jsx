@@ -7,6 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 /* Favourite Recipes Page */
 function Favourite() {
+
+  const navigate = useNavigate();
+  const previous = () => {
+    navigate('/dashboard');
+  };
+
   const token = localStorage.getItem('token');
   const [bookmarks, setBookmarks] = useState([]);
 
@@ -26,6 +32,7 @@ function Favourite() {
   return <div>
     <NavBar />
     <div className="main-content">
+      <button onClick={previous}>Go Back</button>
       <h2>Favorite Recipe</h2>
       <div>
         {bookmarks.map((recipe, key) => {
@@ -41,14 +48,13 @@ function Favourite() {
 export default Favourite;
 
 function BookmarkedRecipe(r) {
-  console.log(r.recipe)
   const recipe = r.recipe
+  console.log(recipe.id)
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('★');
   const navigate = useNavigate();
 
-  const viewRecipe = ({ recipeid }) => {
-    console.log(recipeid);
+  const viewRecipe = (recipeid) => {
     navigate(`/view/recipe/${recipeid}`);
   }
 

@@ -13,7 +13,8 @@ function Recipe () {
 	//React navigate functions
 	const navigate = useNavigate();
 	const goBack = () => {
-		navigate('/dashboard');
+		// navigate('/dashboard');
+		window.history.back();
 	};
 	const goToComments = (recipeid) => {
 		console.log(recipeid);
