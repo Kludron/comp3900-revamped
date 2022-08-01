@@ -198,11 +198,19 @@ def auth_jwt_refresh(expiry, identity, response) -> tuple:
         return response
 
 def auth_get_uid(email, cursor):
+    print('++++'+email+'++++')
     cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
-    try:
-        return cursor.fetchone()[0]
-    except (TypeError,psycopg2.ProgrammingError):
-        return None
+    if not isinstance(cursor.pgresult_ptr, type(None)):
+        result = cursor.fetchone()
+        print(result)
+        try:
+            return result[0]
+        except TypeError:
+            return None
+    # try:
+    #     return result[0]
+    # except (TypeError,psycopg2.ProgrammingError):
+    return None
 
 
 def auth_update_viewed(data, email, cursor, conn):
