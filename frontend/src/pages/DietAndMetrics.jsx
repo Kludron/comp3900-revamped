@@ -84,22 +84,13 @@ function DietAndMetrics() {
 	const [caloricIntakeWeekly, setCalorieIntakeWeekly] = React.useState(12600);
 
 	const handleSubmit = async () => {
+		var today = new Date();
+		var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
 		if(isWeekly){
 			const body = {
 				goal: caloricIntakeWeekly,
 				timeframe: 'Weekly',
-			};
-			console.log(body);
-			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
-			};
-			const response = await axios.post("http://localhost:5000/search", {headers:headers}, body);
-			console.log(response);
-		} else {
-			const body = {
-				goal: caloricIntakeDaily,
-				timeframe: 'Daily',
+				date: date
 			};
 			console.log(body);
 			let headers = {
@@ -108,6 +99,23 @@ function DietAndMetrics() {
 			};
 			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
 			console.log(response);
+		} else {
+			const body = {
+				goal: caloricIntakeDaily,
+				timeframe: 'Daily',
+				date: date
+			};
+			console.log(body);
+			let headers = {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+			};
+			axios.post("http://localhost:5000/setGoal", headers, body)
+			.then(response => {
+				console.log(response);
+			}).catch(err => {
+				console.log(err);
+			})
 		}
 	}
 
@@ -120,11 +128,41 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
+	const recommend = async () => {
+		let headers = {
+			"Authorization": `Bearer ${token}`
+		};
+		axios.get('http://localhost:5000/recommend')
+		.then((response) => {
+			console.log(response);
+		}).catch((err) => {
+			alert(err);
+		})
+	}
+
+	const intakeOverview = async () => {
+		let headers = {
+			"Authorization": `Bearer ${token}`
+		};
+		axios.get('http://localhost:5000/intake_overview')
+		.then((response) => {
+			console.log(response);
+		}).catch((err) => {
+			alert(err);
+		})
+	}
+
+	React.useEffect(() => {
+		recommend();
+		intakeOverview();
+	}, []);
+
 	return <div className="wrapper">
 			<NavBar/>
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>
-				<h2 className="title">Diet/Metrics</h2>
+				<h1 className="title">Diet/Metrics</h1>
+				<h2 className="title">Set Calorie Goal</h2>
 				<div className='calorie_bar'>
 					Daily
 					<Switch
@@ -179,6 +217,12 @@ function DietAndMetrics() {
 								onClick={handleSubmit}>Save</Button>
 						</Box>
 					}
+				</div>
+				<div className='recommend_section'>
+					<h2>Recommendations</h2>
+				</div>
+				<div className='intakeoverview_section'>
+					<h2>Intake Overview</h2>
 				</div>
 			</div>
         </div>

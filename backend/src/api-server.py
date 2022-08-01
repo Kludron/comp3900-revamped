@@ -232,11 +232,19 @@ def reviews(id):
 #############################################
 
 
+<<<<<<< HEAD
 @api.route('/post_recipe', methods=['POST'])
 @jwt_required() # To ensure that the user is logged in
 @cross_origin()
 def post_recipe():
     return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
+=======
+@api.route('/getdietmetrics', methods=['GET'])
+@cross_origin()
+def dietMetrics():
+    #Header: token
+    pass
+>>>>>>> health
 
 @api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
 @jwt_required()
