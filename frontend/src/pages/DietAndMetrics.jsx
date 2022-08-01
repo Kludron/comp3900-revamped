@@ -100,7 +100,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			axios.post("http://localhost:5000/setGoal", headers, body)
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -117,7 +117,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			axios.post("http://localhost:5000/setGoal", headers, body)
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
