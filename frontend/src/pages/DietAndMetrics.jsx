@@ -85,7 +85,10 @@ function DietAndMetrics() {
 
 	const handleSubmit = async () => {
 		var today = new Date();
-		var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth()+1).padStart(2, '0');
+		var yyyy = today.getFullYear();
+		var date = dd+'/'+mm+'/'+yyyy;
 		if(isWeekly){
 			const body = {
 				goal: caloricIntakeWeekly,
@@ -97,8 +100,12 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
-			console.log(response);
+			axios.post("http://localhost:5000/setGoal", headers, body)
+			.then(response => {
+				console.log(response);
+			}).catch(err => {
+				console.log(err);
+			})
 		} else {
 			const body = {
 				goal: caloricIntakeDaily,
@@ -128,7 +135,7 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
-	const recommend = async () => {
+	const Recommendations = async () => {
 		let headers = {
 			"Authorization": `Bearer ${token}`
 		};
@@ -153,7 +160,7 @@ function DietAndMetrics() {
 	}
 
 	React.useEffect(() => {
-		recommend();
+		Recommendations();
 		intakeOverview();
 	}, []);
 
