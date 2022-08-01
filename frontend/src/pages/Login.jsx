@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import ForgotPassword from '../components/ForgotPassword';
+import './Login.css';
 
 /* Login Page */
 function Login () {
@@ -31,7 +32,7 @@ function Login () {
   }}
   >
     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-    <Typography component="h1" variant="h5">
+    <Typography className="Sign-in" component="h1" variant="h5">
       Sign in to F1V3GUY5
     </Typography>
     <LoginForm submit={async (email, password) => {
@@ -58,12 +59,12 @@ function Login () {
         alert('Your email or password are incorrect. Please try again.')
       });
     }} />
-    <ForgotPassword/>
+    <ForgotPassword />
     <br />
-    <span>Don&apos;t have an account? </span>
-    <Button
-    variant="outlined"
-    onClick={register}>Sign Up</Button>
+    <span>Don&apos;t have an account? 
+      <Button
+        onClick={register}>Sign Up</Button>
+    </span>
   </Box>
   </>;
 }

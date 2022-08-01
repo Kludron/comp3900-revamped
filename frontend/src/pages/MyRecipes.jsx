@@ -5,7 +5,7 @@ import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
 /* MyRecipes Page */
 function MyRecipes() {
@@ -24,10 +24,13 @@ function MyRecipes() {
 	
 	const getMyRecipes = async () => {
 		const token = localStorage.getItem('token');
+		var body = {};
 		let headers = {
-			"Authorization": `Bearer ${token}`,
+			headers: {
+				"Authorization": `Bearer ${token}`,
+			}
 		}
-		axios.get('http://localhost:5000/my-recipes', { headers: headers })
+		axios.get('http://localhost:5000/my-recipes', body, headers)
 		.then((response) => {
 			setRecentViewed([]);
 			console.log(response);
@@ -44,10 +47,16 @@ function MyRecipes() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
 		const token = localStorage.getItem('token');
-		let body = {"recentlyViewed": recent};
+		let body = {
+			recentlyViewed: recent
+		};
+		let headers = {
+			headers: {
+				"Authorization": `Bearer ${token}`,
+			}
+		}
 		console.log(body);
-		// axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
-		axios.get('http://localhost:5000/recentlyviewed', body)
+		axios.get('http://localhost:5000/recentlyviewed', body, headers)
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
@@ -76,7 +85,18 @@ function MyRecipes() {
 				</Button>
 				<div className="recent_viewed">
 					<h2>Recently Viewed</h2>
-					<p>{recentViewed}</p>
+					<div className='list_recipes'>
+          	{recentViewed.map((recipe, key) => {
+            	return (
+              	<div className='recipe_box' key={key}>
+									<h3>Name: {recipe.name}</h3>
+									<p>Cuisine: {recipe.cuisine}</p>
+									<p>Description: {recipe.description}</p>
+									<p>Mealtype: {recipe.mealtype}</p>
+									<p>Serving Size: {recipe.servingsize}</p>
+								</div>
+							)})}
+					</div>
 				</div>
 			</div>
 		</div>
