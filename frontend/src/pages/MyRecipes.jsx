@@ -9,7 +9,8 @@ import axios from "axios";
 function MyRecipes() {
 
 	const [myRecipes, setMyRecipes] = React.useState('You have created no recipes, please create one via the button below.')
-	
+	const [recentViewed, setRecentViewed] = React.useState([]);
+
 	//React navigate functions
 	const navigate = useNavigate();
 	const previous = () => {
@@ -20,7 +21,11 @@ function MyRecipes() {
 	};
 	
 	const getMyRecipes = async () => {
-		axios.get('http://localhost:5000/my-recipes/')
+		const token = localStorage.getItem('token');
+		let headers = {
+			'Authorization': `Bearer ${token}`
+		}
+		axios.get('http://localhost:5000/my-recipes', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
@@ -32,13 +37,14 @@ function MyRecipes() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
 		const token = localStorage.getItem('token');
-		let body = {recentlyViewed: recent};
+		if (recent === null) setRecentViewed([]);
+		let body = {"recentlyViewed": recent};
 		console.log(body);
 		let headers = {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${token}`
 		}
-		axios.post('http://localhost:5000/recentlyviewed', body, {headers:headers})
+		axios.get('http://localhost:5000/recentlyviewed', body, headers)
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
@@ -67,7 +73,7 @@ function MyRecipes() {
 				</Button>
 				<div className="recent_viewed">
 					<h2>Recently Viewed</h2>
-
+					<p>{recentViewed}</p>
 				</div>
 			</div>
 		</div>

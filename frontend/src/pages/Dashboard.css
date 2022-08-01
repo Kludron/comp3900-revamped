@@ -75,3 +75,7 @@ p {
     background-color: aqua;
     width: 48%;
 }
+
+.logout_btn {
+    width: 200px
+}
