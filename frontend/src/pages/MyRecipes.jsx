@@ -28,6 +28,9 @@ function MyRecipes() {
 		axios.get('http://localhost:5000/my-recipes', headers)
 		.then((response) => {
 			console.log(response);
+			if(response.data === null){
+				setMyRecipes(null);
+			}
 		}).catch(err => {
 			alert(err);
 		})

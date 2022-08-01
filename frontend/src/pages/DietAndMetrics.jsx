@@ -91,9 +91,9 @@ function DietAndMetrics() {
 		var date = dd+'/'+mm+'/'+yyyy;
 		if(isWeekly){
 			const body = {
-				goal: caloricIntakeWeekly,
-				timeframe: 'Weekly',
-				date: date
+				"goal": caloricIntakeWeekly,
+				"timeframe": 'Weekly',
+				"date": date
 			};
 			console.log(body);
 			let headers = {
@@ -108,9 +108,9 @@ function DietAndMetrics() {
 			})
 		} else {
 			const body = {
-				goal: caloricIntakeDaily,
-				timeframe: 'Daily',
-				date: date
+				"goal": caloricIntakeDaily,
+				"timeframe": 'Daily',
+				"date": date
 			};
 			console.log(body);
 			let headers = {

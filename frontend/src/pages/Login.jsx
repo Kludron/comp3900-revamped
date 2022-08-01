@@ -55,7 +55,7 @@ function Login () {
         }
       }).catch((error) => {
         console.log(error);
-        alert(error)
+        alert('Your email or password are incorrect. Please try again.')
       });
     }} />
     <ForgotPassword/>
