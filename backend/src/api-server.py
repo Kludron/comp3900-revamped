@@ -390,7 +390,7 @@ def setGoal():
     response = {}
     
     try:
-        caloricGoal = data["goal"]
+        caloricGoal = data['Goal']
     except KeyError():
         return {"msg: wrong key", 401}
 
