@@ -27,10 +27,12 @@ function MyRecipes() {
 		}
 		axios.get('http://localhost:5000/my-recipes', { headers: headers })
 		.then((response) => {
+			setRecentViewed([]);
 			console.log(response);
-			if(response.data === null){
-				setMyRecipes(null);
-			}
+			response.data.recipes.forEach((rec) => {
+				console.log(rec);
+				setRecentViewed(recentViewed => [...recentViewed, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+			})
 		}).catch(err => {
 			alert(err);
 		})
