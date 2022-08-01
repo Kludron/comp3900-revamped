@@ -299,28 +299,9 @@ def eaten(id):
 def overview():
     response = {}
 
-    email = get_jwt_identity()
-    query = """
-    SELECT u.id FROM users u WHERE lower(u.email)=%s;
-    """
-    cursor.execute(query, (email,))
-    try:
-        u_id = cursor.fetchone()
-    except TypeError:
-        return {'msg' : 'Authentication Error'}, 403
-
-    email = get_jwt_identity()
-    query = "SELECT id FROM users WHERE email=%s"
-    cursor.execute(query, (email,))
-    try:
-        u_id = cursor.fetchone()[0]
-    except IndexError:
-        return None
-
-    print(u_id)
-    if(u_id == None):
-        return ("msg: user does not exist", 401)   
-
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
     cursor.execute("""
                     SELECT ISNULL(id, 'Total') AS id,
@@ -344,14 +325,15 @@ def overview():
                             SUM(iron),
                             SUM(magnesium)
                             FROM (
-                                    SELECT *
-                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
-                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
-                                    JOIN Ingredients on rlist.ingredient = Ingredients.id;
-                            )
+                                    SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                                    FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
+                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                                    JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                            ) ingredientHistory
                             GROUP BY id WITH ROLLUP
-                        ) AS intake
+                        ) AS intake;
                     """, (u_id, '2022-06-26', '2022-07-26'))
+
     overview = cursor.fetchone()
     
     print(overview)
@@ -414,13 +396,10 @@ def find_recipe_more(recommended_nutrient, amount):
 @jwt_required()
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def recommend():
-    email = get_jwt_identity()
-    query = "SELECT id FROM users WHERE email=%s"
-    cursor.execute(query, (email,))
-    try:
-        u_id = cursor.fetchone()[0]
-    except IndexError:
-        return None
+
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
     nutrient_diff, recommended_nutrient = find_imbalance(u_id)
 
@@ -438,10 +417,6 @@ def recommend():
 def setGoal():
     data = json.loads(request.get_data())
 
-    #print(data.keys())
-    print("start!!!")
-    print(data['goal'])
-
     response = {}
     
     try:
@@ -449,22 +424,9 @@ def setGoal():
     except KeyError:
         return ("msg: wrong key", 401)
 
-    email = get_jwt_identity()
-    query = """
-    SELECT u.id FROM users u WHERE lower(u.email)=%s;
-    """
-    print("here!!!")
-    cursor.execute(query, (email,))
-
-    try:
-        u_id = cursor.fetchone()
-    except TypeError:
-        return {'msg' : 'Authentication Error'}, 403
-
-    
-    print(u_id)
-    if(u_id == null):
-        return ("msg: user does not exist", 401)
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
     #To do: need to add goal column
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
