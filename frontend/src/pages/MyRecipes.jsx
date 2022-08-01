@@ -42,7 +42,6 @@ function MyRecipes() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
 		const token = localStorage.getItem('token');
-		if (recent === null) setRecentViewed([]);
 		let body = {"recentlyViewed": recent};
 		console.log(body);
 		let headers = {
