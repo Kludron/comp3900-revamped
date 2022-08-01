@@ -25,6 +25,7 @@ function MyRecipes() {
 	
 	const getMyRecipes = async () => {
 		const token = localStorage.getItem('token');
+<<<<<<< HEAD
 		var body = {};
 		let headers = {
 			headers: {
@@ -32,6 +33,9 @@ function MyRecipes() {
 			}
 		}
 		axios.get('http://localhost:5000/my-recipes', body, headers)
+=======
+		axios.get('http://localhost:5000/my-recipes')
+>>>>>>> fd17270349fa60d41b8ecf68ff73e3eec1386233
 		.then((response) => {
 			setRecentViewed([]);
 			console.log(response);
