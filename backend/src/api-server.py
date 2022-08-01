@@ -24,11 +24,13 @@ from utils.authentication import *
 from utils.searching import *
 
 api = Flask(__name__)
+cors = CORS(api)
+api.config['CORS_HEADERS'] = 'Content-Type'
+
 api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
-
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -293,7 +295,7 @@ def eaten(id):
 
 @api.route('/intake_overview', methods=['GET'])
 @jwt_required()
-@cross_origin()
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def overview():
     response = {}
 
@@ -312,15 +314,12 @@ def overview():
     cursor.execute(query, (email,))
     try:
         u_id = cursor.fetchone()[0]
-        return uploader
     except IndexError:
         return None
 
-    if(u_id == null):
-        return ("msg: user does not exist", 401)
-
-    cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
-    
+    print(u_id)
+    if(u_id == None):
+        return ("msg: user does not exist", 401)   
 
 
     cursor.execute("""
@@ -346,7 +345,7 @@ def overview():
                             SUM(magnesium)
                             FROM (
                                     SELECT *
-                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date LIMIT %s, %s) AS history
+                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
                                     JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
                                     JOIN Ingredients on rlist.ingredient = Ingredients.id;
                             )
@@ -356,6 +355,7 @@ def overview():
     overview = cursor.fetchone()
     
     print(overview)
+
     return (response, 200)
 
 def find_imbalance(u_id):
@@ -366,11 +366,14 @@ def find_imbalance(u_id):
     counter = 0
     for nutrient in check_nutrients:
         cursor.execute("""SELECT SUM(%s) 
-                        FROM (      SELECT *
-                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date LIMIT %s, %s) AS history
-                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
-                                    JOIN Ingredients on rlist.ingredient = Ingredients.id;
-                        );""", (nutrient[0], u_id, '2022-06-26', '2022-07-26'))
+                        FROM (      SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                                    FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
+                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                                    JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                        ) ingredientHistory;
+                        
+                        
+                        """, (nutrient[0], u_id, '2022-06-26', '2022-07-26'))
         actual_intake = float(cursor.fetchone()[counter])
         expected_intake = nutrient[1]
         diff = expected_intake - actual_intake
@@ -409,14 +412,13 @@ def find_recipe_more(recommended_nutrient, amount):
 
 @api.route('/recommend', methods=['GET'])
 @jwt_required()
-@cross_origin()
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def recommend():
     email = get_jwt_identity()
     query = "SELECT id FROM users WHERE email=%s"
     cursor.execute(query, (email,))
     try:
         u_id = cursor.fetchone()[0]
-        return uploader
     except IndexError:
         return None
 
@@ -427,6 +429,7 @@ def recommend():
     recipes = find_recipe(recommended_nutrient, nutrient_diff)
     
     #Returning a list of food categories that need improvement on
+
     return response
 
 @api.route('/setGoal', methods=['POST'])
