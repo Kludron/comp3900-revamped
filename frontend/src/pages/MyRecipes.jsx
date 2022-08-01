@@ -5,7 +5,7 @@ import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
 
 /* MyRecipes Page */
 function MyRecipes() {
@@ -25,14 +25,16 @@ function MyRecipes() {
 	const getMyRecipes = async () => {
 		const token = localStorage.getItem('token');
 		let headers = {
-			'Authorization': `Bearer ${token}`
+			"Authorization": `Bearer ${token}`,
 		}
-		axios.get('http://localhost:5000/my-recipes', headers=headers)
+		axios.get('http://localhost:5000/my-recipes', { headers: headers })
 		.then((response) => {
+			setRecentViewed([]);
 			console.log(response);
-			if(response.data === null){
-				setMyRecipes(null);
-			}
+			response.data.recipes.forEach((rec) => {
+				console.log(rec);
+				setRecentViewed(recentViewed => [...recentViewed, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+			})
 		}).catch(err => {
 			alert(err);
 		})
@@ -46,10 +48,11 @@ function MyRecipes() {
 		let body = {"recentlyViewed": recent};
 		console.log(body);
 		let headers = {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
+			"Content-Type": 'application/json',
+			"Authorization": `Bearer ${token}`
 		}
-		axios.get('http://localhost:5000/recentlyviewed', body, headers)
+		// axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
+		axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {

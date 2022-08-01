@@ -271,7 +271,18 @@ def eaten(id):
     
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
-    u_id = getUserId()
+
+
+    email = get_jwt_identity()
+    query = """
+    SELECT u.id FROM users u WHERE lower(u.email)=%s;
+    """
+    cursor.execute(query, (email,))
+    try:
+        u_id = cursor.fetchone()
+    except TypeError:
+        return {'msg' : 'Authentication Error'}, 403
+
     if not u_id:
         return ("msg: user does not exist", 401)
 
@@ -281,27 +292,38 @@ def eaten(id):
     return (response, 200)
 
 @api.route('/intake_overview', methods=['GET'])
+@jwt_required()
 @cross_origin()
 def overview():
-    
-    data = json.loads(request.get_data())
     response = {}
-    
-    r_id = data["r_id"]
-    u_id = getUserId()
+
+    email = get_jwt_identity()
+    query = """
+    SELECT u.id FROM users u WHERE lower(u.email)=%s;
+    """
+    cursor.execute(query, (email,))
+    try:
+        u_id = cursor.fetchone()
+    except TypeError:
+        return {'msg' : 'Authentication Error'}, 403
+
+    email = get_jwt_identity()
+    query = "SELECT id FROM users WHERE email=%s"
+    cursor.execute(query, (email,))
+    try:
+        u_id = cursor.fetchone()[0]
+        return uploader
+    except IndexError:
+        return None
+
     if(u_id == null):
         return ("msg: user does not exist", 401)
 
     cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
     
-    #CREATE OR REPLACE VIEW intake_overview AS
-    #SELECT *
-    #FROM (SELECT * FROM meal_history WHERE u_id = u_id** ORDER BY date LIMIT '2022-06-26', '2022-07-26') AS history
-    #JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
-    #JOIN Ingredients on rlist.ingredient = Ingredients.id;
+
 
     cursor.execute("""
-                    CREATE OR REPLACE VIEW intake_sum AS
                     SELECT ISNULL(id, 'Total') AS id,
                             energy,
                             protein, 
@@ -322,22 +344,33 @@ def overview():
                             SUM(calcium),
                             SUM(iron),
                             SUM(magnesium)
-                            FROM intake_overview
+                            FROM (
+                                    SELECT *
+                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date LIMIT %s, %s) AS history
+                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
+                                    JOIN Ingredients on rlist.ingredient = Ingredients.id;
+                            )
                             GROUP BY id WITH ROLLUP
                         ) AS intake
-                    """)
+                    """, (u_id, '2022-06-26', '2022-07-26'))
     overview = cursor.fetchone()
     
+    print(overview)
     return (response, 200)
 
-def find_imbalance():
+def find_imbalance(u_id):
     check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), ('iron', 12), ('magnesium', 400)]
 
     nutrient_diff = 0
     recommended_nutrient = ""
     counter = 0
     for nutrient in check_nutrients:
-        cursor.execute("SELECT SUM(%s) FROM intake_overview;", (nutrient[0], ))
+        cursor.execute("""SELECT SUM(%s) 
+                        FROM (      SELECT *
+                                    FROM (SELECT * FROM meal_history WHERE u_id = %s ORDER BY date LIMIT %s, %s) AS history
+                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id AS rlist
+                                    JOIN Ingredients on rlist.ingredient = Ingredients.id;
+                        );""", (nutrient[0], u_id, '2022-06-26', '2022-07-26'))
         actual_intake = float(cursor.fetchone()[counter])
         expected_intake = nutrient[1]
         diff = expected_intake - actual_intake
@@ -375,10 +408,21 @@ def find_recipe_more(recommended_nutrient, amount):
     return recommended_recipes
 
 @api.route('/recommend', methods=['GET'])
+@jwt_required()
 @cross_origin()
 def recommend():
-    nutrient_diff, recommended_nutrient = find_imbalance()
+    email = get_jwt_identity()
+    query = "SELECT id FROM users WHERE email=%s"
+    cursor.execute(query, (email,))
+    try:
+        u_id = cursor.fetchone()[0]
+        return uploader
+    except IndexError:
+        return None
 
+    nutrient_diff, recommended_nutrient = find_imbalance(u_id)
+
+    print("recommend!!!")
     #Find the single largest nutrient imbalance and recommend 3 recipes to bring diet back into balance
     recipes = find_recipe(recommended_nutrient, nutrient_diff)
     
@@ -422,21 +466,8 @@ def setGoal():
     #To do: need to add goal column
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
 
-    
 
     return (response, 200)
-
-@jwt_required()
-def getUserId():
-    # This section is to verify user identity
-    email = get_jwt_identity()
-    query = "SELECT id FROM users WHERE email=%s"
-    cursor.execute(query, (email,))
-    try:
-        uploader = cursor.fetchone()[0]
-        return uploader
-    except IndexError:
-        return None
 
 
 if __name__ == '__main__':

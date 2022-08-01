@@ -100,7 +100,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			axios.post("http://localhost:5000/setGoal", body, headers)
+			axios.post("http://localhost:5000/setGoal", body, { headers: headers })
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -117,7 +117,7 @@ function DietAndMetrics() {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${token}`
 			};
-			axios.post("http://localhost:5000/setGoal", body, headers)
+			axios.post("http://localhost:5000/setGoal", body, { headers: headers })
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -139,7 +139,7 @@ function DietAndMetrics() {
 		let headers = {
 			"Authorization": `Bearer ${token}`
 		};
-		axios.get('http://localhost:5000/recommend')
+		axios.get('http://localhost:5000/recommend', { headers: headers })
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -151,7 +151,7 @@ function DietAndMetrics() {
 		let headers = {
 			"Authorization": `Bearer ${token}`
 		};
-		axios.get('http://localhost:5000/intake_overview')
+		axios.get('http://localhost:5000/intake_overview', { headers: headers })
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
