@@ -83,14 +83,16 @@ def find_imbalance():
 
     nutrient_diff = 0
     recommended_nutrient = ""
+    counter = 0
     for nutrient in check_nutrients:
         cursor.execute("SELECT SUM(%s) FROM intake_overview;", (nutrient[0], ))
-        actual_intake = float(cursor.fetchone()[0])
+        actual_intake = float(cursor.fetchone()[counter])
         expected_intake = nutrient[1]
         diff = expected_intake - actual_intake
         if(abs(diff) > nutrient_diff):
             nutrient_diff = diff
             recommended_nutrient = nutrient[0]
+        count += 1
 
     return nutrient_diff, recommended_nutrient
 
