@@ -384,12 +384,15 @@ def recommend():
     return response
 
 @api.route('/setGoal', methods=['POST'])
+@jwt_required()
 @cross_origin()
 def setGoal():
     data = json.loads(request.get_data())
-    print(data.keys())
-    print(data['Content-Type'])
-    print(data['Authorization'])
+
+    #print(data.keys())
+    print("start!!!")
+    print(data['goal'])
+
     response = {}
     
     try:
@@ -397,7 +400,20 @@ def setGoal():
     except KeyError:
         return ("msg: wrong key", 401)
 
-    u_id = getUserId()
+    email = get_jwt_identity()
+    query = """
+    SELECT u.id FROM users u WHERE lower(u.email)=%s;
+    """
+    print("here!!!")
+    cursor.execute(query, (email,))
+
+    try:
+        u_id = cursor.fetchone()
+    except TypeError:
+        return {'msg' : 'Authentication Error'}, 403
+
+    
+    print(u_id)
     if(u_id == null):
         return ("msg: user does not exist", 401)
 
@@ -408,6 +424,7 @@ def setGoal():
 
     return (response, 200)
 
+@jwt_required()
 def getUserId():
     # This section is to verify user identity
     email = get_jwt_identity()
