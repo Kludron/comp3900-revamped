@@ -23,9 +23,9 @@ function MyRecipes() {
 	const getMyRecipes = async () => {
 		const token = localStorage.getItem('token');
 		let headers = {
-			'Authorization': `Bearer ${token}`
+			'Authorization': `Bearer ${token}`,
 		}
-		axios.get('http://localhost:5000/my-recipes', headers)
+		axios.get('http://localhost:5000/my-recipes', { headers: headers })
 		.then((response) => {
 			console.log(response);
 			if(response.data === null){
@@ -47,7 +47,7 @@ function MyRecipes() {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${token}`
 		}
-		axios.get('http://localhost:5000/recentlyviewed', body, headers)
+		axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
