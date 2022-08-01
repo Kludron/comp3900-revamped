@@ -7,6 +7,7 @@
 #################################
 
 import json
+from utils.authentication import *
 
 def search_general(method, data, cursor) -> tuple:
     def __add_to_results(data):
@@ -166,7 +167,7 @@ def search_detailed(cursor, r_id) -> tuple:
     r_name, r_description, c_name, m_name, r_sS, r_instructions = recipe
     
     # Adjust this to use the grab_ingredients function.
-    cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
+    cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id,))
     ingredients = cursor.fetchall()
 
     response = {
@@ -240,7 +241,7 @@ def grab_ingredients(cursor, r_id) -> list or None:
     return cursor.fetchall()
 
 def search_users_recipes(email, cursor) -> tuple:
-    u_id = auth_get_uid()
+    u_id = auth_get_uid(email, cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 

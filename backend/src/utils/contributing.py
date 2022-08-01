@@ -28,7 +28,10 @@ def contrib_post_recipe(email, data, cursor, conn):
         mealtype = data['mealtype']
         servingsize = data['servingsize']
         ingredients = data['ingredients']
-        instructions = data['instructions']
+        try:
+            instructions = data['instructions']
+        except KeyError:
+            instructions = "None"
     except KeyError:
         return {'msg' : 'Incorrect Parameters'}, 401
 
@@ -46,8 +49,8 @@ def contrib_post_recipe(email, data, cursor, conn):
 
     cursor.execute(
         # Need cuisine id &  mealtype id
-        "INSERT INTO recipes(name, description, cuisine, mealType, servingSize, uploader) VALUES (%s, %s,%s, %s, %s, %s);", 
-        (name, description, c_id, m_id, servingsize, uploader)
+        "INSERT INTO recipes(name, description, cuisine, mealType, servingSize, uploader, instructions) VALUES (%s, %s,%s, %s, %s, %s, %s);", 
+        (name, description, c_id, m_id, servingsize, uploader, instructions)
     )
 
     cursor.execute("SELECT id FROM recipes ORDER BY id DESC LIMIT 1")
