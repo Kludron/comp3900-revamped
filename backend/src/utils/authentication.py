@@ -219,7 +219,7 @@ def auth_update_viewed(data, email, cursor, conn):
     cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     try:
         u_id = cursor.fetchone()[0]
-    except (psycopg2.ProgrammingError):
+    except (TypeError, psycopg2.ProgrammingError):
         return {'msg' : 'Authentication failed'}, 403
 
     try:

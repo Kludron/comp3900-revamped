@@ -8,6 +8,7 @@
 
 import json
 from utils.authentication import *
+import psycopg2
 
 def search_general(method, data, cursor) -> tuple:
     def __add_to_results(data):
@@ -241,13 +242,15 @@ def grab_ingredients(cursor, r_id) -> list or None:
     return cursor.fetchall()
 
 def search_users_recipes(email, cursor) -> tuple:
-    u_id = auth_get_uid(email, cursor)
-    if not u_id:
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    try:
+        u_id=cursor.fetchone()[0]
+    except (psycopg2.ProgrammingError, TypeError):
         return {'msg' : 'Authentication error'}, 403
 
     cursor.execute("SELECT id FROM recipes WHERE uploader=%s", (u_id,))
     try:
-        recipes = [row[-1] for row in cursor.fetchall()]
+        recipes = [row[0] for row in cursor.fetchall()]
     except TypeError:
         # Does this occur when user hasn't uploaded?
         return {'msg' : 'Something went wrong retrieving recipes'}, 500
@@ -259,6 +262,7 @@ def search_users_recipes(email, cursor) -> tuple:
     for r_id in recipes:
         result, status_code = search_detailed(cursor, r_id)
         if not status_code == 200: continue
+
         response['Recipes'].append(result)
 
     return response, 200
