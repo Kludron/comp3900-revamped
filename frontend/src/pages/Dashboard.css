@@ -119,6 +119,7 @@ p {
 
 .recipeBox .upper-section .title_bar .avatar {
     margin-right: 2vw;
+    cursor: pointer;
 }
 
 .recipeBox .upper-section .title_bar .head {
