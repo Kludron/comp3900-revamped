@@ -99,7 +99,7 @@ function DietAndMetrics() {
 			let headers = {
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": 'Bearer '+token
+					"Authorization": `Bearer ${token}`
 				}
 			};
 			console.log(headers)
@@ -119,7 +119,7 @@ function DietAndMetrics() {
 			let headers = {
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": 'Bearer '+token
+					"Authorization": `Bearer ${token}`
 				}
 			};
 			axios.post("http://localhost:5000/setGoal", body, headers)
@@ -141,13 +141,12 @@ function DietAndMetrics() {
   };
 
 	const Recommendations = async () => {
-		var body = {};
 		let headers = {
 			headers: {
-				"Authorization": 'Bearer '+token
+				"Authorization": `Bearer ${token}`
 			}
 		};
-		axios.get('http://localhost:5000/recommend', body, headers)
+		axios.get('http://localhost:5000/recommend', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -156,13 +155,12 @@ function DietAndMetrics() {
 	}
 
 	const intakeOverview = async () => {
-		var body = {};
 		let headers = {
 			headers: {
-				"Authorization": 'Bearer '+token
+				"Authorization": `Bearer ${token}`
 			}
 		};
-		axios.get('http://localhost:5000/intake_overview', body, headers)
+		axios.get('http://localhost:5000/intake_overview', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
