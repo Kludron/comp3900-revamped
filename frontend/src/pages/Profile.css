@@ -5,23 +5,35 @@
 }
 
 .main-content > * {
-    margin: 20px;
+    margin: 2vw;
 }
 
-.info {
+.userdata_field {
     display: flex;
 }
 
-.attribute {
+.attribute p {
+    font-size: 1.5vw;
+    font-weight: bold;
     display: flex;
     flex-direction: column;
 }
 
-.attribute div {
-    margin: 10px;
+.attribute p {
+    margin: 1vw;
 }
 
-.data {
+.info {
+    margin-left: 2vw;
+}
+.info p {
+    font-size: 1.5vw;
+    display: flex;
+    flex-direction: column;
+    margin: 1vw;
+}
+
+/* .data {
     display: flex;
     flex-direction: column;
     margin-left: 70px;
@@ -29,34 +41,35 @@
 
 .data div {
     margin: 10px;
-}
+} */
 
 .change-button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 70px;
+    margin-left: 3vw;
+    align-self: flex-start;
 }
 
 .change-button button {
-    margin: 10px;
-}
-
-.allergies-title {
-    margin-bottom: 0;
+    margin: 1vw;
 }
 
 .allergens {
-    margin-top: 0px;
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
 }
 
+.select-allergens{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .selections {
-    margin-top: 20px;
-    height: 250px;
-    width: 400px;
+    height: 40vh;
+    width: 30vw;
     border-style: ridge;
     display: flex;
     flex-wrap: wrap;
@@ -75,16 +88,22 @@
 }
 
 .allergies-box {
-    height: 200px;
-    width: 350px;
+    height: 40vh;
+    width: 30vw;
     border-style: ridge;
     display: flex;
     flex-wrap: wrap;
 }
 
 .allergies-box-element {
-    margin: 10px;
+    margin: 1vw;
 }
+
+.reset-save-button {
+    display: flex;
+    justify-content: space-around;
+}
+
 .wrapper .main-content {
     width: 100%;
     margin-left: 20vw;
