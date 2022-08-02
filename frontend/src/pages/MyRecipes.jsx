@@ -11,7 +11,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 /* MyRecipes Page */
 function MyRecipes() {
 
-	const [myRecipes, setMyRecipes] = React.useState('You have created no recipes, please create one via the button below.')
+	const [myRecipes, setMyRecipes] = React.useState([]);
 	const [recentViewed, setRecentViewed] = React.useState([]);
 
 	const token = localStorage.getItem('token');
@@ -34,11 +34,11 @@ function MyRecipes() {
 		console.log(headers);
 		axios.get('http://localhost:5000/my-recipes', headers)
 		.then((response) => {
-			console.log(response);
-			/*response.data.recipes.forEach((rec) => {
+			response.data.Recipes.forEach((rec) => {
 				console.log(rec);
-				setRecentViewed(recentViewed => [...recentViewed, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
-			})*/
+				setMyRecipes(myRecipes => [...myRecipes, {name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+			})
+			console.log(myRecipes);
 		}).catch(err => {
 			console.log(err);
 		})
@@ -57,7 +57,7 @@ function MyRecipes() {
 			}
 		}
 		console.log(body);
-		axios.get('http://localhost:5000/recentlyviewed', body, headers)
+		axios.post('http://localhost:5000/recentlyviewed', body, headers)
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {
@@ -76,7 +76,18 @@ function MyRecipes() {
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>
 				<h2>My Recipes</h2>
-				<p>{myRecipes}</p>
+				<div className='list_recipes'>
+					{myRecipes.map((recipe, key) => {
+						return (
+							<div className='recipe_box' key={key}>
+								<h3>Name: {recipe.name}</h3>
+								<p>Cuisine: {recipe.cuisine}</p>
+								<p>Description: {recipe.description}</p>
+								<p>Mealtype: {recipe.mealtype}</p>
+								<p>Serving Size: {recipe.servingsize}</p>
+							</div>
+						)})}
+				</div>
 				<Button
       		sx={{ mt: 3, mb: 2 }}
       		id='create_recipe'
