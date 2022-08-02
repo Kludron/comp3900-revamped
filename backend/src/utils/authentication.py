@@ -15,7 +15,7 @@ import psycopg2
 
 # JWT Authentication Information
 JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
-JWT_EXPIRY = datetime.timedelta(minutes=30)
+JWT_EXPIRY = datetime.timedelta(hours=1)
 
 # User hashing information
 HASH_SALT = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
@@ -216,8 +216,10 @@ def auth_get_uid(email, cursor):
 def auth_update_viewed(data, email, cursor, conn):
 
     # Grab the users u_id
-    u_id = auth_get_uid(email, cursor)
-    if not u_id:
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    try:
+        u_id = cursor.fetchone()[0]
+    except (psycopg2.ProgrammingError):
         return {'msg' : 'Authentication failed'}, 403
 
     try:

@@ -34,10 +34,10 @@ function Profile() {
 
   //Pulls user's profile details using their token to be displayed on the page
   const loadProfile = async () => {
-    var headers = {
+    const headers = {
       "Authorization": `Bearer ${token}`
     }
-    const response = await axios.get('http://localhost:5000/profile', { headers: headers });
+    const response = await axios.get('http://localhost:5000/profile', headers);
     setuserData({
       email: response.data.Email,
       username: response.data.Username,
@@ -71,7 +71,7 @@ function Profile() {
     var body = {
       allergyList
     };
-    axios.put("http://localhost:5000/profile", body, {headers:headers})
+    axios.put("http://localhost:5000/profile", body, headers)
     .then((response) => {
       console.log(response);
     }).catch((error) => {
