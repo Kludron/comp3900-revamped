@@ -82,7 +82,7 @@ function Dashboard () {
       setfavourite(false);
       setbookmarkStar('☆');
       console.log('unbookmarked'); //As above
-    }
+    }*/
   };
 
   const handleClick = () => {
@@ -119,7 +119,7 @@ function Dashboard () {
     /*if (!token) {
       navigate('/login');
     }*/
-  };
+  },[]);
 
   return <div>
     {/* left title and search bar */}
