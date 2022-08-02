@@ -105,7 +105,7 @@ def profile():
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
-@api.route('/recentlyviewed', methods=['GET'])
+@api.route('/recentlyviewed', methods=['GET', 'PUT'])
 @jwt_required()
 @cross_origin()
 def recently_viewed():
