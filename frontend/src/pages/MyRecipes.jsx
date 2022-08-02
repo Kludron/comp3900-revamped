@@ -14,6 +14,8 @@ function MyRecipes() {
 	const [myRecipes, setMyRecipes] = React.useState('You have created no recipes, please create one via the button below.')
 	const [recentViewed, setRecentViewed] = React.useState([]);
 
+	const token = localStorage.getItem('token');
+
 	//React navigate functions
 	const navigate = useNavigate();
 	const previous = () => {
@@ -24,11 +26,10 @@ function MyRecipes() {
 	};
 	
 	async function getMyRecipes() {
-		const token = localStorage.getItem('token');
 		var body = {};
 		let headers = {
 			headers: {
-				"Authorization": 'Bearer '+token
+				"Authorization": `Bearer ${token}`
 			}
 		}
 		console.log(headers);
@@ -47,13 +48,13 @@ function MyRecipes() {
 	async function getRecentlyViewed() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
-		const token = localStorage.getItem('token');
 		let body = {
 			recentlyViewed: recent
 		};
 		let headers = {
 			headers: {
-				"Authorization": 'Bearer '+token
+				"Content-type": "application/json",
+				"Authorization": `Bearer ${token}`
 			}
 		}
 		console.log(body);
