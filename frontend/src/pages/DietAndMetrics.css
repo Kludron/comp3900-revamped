@@ -1,0 +1,8 @@
+.wrapper {
+    display: flex;
+    position: relative;
+}
+
+.h1 {
+    margin-left: 0;
+}

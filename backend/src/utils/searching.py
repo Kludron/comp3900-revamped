@@ -1,7 +1,14 @@
+#################################
+#
+#   Search functions used for 
+#   COMP3900 F1v3guy5 recipe
+#   recommendation system.
+#
+#################################
 
 import json
 
-def search_general(method, data, cursor):
+def search_general(method, data, cursor) -> tuple:
     def __add_to_results(data):
         for recipe in data:
             id, name, desc, cuisine, mealT, ss = recipe
@@ -84,7 +91,7 @@ def search_general(method, data, cursor):
                                     WHERE i.name in ({','.join(['%s' for _ in range(len(ingredients))])})
                                 )""")
                     for ingredient in ingredients:
-                        arguments.append(ingredient)
+                        arguments.append(ingredient["Name"])
                 if mealTypes:
                     constraints.append(f"m.name in ({','.join(['%s' for _ in range(len(mealTypes))])})")
                     for mealType in mealTypes:
@@ -98,7 +105,7 @@ def search_general(method, data, cursor):
                     query += " WHERE "
                     query += " AND ".join(constraints)
                 cursor.execute(query, tuple(arguments))
-
+                print(query)
                 __add_to_results(cursor.fetchall())
 
                 return (responseval, 200)
@@ -106,9 +113,45 @@ def search_general(method, data, cursor):
                 print(e)
                 return ({'msg': "Invalid request"}, 400)
 
-def search_detailed(cursor, r_id):
+def search_detailed(cursor, r_id) -> tuple:
+    """
+    parameters:
+        :cursor: psycopg2 sql cursor
+        :r_id: recipe id -> int
+    details:
+        This function returns detailed information about the specified
+        recipe. This information includes:
+            {
+                Name,
+                Description,
+                Cuisine,
+                MealType,
+                ServingSize,
+                Ingredients : [
+                    {
+                        Name,
+                        Energy,
+                        Protein,
+                        Fat,
+                        Fibre,
+                        Sugars,
+                        Carbohydrates,
+                        Calcium,
+                        Iron,
+                        Magnesium,
+                        Manganese,
+                        Phosphorus,
+                        Quantity,
+                        Grams,
+                        Millilitres
+                    },
+                ],
+                Instructions
+            }
+    """
+
     query = """
-        SELECT r.name, r.description, c.name, m.name, r.servingSize
+        SELECT r.name, r.description, c.name, m.name, r.servingSize, r.instructions
         FROM recipes r
             JOIN cuisines c ON c.id=r.cuisine
             JOIN mealtypes m ON m.id = r.mealType
@@ -120,8 +163,9 @@ def search_detailed(cursor, r_id):
     if not recipe:
         return {'msg' : 'Recipe does not exist'}, 401
         
-    r_name, r_description, c_name, m_name, r_sS = recipe
+    r_name, r_description, c_name, m_name, r_sS, r_instructions = recipe
     
+    # Adjust this to use the grab_ingredients function.
     cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
     ingredients = cursor.fetchall()
 
@@ -131,7 +175,8 @@ def search_detailed(cursor, r_id):
         "Cuisine" : c_name,
         "MealType" : m_name,
         "ServingSize" : r_sS,
-        "Ingredients" : list()
+        "Instructions" : r_instructions,
+        "Ingredients" : list(),
     }
 
     for ingredient in ingredients:
@@ -181,5 +226,38 @@ def search_detailed(cursor, r_id):
             Grams=0,
             Millilitres=0.0
         ))
+
+    return response, 200
+
+def grab_ingredients(cursor, r_id) -> list or None:
+    cursor.execute("""
+        SELECT i.name,r.quantity,r.grams,r.millilitres 
+        FROM recipe_ingredients r
+        JOIN
+            ingredients i on i.id = r.ingredient
+        WHERE r_id=%s";
+    """, (r_id, ))
+    return cursor.fetchall()
+
+def search_users_recipes(email, cursor) -> tuple:
+    u_id = auth_get_uid()
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
+
+    cursor.execute("SELECT id FROM recipes WHERE uploader=%s", (u_id,))
+    try:
+        recipes = [row[-1] for row in cursor.fetchall()]
+    except TypeError:
+        # Does this occur when user hasn't uploaded?
+        return {'msg' : 'Something went wrong retrieving recipes'}, 500
+
+    if not recipes:
+        return {'msg' : 'No recipes found'}, 200
+
+    response={'Recipes' : list()}
+    for r_id in recipes:
+        result, status_code = search_detailed(cursor, r_id)
+        if not status_code == 200: continue
+        response['Recipes'].append(result)
 
     return response, 200

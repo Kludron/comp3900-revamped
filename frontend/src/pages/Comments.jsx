@@ -1,80 +1,83 @@
 import React, { useState } from "react";
-import comments from '../comments/comments.json'
 import './Comments.css'
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Rating, TextField } from "@mui/material";
+
+const token = localStorage.getItem("token");
 
 /* Recipe Comments Page */
 function Comments () {
 
+  const navigate = useNavigate();
+  const goBack = () => {
+		navigate(`/view/recipe/${recipeid}`);
+	};
+
   //Obtains recipeID from URL
   const recipeid = window.location.pathname.split('/')[3];
-
-  const [commets, setComments] = useState({});
-
-  const token = localStorage.getItem("token");
-
+  const [comments, setComments] = useState([]);
+  
+  
   //Loads Recipe comments from backend
   const loadComments = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
     }
+    // TODO : change the path
     const response = await axios.get(`http://localhost:5000/reviews/recipeid=${recipeid}`, {headers:headers});
-    console.log(response.data.Email);
-      setComments({
-        commenter: response.data.Email, 
-        comment: response.data.description, 
-        rating: response.data.rating, 
-      });
-      console.log(comments);
+    setComments(response.data.Comments);
   }
-
+  
   React.useEffect(() => {
     loadComments();
-  })
-
+  }, [])
+  console.log(comments);
+  
   return <div>
-    <CommentBar/>
+    <button className="comment-go-back" onClick={goBack}>←Go Back</button>
+    <CommentBar recipeid={recipeid}/>
     <div>
-      {comments.map((post, key) => (
-        <Comment key={key} commenter={post.commenter} comment={post.comment} rating={post.rating}/>
-      ))}
+      {comments.map((comment, key) => (
+        <Comment key={key} username={comment.Username} comment={comment.Content} rating={comment.Rating}/>
+        ))}
     </div>
   </div>
 }
 
 export default Comments;
 
-function Comment ({commenter, comment, rating}) {
+function Comment ({username, comment, rating}) {
   return <div className="comment">
     <div className="comment-user">
       <Avatar className="comment-user-icon"/>
-      {commenter}
+      {username}
     </div>
     <div className="comment-content">
-      <Rating value={rating} readOnly/>
+      {/* <Rating value={rating} readOnly/> */}
       {comment} 
     </div>
   </div>
 }
 
-function CommentBar () {
+function CommentBar ({ recipeid }) {
   const [comment, setComment] = React.useState('');
   const [rating, setRating] = React.useState(0);
-
-
+  
+  
   const submitComment = async () => {
-    let headers = {
-        "Content-Type": "application/json",
-    };
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
     var body = {
       comment,
       rating
     };
-    axios.post("http://localhost:5000/comment", body, headers)
+    axios.post(`http://localhost:5000/contrib/review/recipe=${recipeid}`, body, { headers: headers })
     .then((response) => {
-      console.log(response);
+      alert("Comment successfully!")
     }).catch((error) => {
       console.log(error);
       alert(error)

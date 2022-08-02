@@ -16,8 +16,13 @@ function Welcome () {
       </div>
       <div className="space"></div>
       <div className="right">
+        <Link to='/dashboard'>Continue as Guest</Link>
+      </div>
+      <div className="space"></div>
+      <div className="right">
         <Link to='/login'>Log in</Link>
       </div>
+
     </div>
   </main>
   </>;

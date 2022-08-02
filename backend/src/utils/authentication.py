@@ -9,9 +9,9 @@ import hashlib
 import smtplib
 import ssl
 from flask_jwt_extended import (
-    create_access_token,
-    jwt_required
+    create_access_token
 )
+import psycopg2
 
 # JWT Authentication Information
 JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
@@ -25,6 +25,8 @@ DB_HOST = '45.77.234.200'
 DB_NAME = 'comp3900db'
 DB_USER = 'comp3900_user'
 DB_PASS =  'yckAPfc9MX42N4'
+
+RVSTORAGE = 10 # Recently Viewed Storage
 
 def auth_login(data, cursor) -> tuple:
     """
@@ -53,7 +55,7 @@ def auth_login(data, cursor) -> tuple:
     try:
         vEmail, username, points = cursor.fetchone()
         isValid = vEmail == email
-    except TypeError or ValueError:
+    except (ValueError, TypeError, psycopg2.ProgrammingError):
         isValid = False
     if not isValid:
         response["msg"] = "Invalid Email / Password"
@@ -81,7 +83,7 @@ def auth_register(data, cursor, conn) -> tuple:
     
     try:
         doesExist = cursor.fetchone()[0] == email
-    except (TypeError, IndexError):
+    except (ValueError, TypeError, psycopg2.ProgrammingError):
         doesExist = False
 
     if doesExist:
@@ -99,7 +101,7 @@ def auth_register(data, cursor, conn) -> tuple:
     cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
     try:
         doesExist = cursor.fetchone()[0] == email
-    except (TypeError, IndexError):
+    except (ValueError, TypeError, psycopg2.ProgrammingError):
         doesExist = False
 
     if doesExist:
@@ -194,3 +196,121 @@ def auth_jwt_refresh(expiry, identity, response) -> tuple:
         return response
     except (RuntimeError, KeyError):
         return response
+
+def auth_get_uid(email, cursor):
+    cursor.execute("SELECT id FROM users WHERE email=%s;", (email,))
+    try:
+        return cursor.fetchone()[0]
+    except TypeError:
+        return None
+
+
+def auth_update_viewed(data, email, cursor, conn):
+
+    # Grab the users u_id
+    u_id = auth_get_uid(email, cursor)
+    if not u_id:
+        return {'msg' : 'Authentication failed'}, 403
+
+    try:
+        data = json.loads(data)
+        recipes = data["recentlyViewed"]
+    except (KeyError, json.decoder.JSONDecodeError):
+        return {'msg' : 'Invalid parameters'}, 400
+
+    # Get a count of the number of recently viewed recipes are stored for that user
+    cursor.execute("SELECT COUNT(u_id) FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
+    try:
+        nStored = cursor.fetchone()[0]
+    except TypeError:
+        return {'msg' : 'An error occured when grabbing users recently viewed recipes'}, 500
+
+    # Calculate number of items to delete
+    nDelete = max(0, len(recipes) + nStored - RVSTORAGE)
+    # Delete n recentlyViewed from the database
+    cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
+
+    # Insert recently viewed recipes into the db
+    for recipe in recipes:
+        try:
+            r_id = recipe['r_id']
+        except KeyError: # Invalid recipe entry. Ignore it
+            pass
+        cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s)", (u_id, r_id))
+
+    conn.commit()
+    return {'msg' : 'Successfully updated recently viewed table'}, 200
+
+
+def auth_recipe_uploader(email, cursor, r_id) -> bool:
+    # Get the users id
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    try:
+        u_id = cursor.fetchone()[0]
+    except (ValueError, TypeError, psycopg2.ProgrammingError):
+        return False
+    # Check that the user id matches the recipe's uploader id
+    query = """
+    SELECT 1
+    FROM recipes r
+        JOIN cuisines c ON c.id=r.cuisine
+        JOIN mealtypes m ON m.id = r.mealType
+    WHERE r.uploader = %s AND r.id = %s;
+    """
+    cursor.execute(query, (u_id,r_id))
+    
+    try:
+        if cursor.fetchone()[0]:
+            return True
+    except (ValueError, TypeError, psycopg2.ProgrammingError):
+        return False
+    finally:
+        # Fail close (fail false)
+        return False
+
+def auth_get_profile(email, cursor):
+    response={}
+    query = """
+    SELECT u.id, u.username, u.email, u.points FROM users u WHERE lower(u.email)=%s;
+    """
+    cursor.execute(query, (email,))
+    try:
+        u_id, username, email, points = cursor.fetchone()
+    except (ValueError, psycopg2.ProgrammingError, TypeError):
+        return {'msg' : 'Authentication Error'}, 403
+
+    # Grab Allergens
+    cursor.execute("""
+        SELECT a.name FROM allergens a;
+    """, (u_id,))
+    allAllergens = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT a.name
+        FROM user_allergens ua, allergens a
+        WHERE ua.a_id = a.id
+        AND ua.u_id = %s;
+    """, (u_id,))
+    usersAllergens = cursor.fetchall()
+    response = {
+        'Username' : username,
+        'Email' : email,
+        'Points' : points,
+        'allAllergens' : [], 
+        'usersAllergens': [], 
+    }
+    
+    for allergen in allAllergens:
+        try:
+            response["allAllergens"].append(allergen[0])
+        except KeyError:
+            # No allergies found? This might not even be run in that case.
+            pass
+    
+    for allergen in usersAllergens:
+        try:
+            response["usersAllergens"].append(allergen[0])
+        except KeyError:
+            pass
+
+    return response, 200

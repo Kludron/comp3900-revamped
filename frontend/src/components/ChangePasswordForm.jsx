@@ -12,31 +12,31 @@ function ChangePasswordForm ({ submit }) {
 		submit(newpassword, repassword);
 	}
 
-	return (<>
-		<TextField
-			margin="normal"
-			required
-			halfwidth="true"
-			label="New Password"
-			type="password"
-			onChange={e => setNewPassword(e.target.value)}
-		/>
-		<TextField
-			margin="normal"
-			required
-			halfwidth="true"
-			label="Re-type Password"
-			type="password"
-			id="password"
-			onChange={e => setRePassword(e.target.value)}
-		/><br />
-		<Button
-			sx={{ mt: 3, mb: 2 }}
-			id='login'
-			variant="contained" onClick={onSubmit}>Submit
-		</Button>
-	</>)
-
+    /*Possible indentation error*/
+		return (<>
+			<TextField
+				margin="normal"
+				required
+				halfwidth="true"
+				label="New Password"
+				type="password"
+				onChange={e => setNewPassword(e.target.value)}
+			/>
+			<TextField
+				margin="normal"
+				required
+				halfwidth="true"
+				label="Re-type Password"
+				type="password"
+				id="password"
+				onChange={e => setRePassword(e.target.value)}
+			/><br />
+			<Button
+				sx={{ mt: 3, mb: 2 }}
+				id='changepasswordbtn'
+				variant="contained" onClick={onSubmit}>Submit
+			</Button>
+		</>)
 }
 
 ChangePasswordForm.propTypes = {
