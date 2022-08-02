@@ -7,12 +7,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import axios from 'axios';
+import Autocomplete from '@mui/material/Autocomplete';
 
 /* Create Recipe Form */
 function CreateRecipeForm ({ submit }) {
 
 	const onSubmit = () => {
-		submit(recipeName, description, cuisineName, mealtypeName, servingsize);
+		submit(recipeName, description, cuisineName, mealtypeName, servingsize, ingredientsName, instructions);
 	};
 
 	const theme = useTheme();
@@ -27,14 +29,30 @@ function CreateRecipeForm ({ submit }) {
 		},
 	};
 
+	const [cuisineList, setCuisineList] = React.useState([]);
+  const [mealtypeList, setMealtypeList] =  React.useState([]);
+  const [ingredientsList, setIngredientsList] = React.useState([]);
+
+	const getCuisines = async () => {
+    const configdata = await axios.get('http://localhost:5000/search');
+    setMealtypeList(configdata.data.MealTypes);
+    setCuisineList(configdata.data.Cuisine);
+    configdata.data.Ingredients.forEach((i) => {
+      setIngredientsList(ingredientsList => [...ingredientsList, {name: i}]);
+    });
+  };
+
+	React.useEffect(() => {
+		getCuisines();
+	}, [])
+
 	const [recipeName, setRecipeName] = React.useState('');
 	const [description, setDescription] = React.useState('');
-	const cuisines = ['English','Irish','Korean','Chinese','Japanese','Spanish','Thai','Indian','Israeli','Middle Eastern','German'];
 	const [cuisineName, setCuisines] = React.useState('');
 	const [mealtypeName, setmealtypes] = React.useState('');
-	const mealtypes = ['Breakfast','Lunch','Dinner','Dessert','Snack'];
+	const [ingredientsName, setIngredients] = React.useState([]);
 	const [servingsize, setServingSize] = React.useState('');
-
+	const [instructions, setInstructions] = React.useState('');
 
 	const handleChangeCuisine = (event) => {
 		const {
@@ -50,6 +68,11 @@ function CreateRecipeForm ({ submit }) {
     setmealtypes(value);
   };
 
+	const handleChangeIngredients = (event, value) => {
+    setIngredients(value);
+    console.log(value);
+  };
+
 	function getStylesCuisine(name, cuisines, theme) {
 		return {
 			fontWeight:
@@ -58,6 +81,7 @@ function CreateRecipeForm ({ submit }) {
 					: theme.typography.fontWeightMedium,
 		};
 	};
+
 	function getStylesMealtype(name, mealtypeName, theme) {
 		return {
 			fontWeight:
@@ -67,23 +91,36 @@ function CreateRecipeForm ({ submit }) {
 		};
 	};
 
+	const options = ingredientsList.map((option) => {
+    //console.log(option.name);
+		const firstLetter = option.name.Name[0].toUpperCase();
+		return {
+			firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+			...option.name,
+		};
+	});
+
 	return (<>
 		<h2>Create a Recipe</h2>
 		<TextField
+			sx={{ width: 400 }}
 			margin="normal"
 			required
 			label="Recipe Name"
+			placeholder="e.g Mashed Potatoes"
 			type="text"
 			onChange={e => setRecipeName(e.target.value)}
 		/>
 		<TextField
+			sx={{ width: 400 }}
 			margin="normal"
 			required
 			label="Description"
+			placeholder="Quick, easy and a family favourite!"
 			type="text"
 			onChange={e => setDescription(e.target.value)}
 		/>
-		<FormControl sx={{ m: 1, width: 200}}>
+		<FormControl sx={{ m: 2, width: 200}}>
 			<InputLabel id="Cuisine_selectbox">Select Cuisine</InputLabel>
 			<Select
 				value={cuisineName}
@@ -92,7 +129,7 @@ function CreateRecipeForm ({ submit }) {
 				MenuProps={MenuProps}
 				defaultValue=""
 			>
-				{cuisines.map((name) => (
+				{cuisineList.map((name) => (
 					<MenuItem
 						key={name}
 						value={name}
@@ -103,16 +140,17 @@ function CreateRecipeForm ({ submit }) {
 				))}
 			</Select>
 		</FormControl>
-		<FormControl sx={{ m: 1, width: 200}}>
-			<InputLabel id="Mealtype_selectbox">Select Meal Type</InputLabel>
+		<FormControl sx={{ m: 2, width: 200}}>
+			<InputLabel id="Mealtype_selectbox">Select Meal Type *</InputLabel>
 			<Select
+				required
 				value={mealtypeName}
 				onChange={handleChangeMealtype}
 				input={<OutlinedInput label="Mealtype" />}
 				MenuProps={MenuProps}
 				defaultValue=""
 			>
-				{mealtypes.map((name) => (
+				{mealtypeList.map((name) => (
 					<MenuItem
 						key={name}
 						value={name}
@@ -123,12 +161,38 @@ function CreateRecipeForm ({ submit }) {
 				))}
 			</Select>
 		</FormControl>
-		<TextField
-			margin="normal"
+		<Autocomplete
 			required
+			multiple
+			id="grouped"
+			options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+			groupBy={(option) => option.firstLetter}
+			getOptionLabel={(option) => option.Name}
+			sx={{ m: 1, width: 400 }}
+			onChange={handleChangeIngredients}
+			renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
+		/>
+		<TextField
+			required
+			placeholder="Eg. 3"
+			margin="normal"
 			label="Serving Size (No. of People)"
 			type="text"
 			onChange={e => setServingSize(e.target.value)}
+		/>
+		<TextField
+			required
+			label="Recipe Instructions"
+			sx={{ width: 400}}
+			placeholder="Instructions: eg. 
+			1. Peel the potatoes
+			2. Boil potatoes for 15 minutes"
+			multiline={true}
+			rows={8}
+			margin="normal"
+			autoFocus={true}
+			variant="outlined"
+			onChange={e => setInstructions(e.target.value)}
 		/>
 		<br />
 		<Button
