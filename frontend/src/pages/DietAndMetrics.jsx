@@ -97,11 +97,13 @@ function DietAndMetrics() {
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": 'Bearer '+token
+				}
 			};
 			console.log(headers)
-			axios.post("http://localhost:5000/setGoal", body, { headers: headers })
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -115,10 +117,12 @@ function DietAndMetrics() {
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": 'Bearer '+token
+				}
 			};
-			axios.post("http://localhost:5000/setGoal", body, { headers: headers })
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -137,10 +141,13 @@ function DietAndMetrics() {
   };
 
 	const Recommendations = async () => {
+		var body = {};
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": 'Bearer '+token
+			}
 		};
-		axios.get('http://localhost:5000/recommend', { headers: headers })
+		axios.get('http://localhost:5000/recommend', body, headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -149,10 +156,13 @@ function DietAndMetrics() {
 	}
 
 	const intakeOverview = async () => {
+		var body = {};
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": 'Bearer '+token
+			}
 		};
-		axios.get('http://localhost:5000/intake_overview', { headers: headers })
+		axios.get('http://localhost:5000/intake_overview', body, headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {

@@ -23,53 +23,41 @@ function MyRecipes() {
 		navigate('/create-recipe');
 	};
 	
-	const getMyRecipes = async () => {
+	async function getMyRecipes() {
 		const token = localStorage.getItem('token');
-<<<<<<< HEAD
 		var body = {};
 		let headers = {
 			headers: {
-				"Authorization": `Bearer ${token}`,
+				"Authorization": 'Bearer '+token
 			}
 		}
+		console.log(headers);
 		axios.get('http://localhost:5000/my-recipes', body, headers)
-=======
-		axios.get('http://localhost:5000/my-recipes')
->>>>>>> fd17270349fa60d41b8ecf68ff73e3eec1386233
 		.then((response) => {
-			setRecentViewed([]);
 			console.log(response);
-			response.data.recipes.forEach((rec) => {
+			/*response.data.recipes.forEach((rec) => {
 				console.log(rec);
 				setRecentViewed(recentViewed => [...recentViewed, {id: rec.ID, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
-			})
+			})*/
 		}).catch(err => {
-			alert(err);
+			console.log(err);
 		})
 	};
 
-	const getRecentlyViewed = async () => {
+	async function getRecentlyViewed() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
 		const token = localStorage.getItem('token');
-<<<<<<< HEAD
 		let body = {
 			recentlyViewed: recent
 		};
 		let headers = {
 			headers: {
-				"Authorization": `Bearer ${token}`,
+				"Authorization": 'Bearer '+token
 			}
 		}
 		console.log(body);
 		axios.get('http://localhost:5000/recentlyviewed', body, headers)
-=======
-		if (recent === null) setRecentViewed([]);
-		let body = {"recentlyViewed": recent};
-		console.log(body);
-		// axios.get('http://localhost:5000/recentlyviewed', body, { headers: headers })
-		axios.get('http://localhost:5000/recentlyviewed', body)
->>>>>>> fd17270349fa60d41b8ecf68ff73e3eec1386233
 		.then((response) => {
 			console.log(response);
 		}).catch(err => {

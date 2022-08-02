@@ -35,8 +35,8 @@ function Welcome () {
             </div>
             <div className="links">
               <ul>
-                <li><Button variant="contained" onClick={signup}>Sign Up</Button></li>
-                <li><Button variant="contained" onClick={register}>Log In</Button></li>
+                <li><Button variant="contained" onClick={register}>Sign Up</Button></li>
+                <li><Button variant="contained" onClick={signup}>Log In</Button></li>
               </ul>
             </div>
             <div className="overlay"></div>
