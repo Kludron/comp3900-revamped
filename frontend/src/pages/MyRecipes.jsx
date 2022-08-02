@@ -26,14 +26,13 @@ function MyRecipes() {
 	};
 	
 	async function getMyRecipes() {
-		var body = {};
 		let headers = {
 			headers: {
 				"Authorization": `Bearer ${token}`
 			}
 		}
 		console.log(headers);
-		axios.get('http://localhost:5000/my-recipes', body, headers)
+		axios.get('http://localhost:5000/my-recipes', headers)
 		.then((response) => {
 			console.log(response);
 			/*response.data.recipes.forEach((rec) => {
