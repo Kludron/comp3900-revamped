@@ -85,32 +85,44 @@ function DietAndMetrics() {
 
 	const handleSubmit = async () => {
 		var today = new Date();
-		var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth()+1).padStart(2, '0');
+		var yyyy = today.getFullYear();
+		var date = dd+'/'+mm+'/'+yyyy;
 		if(isWeekly){
 			const body = {
-				goal: caloricIntakeWeekly,
-				timeframe: 'Weekly',
-				date: date
+				"goal": caloricIntakeWeekly,
+				"timeframe": 'Weekly',
+				"date": date
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				}
 			};
-			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
-			console.log(response);
+			console.log(headers)
+			axios.post("http://localhost:5000/setGoal", body, headers)
+			.then(response => {
+				console.log(response);
+			}).catch(err => {
+				console.log(err);
+			})
 		} else {
 			const body = {
-				goal: caloricIntakeDaily,
-				timeframe: 'Daily',
-				date: date
+				"goal": caloricIntakeDaily,
+				"timeframe": 'Daily',
+				"date": date
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				}
 			};
-			axios.post("http://localhost:5000/setGoal", headers, body)
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -128,11 +140,13 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
-	const recommend = async () => {
+	const Recommendations = async () => {
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
 		};
-		axios.get('http://localhost:5000/recommend')
+		axios.get('http://localhost:5000/recommend', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -142,9 +156,11 @@ function DietAndMetrics() {
 
 	const intakeOverview = async () => {
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
 		};
-		axios.get('http://localhost:5000/intake_overview')
+		axios.get('http://localhost:5000/intake_overview', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -153,7 +169,7 @@ function DietAndMetrics() {
 	}
 
 	React.useEffect(() => {
-		recommend();
+		Recommendations();
 		intakeOverview();
 	}, []);
 

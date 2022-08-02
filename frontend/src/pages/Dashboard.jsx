@@ -97,7 +97,7 @@ function Dashboard () {
 
   const eatenRecipe = async (recipeid) => {
     if(localStorage.getItem('token') != null){
-      let headers = {
+      var headers = {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       }

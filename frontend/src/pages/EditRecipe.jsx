@@ -9,12 +9,62 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import Autocomplete from '@mui/material/Autocomplete';
+import { useNavigate } from 'react-router-dom';
 
-/* Create Recipe Form */
-function CreateRecipeForm ({ submit }) {
+function EditRecipe ({submit}) {
+  
+	const navigate = useNavigate();
 
-	const onSubmit = () => {
-		submit(recipeName, description, cuisineName, mealtypeName, servingsize, ingredientsName, instructions);
+	//Obtains recipeID from the URL
+	const recipeid = window.location.pathname.split('/')[3];
+
+	//Obtains authToken of user that was stored in localStorage
+	const token = localStorage.getItem('token');
+	
+	const [recipeData, setrecipeData] = React.useState([]);
+
+	//Asynchronous function that pulls data from backend server to be displayed to user
+	const getRecipe = async () => {
+		let headers = {
+			'Content-type': 'application/json',
+			Authorization: `Bearer ${token}`,
+		}
+		const response = await axios.get(`http://localhost:5000/view/recipe/${recipeid}`, headers);
+		console.log(response);
+		setrecipeData({
+			name: response.data.Name,
+			description: response.data.Description, 
+			instructions: response.data.Instructions,
+			ingredients: response.data.Ingredients, 
+			cuisine: response.data.Cuisine, 
+			mealtype: response.data.MealType, 
+			servingsize: response.data.ServingSize
+		});
+	}
+
+	const onSubmit = async () => {
+		const body = {
+			"name": recipeName,
+			"description": description,
+			"cuisine": cuisineName,
+			"mealtype": mealtypeName,
+			"servingsize": servingsize,
+			"ingredients": ingredientsName,
+			"instructions": instructions,
+		}
+		var headers = {
+			'Content-Type': 'application/json',
+			"Authorization": `Bearer ${token}`
+		}
+		console.log(body);
+		axios.post(`http://localhost:5000/my-recipes/recipeid=${recipeid}`, body, {headers: headers})
+		.then((response) => {
+			console.log(response);
+			alert('Recipe editted successfully');
+			navigate('/myRecipes');
+		}).catch((err) => {
+			alert(err);
+		});
 	};
 
 	const theme = useTheme();
@@ -44,6 +94,7 @@ function CreateRecipeForm ({ submit }) {
 
 	React.useEffect(() => {
 		getCuisines();
+		getRecipe();
 	}, [])
 
 	const [recipeName, setRecipeName] = React.useState('');
@@ -100,14 +151,15 @@ function CreateRecipeForm ({ submit }) {
 		};
 	});
 
-	return (<>
-		<h2>Create a Recipe</h2>
+
+	return(<>
+		<h2>Edit Your Recipe</h2>
 		<TextField
 			sx={{ width: 400 }}
 			margin="normal"
 			required
-			label="Recipe Name"
-			placeholder="e.g Mashed Potatoes"
+			label="Recipe Name:"
+			value={recipeData.name}
 			type="text"
 			onChange={e => setRecipeName(e.target.value)}
 		/>
@@ -116,7 +168,7 @@ function CreateRecipeForm ({ submit }) {
 			margin="normal"
 			required
 			label="Description"
-			placeholder="Quick, easy and a family favourite!"
+			value={recipeData.description}
 			type="text"
 			onChange={e => setDescription(e.target.value)}
 		/>
@@ -174,7 +226,7 @@ function CreateRecipeForm ({ submit }) {
 		/>
 		<TextField
 			required
-			placeholder="Eg. 3"
+			value={recipeData.servingsize}
 			margin="normal"
 			label="Serving Size (No. of People)"
 			type="text"
@@ -184,9 +236,7 @@ function CreateRecipeForm ({ submit }) {
 			required
 			label="Recipe Instructions"
 			sx={{ width: 400}}
-			placeholder="Instructions: eg. 
-			1. Peel the potatoes
-			2. Boil potatoes for 15 minutes"
+			value={recipeData.instructions}
 			multiline={true}
 			rows={8}
 			margin="normal"
@@ -201,7 +251,6 @@ function CreateRecipeForm ({ submit }) {
 			variant="contained" onClick={onSubmit}>Submit
 		</Button>
 	</>)
-
 }
 
-export default CreateRecipeForm;
+export default EditRecipe;

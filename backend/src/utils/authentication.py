@@ -15,7 +15,7 @@ import psycopg2
 
 # JWT Authentication Information
 JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
-JWT_EXPIRY = datetime.timedelta(minutes=30)
+JWT_EXPIRY = datetime.timedelta(hours=1)
 
 # User hashing information
 HASH_SALT = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
@@ -198,24 +198,36 @@ def auth_jwt_refresh(expiry, identity, response) -> tuple:
         return response
 
 def auth_get_uid(email, cursor):
-    cursor.execute("SELECT id FROM users WHERE email=%s;", (email,))
-    try:
-        return cursor.fetchone()[0]
-    except TypeError:
-        return None
+    print('++++'+email+'++++')
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    if not isinstance(cursor.pgresult_ptr, type(None)):
+        result = cursor.fetchone()
+        print(result)
+        try:
+            return result[0]
+        except TypeError:
+            return None
+    # try:
+    #     return result[0]
+    # except (TypeError,psycopg2.ProgrammingError):
+    return None
 
 
 def auth_update_viewed(data, email, cursor, conn):
 
     # Grab the users u_id
-    u_id = auth_get_uid(email, cursor)
-    if not u_id:
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    try:
+        u_id = cursor.fetchone()[0]
+    except (TypeError, psycopg2.ProgrammingError):
         return {'msg' : 'Authentication failed'}, 403
 
     try:
         data = json.loads(data)
         recipes = data["recentlyViewed"]
     except (KeyError, json.decoder.JSONDecodeError):
+        if isinstance(data, bytes):
+            return {'mgs' : 'No recently viewed recipes passed through'}, 200
         return {'msg' : 'Invalid parameters'}, 400
 
     # Get a count of the number of recently viewed recipes are stored for that user
@@ -224,19 +236,23 @@ def auth_update_viewed(data, email, cursor, conn):
         nStored = cursor.fetchone()[0]
     except TypeError:
         return {'msg' : 'An error occured when grabbing users recently viewed recipes'}, 500
+    except ProgrammingError:
+        nStored = 0
 
-    # Calculate number of items to delete
-    nDelete = max(0, len(recipes) + nStored - RVSTORAGE)
-    # Delete n recentlyViewed from the database
-    cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
+    if isinstance(recipes, list):
+        # Calculate number of items to delete
+        nDelete = max(0, len(recipes) + nStored - RVSTORAGE)
+        # Delete n recentlyViewed from the database
+        if nDelete > 0:
+            cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s", (u_id, nDelete))
 
-    # Insert recently viewed recipes into the db
-    for recipe in recipes:
-        try:
-            r_id = recipe['r_id']
-        except KeyError: # Invalid recipe entry. Ignore it
-            pass
-        cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s)", (u_id, r_id))
+        # Insert recently viewed recipes into the db
+        for recipe in recipes:
+            try:
+                r_id = recipe['r_id']
+            except KeyError: # Invalid recipe entry. Ignore it
+                pass
+            cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s)", (u_id, r_id))
 
     conn.commit()
     return {'msg' : 'Successfully updated recently viewed table'}, 200

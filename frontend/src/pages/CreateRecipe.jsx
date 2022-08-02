@@ -16,27 +16,29 @@ function CreateRecipe() {
 	}
     return <>
 			<button onClick={previous}>Go Back</button>
-			<CreateRecipeForm submit={(recipeName, description, cuisineName, mealtypeName, servingsize) => {
-				if(recipeName === empty || description === empty ||  mealtypeName === empty || servingsize === empty){
-					alert('One of the fields are empty, please try again.');
+			<CreateRecipeForm submit={(recipeName, description, cuisineName, mealtypeName, servingsize, ingredients, instructions) => {
+				console.log(recipeName, description, cuisineName, mealtypeName, servingsize, ingredients, instructions)
+				if(recipeName === empty || description === empty ||  mealtypeName === empty || servingsize === empty || ingredients === empty || instructions === empty){
+					alert('One of the fields are incorrect or empty, please try again.');
 				} else {
-					alert('Recipe created successfully')
-					navigate('/myRecipes');
 					const body = {
 						"name": recipeName,
 						"description": description,
 						"cuisine": cuisineName,
 						"mealtype": mealtypeName,
 						"servingsize": servingsize,
-						"ingredients": '',
+						"ingredients": ingredients,
+						"instructions": instructions,
 					}
 					var headers = {
       			"Authorization": `Bearer ${token}`
     			}
 					console.log(body);
-					axios.post("http://localhost:5000/post_recipe", body, {headers:headers})
+					axios.post("http://localhost:5000/post_recipe", body, {headers: headers})
 					.then((response) => {
 						console.log(response);
+						alert('Recipe created successfully');
+						navigate('/myRecipes');
 					}).catch((err) => {
 						alert(err);
 					});
