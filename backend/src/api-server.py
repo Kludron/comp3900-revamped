@@ -320,7 +320,7 @@ def overview():
                             JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
                     ) ingredientHistory
                      
-                    """, (u_id, '2022-06-26', '2022-07-26'))
+                    """, (u_id, '2022-06-26', '2022-08-26'))
 
     overview = cursor.fetchone()
     print("overview test")
