@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
+import '../pages/Dashboard.css';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -105,68 +106,85 @@ export default function MultipleSelect({ submit }) {
 	});
 
   return (
-    <div>
-      <TextField sx={{ m: 1, width: 400}}
-			margin="normal"
-			label="Search for Recipes.."
-			type="text"
-			onChange={e => setSearchQuery(e.target.value)}
-		  />
-      <FormControl sx={{ m: 1, width: 200}}>
-        <InputLabel id="Mealtype_inputlabel">Select Mealtype(s)...</InputLabel>
-        <Select
+    <div className="search_bars">
+      <div className="ingredient_bar">
+        <Autocomplete
+          className="bar"
           multiple
-          value={mealtypeName}
-          onChange={handleChangeMealtype}
-          input={<OutlinedInput label="Mealtypes" />}
-          MenuProps={MenuProps}
-        >
-          {mealtypeList.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStylesMealtype(name, mealtypeName, theme)}
+          id="grouped"
+          options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+          groupBy={(option) => option.firstLetter}
+          getOptionLabel={(option) => option.Name}
+          sx={{ m: 1,}}
+          onChange={handleChangeIngredients}
+          renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
+        />
+      </div>
+      <div className="remaining_bars">
+        <div>
+          <TextField sx={{ m: 1}}
+          className="bar2"
+          margin="normal"
+          label="Search for Recipes.."
+          type="text"
+          onChange={e => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div>
+          <FormControl sx={{ m: 1}}>
+            <InputLabel id="Mealtype_inputlabel">Select Mealtype(s)...</InputLabel>
+            <Select
+              className="bar2"
+              multiple
+              value={mealtypeName}
+              onChange={handleChangeMealtype}
+              input={<OutlinedInput label="Mealtypes" />}
+              MenuProps={MenuProps}
             >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl sx={{ m: 1, width: 200}}>
-        <InputLabel id="Cuisine_selectbox">Select Cuisine(s)...</InputLabel>
-        <Select
-          multiple
-          value={cuisineName}
-          onChange={handleChangeCuisine}
-          input={<OutlinedInput label="Cuisines" />}
-          MenuProps={MenuProps}
-        >
-        {cuisineList.map((name) => (
-          <MenuItem
-            key={name}
-            value={name}
-            style={getStylesCuisine(name, cuisineName, theme)}
-          >
-            {name}
-          </MenuItem>
-        ))}
-        </Select>
-      </FormControl>
-      <Autocomplete
-        multiple
-        id="grouped"
-        options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-        groupBy={(option) => option.firstLetter}
-        getOptionLabel={(option) => option.Name}
-        sx={{ m: 1, width: 400 }}
-        onChange={handleChangeIngredients}
-        renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
-      />
-      <Button variant="outlined"
-        sx={{ mt: 3, mb: 2 }}
-        type="submit" 
-        onClick={onSubmit}>Search
-      </Button>
+              {mealtypeList.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={getStylesMealtype(name, mealtypeName, theme)}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div>
+          <FormControl sx={{ m: 1}}>
+            <InputLabel id="Cuisine_selectbox">Select Cuisine(s)...</InputLabel>
+            <Select
+              className="bar2"
+              multiple
+              value={cuisineName}
+              onChange={handleChangeCuisine}
+              input={<OutlinedInput label="Cuisines" />}
+              MenuProps={MenuProps}
+            >
+            {cuisineList.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStylesCuisine(name, cuisineName, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div>
+          <Button variant="outlined"
+            className="btn"
+            sx={{ mt: 3, mb: 3 }}
+            type="submit" 
+            onClick={onSubmit}>Search
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
