@@ -297,25 +297,24 @@ def eaten(id):
 @jwt_required()
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def overview():
-    u_id = 1 #auth_get_uid(get_jwt_identity(), cursor)
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
     cursor.execute("""
-               
                     SELECT
-                    SUM(energy),
-                    SUM(protein), 
-                    SUM(fat),
-                    SUM(fibre),
-                    SUM(sugars),
-                    SUM(carbohydrates),
-                    SUM(calcium),
-                    SUM(iron),
-                    SUM(magnesium)
+                    SUM(energy) AS energy,
+                    SUM(protein) AS protein, 
+                    SUM(fat) AS fat,
+                    SUM(fibre) AS fibre,
+                    SUM(sugars) AS sugars,
+                    SUM(carbohydrates) AS carbohydrates,
+                    SUM(calcium) AS calcium,
+                    SUM(iron) AS iron,
+                    SUM(magnesium) AS magnesium
                     FROM (
                             SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
-                            FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
+                            FROM (SELECT r_id FROM meal_history WHERE u_id = 1 ORDER BY date BETWEEN '2022-06-26' AND '2022-08-26') AS history
                             JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
                             JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
                     ) ingredientHistory
@@ -327,6 +326,7 @@ def overview():
     print(overview)
     
     response = {
+        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium', 'manganese'],
         'overview' : overview
     }
     return response, 200
@@ -425,7 +425,7 @@ def setGoal():
     except KeyError:
         return ("msg: wrong key", 401)
 
-    u_id = 1 #auth_get_uid(get_jwt_identity(), cursor)
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
