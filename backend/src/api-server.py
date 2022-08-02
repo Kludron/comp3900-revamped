@@ -320,9 +320,11 @@ def overview():
                             JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
                     ) ingredientHistory
                      
-                    """, (u_id, '2022-06-26', '2022-07-26'))
+                    """, (u_id, '2022-06-26', '2022-08-26'))
 
     overview = cursor.fetchone()
+    print("overview test")
+    print(overview)
     
     response = {
         'overview' : overview
@@ -360,29 +362,34 @@ def find_imbalance(u_id):
     return nutrient_diff, recommended_nutrient
 
 def find_recipe_more(recommended_nutrient, amount):
-    sort = ""
+    sort = ''
     if amount > 0:
         sort = 'DESC'   #higher values will be at the start of the table
     elif amount < 0:
         sort = 'ASC'    #lower values will be at the start of the table
-    cursor.execute( """ SELECT r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
-                        FROM (                        
-                            SELECT recipe_ingredients.r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
-                            FROM recipe_ingredients
-                            JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
-                        ) r_id_with_nutrients
-                        ORDER BY calcium DESC;
-                    """, (recommended_nutrient, ))
+    
+
+
+    #Actual implementation, but doesn't work
+    query = """ SELECT r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                    FROM (                        
+                        SELECT recipe_ingredients.r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                        FROM recipe_ingredients
+                        JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                    ) r_id_with_nutrients
+                    ORDER BY {} {};
+                """.format(recommended_nutrient, sort)
+    cursor.execute(query)
 
     recommended_recipes = []
-    record = cursor.fetchone()[0]
-    #recipes = cursor.fetchall()
-    #count = 0
-    #for recipe in recipes:
-    #    recommended_recipes.append(recipe[0])
-    #    if count >= 2:
-    #        break
-    #    count += 1
+ 
+    recipes = cursor.fetchall()
+    count = 0
+    for recipe in recipes:
+        recommended_recipes.append(recipe[0])
+        if count >= 2:
+            break
+        count += 1
 
     return recommended_recipes
 
