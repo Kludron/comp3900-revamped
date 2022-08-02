@@ -105,7 +105,7 @@ def profile():
 def search():
     return search_general(request.method, request.get_data(), cursor)
 
-@api.route('/recentlyviewed', methods=['GET', 'PUT'])
+@api.route('/recentlyviewed', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def recently_viewed():
@@ -297,57 +297,46 @@ def eaten(id):
 @jwt_required()
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def overview():
-    response = {}
-
-    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = 1 #auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
     cursor.execute("""
-                    SELECT ISNULL(id, 'Total') AS id,
-                            energy,
-                            protein, 
-                            fat,
-                            fibre,
-                            sugars,
-                            carbohydrates,
-                            calcium,
-                            iron,
-                            magnesium
-                    FROM (  SELECT
-                            SUM(energy),
-                            SUM(protein), 
-                            SUM(fat),
-                            SUM(fibre),
-                            SUM(sugars),
-                            SUM(carbohydrates),
-                            SUM(calcium),
-                            SUM(iron),
-                            SUM(magnesium)
-                            FROM (
-                                    SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
-                                    FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
-                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
-                                    JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
-                            ) ingredientHistory
-                            GROUP BY id WITH ROLLUP
-                        ) AS intake;
+               
+                    SELECT
+                    SUM(energy),
+                    SUM(protein), 
+                    SUM(fat),
+                    SUM(fibre),
+                    SUM(sugars),
+                    SUM(carbohydrates),
+                    SUM(calcium),
+                    SUM(iron),
+                    SUM(magnesium)
+                    FROM (
+                            SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                            FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
+                            JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                            JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                    ) ingredientHistory
+                     
                     """, (u_id, '2022-06-26', '2022-07-26'))
 
     overview = cursor.fetchone()
     
-    print(overview)
-
-    return (response, 200)
+    response = {
+        'overview' : overview
+    }
+    return response, 200
 
 def find_imbalance(u_id):
     check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), ('iron', 12), ('magnesium', 400)]
 
     nutrient_diff = 0
     recommended_nutrient = ""
-    counter = 0
+
     for nutrient in check_nutrients:
-        cursor.execute("""SELECT SUM(%s) 
+        cursor.execute("""SELECT SUM(protein) 
                         FROM (      SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
                                     FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
                                     JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
@@ -355,40 +344,45 @@ def find_imbalance(u_id):
                         ) ingredientHistory;
                         
                         
-                        """, (nutrient[0], u_id, '2022-06-26', '2022-07-26'))
-        actual_intake = float(cursor.fetchone()[counter])
+                        """, ( u_id, '2022-06-26', '2022-07-26'))
+        actual_intake = 0
+        record = cursor.fetchone()[0]
+        print(record)
+        if(record is not None):
+            actual_intake = float(record)
+   
         expected_intake = nutrient[1]
         diff = expected_intake - actual_intake
         if(abs(diff) > nutrient_diff):
             nutrient_diff = diff
             recommended_nutrient = nutrient[0]
-        count += 1
-
+    
     return nutrient_diff, recommended_nutrient
 
 def find_recipe_more(recommended_nutrient, amount):
     sort = ""
     if amount > 0:
-        sort = "DESC"   #higher values will be at the start of the table
+        sort = 'DESC'   #higher values will be at the start of the table
     elif amount < 0:
-        sort = "ASC"    #lower values will be at the start of the table
-    cursor.execute( """ CREATE VIEW rid_ingredients AS
-                        SELECT *
-                        FROM recipe_ingredients
-                        JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
-                    """)
-
-    cursor.execute("SELECT * FROM rid_ingredients ORDER BY %s %s", (recommended_nutrient, sort))
+        sort = 'ASC'    #lower values will be at the start of the table
+    cursor.execute( """ SELECT r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                        FROM (                        
+                            SELECT recipe_ingredients.r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                            FROM recipe_ingredients
+                            JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                        ) r_id_with_nutrients
+                        ORDER BY calcium DESC;
+                    """, (recommended_nutrient, ))
 
     recommended_recipes = []
-    recipes = cursor.fetchall()
-
-    count = 0
-    for recipe in recipes:
-        recommended_recipes.append(recipe[0])
-        if count >= 2:
-            break
-        count += 1
+    record = cursor.fetchone()[0]
+    #recipes = cursor.fetchall()
+    #count = 0
+    #for recipe in recipes:
+    #    recommended_recipes.append(recipe[0])
+    #    if count >= 2:
+    #        break
+    #    count += 1
 
     return recommended_recipes
 
@@ -396,35 +390,35 @@ def find_recipe_more(recommended_nutrient, amount):
 @jwt_required()
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def recommend():
-
-    u_id = auth_get_uid(get_jwt_identity(), cursor)
+   
+    #u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = 1
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
     nutrient_diff, recommended_nutrient = find_imbalance(u_id)
 
-    print("recommend!!!")
     #Find the single largest nutrient imbalance and recommend 3 recipes to bring diet back into balance
-    recipes = find_recipe(recommended_nutrient, nutrient_diff)
+    recipes = find_recipe_more(recommended_nutrient, nutrient_diff)
     
     #Returning a list of food categories that need improvement on
-
-    return response
+    response = {
+        'recipes' : recipes
+    }
+    return response, 200
 
 @api.route('/setGoal', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def setGoal():
     data = json.loads(request.get_data())
-
-    response = {}
     
     try:
         caloricGoal = data['goal']
     except KeyError:
         return ("msg: wrong key", 401)
 
-    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = 1 #auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
@@ -432,7 +426,7 @@ def setGoal():
     cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
 
 
-    return (response, 200)
+    return ({'msg' : 'Success'}, 200)
 
 
 if __name__ == '__main__':
