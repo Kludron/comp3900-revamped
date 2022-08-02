@@ -262,7 +262,7 @@ def search_users_recipes(email, cursor) -> tuple:
     for r_id in recipes:
         result, status_code = search_detailed(cursor, r_id)
         if not status_code == 200: continue
-
+        result["r_id"] = r_id
         response['Recipes'].append(result)
 
     return response, 200
