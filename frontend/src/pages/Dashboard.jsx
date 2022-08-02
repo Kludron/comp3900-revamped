@@ -20,6 +20,8 @@ function Dashboard () {
   const [recipes, setRecipes] = useState([]);
   const [bookmarkedRecipe, setbookmarkedRecipe] = useState([])
   
+  const user = localStorage.getItem('username');
+
   //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
@@ -94,27 +96,31 @@ function Dashboard () {
   }
 
   const eatenRecipe = async (recipeid) => {
-    let headers = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-    let body = {
-      r_id: recipeid,
-    }
-    console.log(recipeid + ': eaten');
-    const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
-    console.log(response.status);
-    if(response.status === '200'){
-      alert('You have marked the recipe as eaten.');
+    if(localStorage.getItem('token') != null){
+      let headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+      let body = {
+        r_id: recipeid,
+      }
+      console.log(body);
+      const response = await axios.put(`http://localhost:5000/eaten/recipeid=${recipeid}`, body, {headers:headers})
+      console.log(response.status);
+      if(response.status === '200'){
+        alert('You have marked the recipe as eaten.');
+      } else {
+        alert('An issue has occurred marking the recipe as eaten. Please try again.')
+      }
     } else {
-      alert('An issue has occurred marking the recipe as eaten. Please try again.')
+      alert('Please create an account to access the Eaten functionality and being tracking your dietary intake.')
     }
   }
 
   React.useEffect(() => {
-    if (!token) {
+    /*if (!token) {
       navigate('/login');
-    }
+    }*/
   });
 
   return <div>
@@ -179,12 +185,11 @@ function Dashboard () {
 
   {/* right title and search bar */}
     <div className='recipe_screen'>
-      <Button variant='outlined' onClick={logout}>Logout</Button>
+      <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
       <Avatar onClick={handleClick} sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
-      <h2>F1V3GUY5 RECIPES</h2>
+      <h2>Welcome {user}, to F1V3GUY5 RECIPES</h2>
       {/* right recipes box */}
       <div className="recipeBox">
-
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           setRecipes([]);
           console.log('submitted successfully');

@@ -97,10 +97,11 @@ create table user_allergens (
 );
 
 create table meal_history (
+    m_his           int unique GENERATED ALWAYS AS IDENTITY (START WITH 1) not null,
     u_id            int references Users(id) not null,
     r_id            int references Recipes(id) not null,
     date            DATE not null,
-    primary key     (u_id)
+    primary key     (m_his)
 );
 
 create table recipe_rating (

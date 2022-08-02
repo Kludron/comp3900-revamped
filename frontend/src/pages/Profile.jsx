@@ -19,6 +19,12 @@ function Profile() {
   const previous = () => {
     navigate('/dashboard');
   };
+  const changePassword = () => {
+    navigate('/change-password');
+  };
+  const changeUsername = () => {
+    navigate('/change-username');
+  };
 
   //Pulls user's profile details using their token to be displayed on the page
   const loadProfile = async () => {
