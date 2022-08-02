@@ -35,7 +35,7 @@ function Comments () {
   }, [])
   console.log(comments);
   
-  return <div>
+  return <div className="comments">
     <button className="comment-go-back" onClick={goBack}>←Go Back</button>
     <CommentBar recipeid={recipeid}/>
     <div>
