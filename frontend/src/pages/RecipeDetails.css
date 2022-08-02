@@ -5,3 +5,12 @@
 .recipe_details .recipe_name {
     font-size: 25pt;
 }
+
+.recipe_rating {
+    display: flex;
+}
+
+.rating_number {
+    font-size: 13pt;
+    margin-left: 5px;
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Rating } from "@mui/material";
 import './RecipeDetails.css';
 
 /* Recipe Page */
@@ -13,8 +14,8 @@ function Recipe () {
 	//React navigate functions
 	const navigate = useNavigate();
 	const goBack = () => {
-		// navigate('/dashboard');
-		window.history.back();
+		navigate('/dashboard');
+		// window.history.back();
 	};
 	const goToComments = (recipeid) => {
 		console.log(recipeid);
@@ -43,7 +44,8 @@ function Recipe () {
 			ingredients: response.data.Ingredients, 
 			cuisine: response.data.Cuisine, 
 			mealtype: response.data.MealType, 
-			servingsize: response.data.ServingSize
+			servingsize: response.data.ServingSize,
+			rating: response.data.Rating,
 		});
 		setIngredients(response.data.Ingredients);
 		console.log(response.data.Ingredients);
@@ -57,6 +59,10 @@ function Recipe () {
 		<div className='recipe_details'>
 			<button onClick={() => goBack()}>←Go Back</button>
 			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
+			<p className='recipe_rating'>
+				<Rating name="recipe-rating" value={recipe.rating} precision={0.1} readOnly/>
+				<p className='rating_number'>{recipe.rating}</p>
+			</p>
 			<p className='recipe_description'>Description: {recipe.description}</p>
 			<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
 			<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>

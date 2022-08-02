@@ -169,6 +169,16 @@ def search_detailed(cursor, r_id) -> tuple:
     cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id))
     ingredients = cursor.fetchall()
 
+    rating = 0
+    cursor.execute('''
+        SELECT AVG(rating) 
+        FROM recipe_rating
+        WHERE r_id = %s;
+    ''', (r_id))
+    try:
+        rating = cursor.fetchone()[0]
+    except:
+        pass
     response = {
         "Name" : r_name,
         "Description" : r_description,
@@ -177,6 +187,7 @@ def search_detailed(cursor, r_id) -> tuple:
         "ServingSize" : r_sS,
         "Instructions" : r_instructions,
         "Ingredients" : list(),
+        "Rating": rating,
     }
 
     for ingredient in ingredients:
@@ -226,6 +237,7 @@ def search_detailed(cursor, r_id) -> tuple:
             Grams=0,
             Millilitres=0.0
         ))
+    
 
     return response, 200
 
