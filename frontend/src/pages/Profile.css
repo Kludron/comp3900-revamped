@@ -101,6 +101,7 @@
 }
 
 .reset-save-button {
+    margin: 2vh;
     display: flex;
     justify-content: space-around;
 }
