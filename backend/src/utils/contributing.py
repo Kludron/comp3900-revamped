@@ -11,6 +11,7 @@ def contrib_post_recipe(email, data, cursor, conn):
         data = json.loads(data)
     except json.decoder.JSONDecodeError:
         return {'msg' : 'Invalid data format'}, 401
+
     response = {}
 
     # This section is to verify user identity
@@ -28,10 +29,7 @@ def contrib_post_recipe(email, data, cursor, conn):
         mealtype = data['mealtype']
         servingsize = data['servingsize']
         ingredients = data['ingredients']
-        try:
-            instructions = data['instructions']
-        except KeyError:
-            instructions = "None"
+        instructions = data['instructions']
     except KeyError:
         return {'msg' : 'Incorrect Parameters'}, 401
 
@@ -61,10 +59,15 @@ def contrib_post_recipe(email, data, cursor, conn):
     
     for ingredient in ingredients:
         try:
-            name = ingredient['name']
-            quantity = ingredient['quantity']
-            grams = ingredient['grams']
-            millilitres = ingredient['millilitres']
+            name = ingredient['Name']
+            try:
+                quantity = ingredient['quantity']
+                grams = ingredient['grams']
+                millilitres = ingredient['millilitres']
+            except KeyError:
+                quantity = 0
+                grams = 0
+                millilitres = 0
         except KeyError:
             return {'msg' : 'Incorrect Parameters'}, 401
 
