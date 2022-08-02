@@ -38,7 +38,6 @@ function MyRecipes() {
 				console.log(rec);
 				setMyRecipes(myRecipes => [...myRecipes, {name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
 			})
-			console.log(myRecipes);
 		}).catch(err => {
 			console.log(err);
 		})
