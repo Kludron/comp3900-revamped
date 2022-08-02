@@ -25,10 +25,19 @@ function MyRecipes() {
 		navigate('/create-recipe');
 	};
 	
+	const viewRecipe = (recipeID,key) => {
+		console.log('viewed ' + recipeID);
+		navigate(`/view/recipe/${recipeID}`);
+	}
+
+	const handleClick = (recipeID) => {
+		navigate(`/myRecipes/edit/${recipeID}`);
+	}
+
 	async function getMyRecipes() {
 		let headers = {
 			headers: {
-				"Authorization": `Bearer ${token}`
+				Authorization: `Bearer ${token}`
 			}
 		}
 		console.log(headers);
@@ -36,7 +45,7 @@ function MyRecipes() {
 		.then((response) => {
 			response.data.Recipes.forEach((rec) => {
 				console.log(rec);
-				setMyRecipes(myRecipes => [...myRecipes, {name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
+				setMyRecipes(myRecipes => [...myRecipes, {id: rec.r_id, name: rec.Name, description: rec.Description, cuisine: rec.Cuisine, mealtype: rec.MealType, servingsize: rec.ServingSize}]);
 			})
 		}).catch(err => {
 			console.log(err);
@@ -51,8 +60,8 @@ function MyRecipes() {
 		};
 		let headers = {
 			headers: {
-				"Content-type": "application/json",
-				"Authorization": `Bearer ${token}`
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${token}`
 			}
 		}
 		console.log(body);
@@ -79,11 +88,13 @@ function MyRecipes() {
 					{myRecipes.map((recipe, key) => {
 						return (
 							<div className='recipe_box' key={key}>
+								<button onClick={() => handleClick(recipe.id)}>Edit</button>
 								<h3>Name: {recipe.name}</h3>
 								<p>Cuisine: {recipe.cuisine}</p>
 								<p>Description: {recipe.description}</p>
 								<p>Mealtype: {recipe.mealtype}</p>
 								<p>Serving Size: {recipe.servingsize}</p>
+								<button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
 							</div>
 						)})}
 				</div>
@@ -105,6 +116,7 @@ function MyRecipes() {
 									<p>Description: {recipe.description}</p>
 									<p>Mealtype: {recipe.mealtype}</p>
 									<p>Serving Size: {recipe.servingsize}</p>
+									
 								</div>
 							)})}
 					</div>

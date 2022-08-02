@@ -20,6 +20,7 @@ import ChangeUsername from './pages/ChangeUsername';
 import Comments from './pages/Comments';
 import Recipe from './pages/Recipe';
 import CreateRecipe from './pages/CreateRecipe';
+import EditRecipe from './pages/EditRecipe';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path='/view/recipe/:recipeid' element={<Recipe />} />
           <Route path='/create-recipe' element={<CreateRecipe />} />
           <Route path='/view/recipe/:recipeid/comments' element={<Comments />} />
+          <Route path='/myRecipes/edit/:recipeid' element={<EditRecipe />} />
         </Routes>
       </BrowserRouter>
     </>
