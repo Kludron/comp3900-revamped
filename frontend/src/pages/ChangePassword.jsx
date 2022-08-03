@@ -2,6 +2,11 @@ import React from 'react';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import './ChangeUsername.css';
 
 function ChangePassword () {
 
@@ -20,33 +25,47 @@ function ChangePassword () {
   }
 
 	return <>
-		<div>
-			<h1>Change Password</h1>
-			<button onClick={previous}>Go Back</button>
-		</div>
-		<ChangePasswordForm submit={async (newpassword, repassword) => {
-			console.log(newpassword,repassword)
-			if(checkPasswords(newpassword, repassword)){
-				let token = localStorage.getItem('token');
-				let headers = {
-          			'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`,
-      };
-      var body = {
-				newpassword
-      };
-      axios.put('http://localhost:5000/auth/change-password', body, {headers:headers})
-			.then((response) => {
-				console.log(response);
-				alert('You have successfully changed your password');
-				navigate('/profile');
-			}).catch((error) => {
-				console.log(error)
-				alert(error);
-			})
-		} else {
-			return false;
-		}}}/>
+		<body>
+    	<main>
+				<Button className="go_back" variant='contained' onClick={previous}>← Go Back</Button>
+				<Box
+					className="box"
+					sx={{
+						marginTop: 10,
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+				}}>
+					<Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}></Avatar>
+					<Typography className="Sign-in" component="h1" variant="h5">
+						Change Username
+					</Typography>
+					<ChangePasswordForm submit={async (newpassword, repassword) => {
+						console.log(newpassword,repassword)
+						if(checkPasswords(newpassword, repassword)){
+							let token = localStorage.getItem('token');
+							let headers = {
+											'Content-Type': 'application/json',
+								'Authorization': `Bearer ${token}`,
+						};
+						var body = {
+							newpassword
+						};
+						axios.put('http://localhost:5000/auth/change-password', body, {headers:headers})
+						.then((response) => {
+							console.log(response);
+							alert('You have successfully changed your password');
+							navigate('/profile');
+						}).catch((error) => {
+							console.log(error)
+							alert(error);
+						})
+					} else {
+						return false;
+					}}}/>
+				</Box>
+			</main>
+		</body>
 	</>
 }
 

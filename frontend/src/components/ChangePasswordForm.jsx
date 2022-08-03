@@ -15,6 +15,7 @@ function ChangePasswordForm ({ submit }) {
     /*Possible indentation error*/
 		return (<>
 			<TextField
+				sx={{ width: 350 }}
 				margin="normal"
 				required
 				halfwidth="true"
@@ -23,6 +24,7 @@ function ChangePasswordForm ({ submit }) {
 				onChange={e => setNewPassword(e.target.value)}
 			/>
 			<TextField
+				sx={{ width: 350 }}
 				margin="normal"
 				required
 				halfwidth="true"
@@ -30,7 +32,7 @@ function ChangePasswordForm ({ submit }) {
 				type="password"
 				id="password"
 				onChange={e => setRePassword(e.target.value)}
-			/><br />
+			/>
 			<Button
 				sx={{ mt: 3, mb: 2 }}
 				id='changepasswordbtn'
