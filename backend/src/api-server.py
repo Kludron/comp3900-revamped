@@ -2,7 +2,7 @@ from getpass import getuser
 from hashlib import sha256
 import psycopg2
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 import json
 from flask import (
     Flask,
@@ -44,7 +44,7 @@ except Exception as e:
 
 jwt = JWTManager(api)
 cors = CORS(api)
-# api.config['CORS_HEADERS'] = 'Content-Type'
+api.config['CORS_HEADERS'] = 'Content-Type'
 
 #############################################
 #                                           #
@@ -55,30 +55,32 @@ cors = CORS(api)
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
 def login():
-    return auth_login(request.get_data(), cursor)
+    return auth_login(request.get_data(), conn)
 
 @api.route('/auth/register', methods=['POST'])
 @cross_origin()
 def register():
-    return auth_register(request.get_data(), cursor, conn)
+    return auth_register(request.get_data(), conn)
 
 
 @api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change_password():
-    return auth_change_password(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_change_password(request.get_data(), get_jwt_identity(), conn)
 
 @api.route('/auth/change-username', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change_username():
-    return auth_change_username(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_change_username(request.get_data(), get_jwt_identity(), conn)
 
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    auth_forgot_password(request.get_data())
+    data = json.loads(request.get_data())
+    email = data['email']
+    return auth_forgot_password(email, cursor, conn)
 
 # Haven't tested this yet
 # @api.after_request()
@@ -91,7 +93,7 @@ def reset():
 @cross_origin()
 def profile():
     if request.method == 'GET':
-        return auth_get_profile(get_jwt_identity(), cursor)
+        return auth_get_profile(get_jwt_identity(), conn)
     elif request.method == 'PUT':
         return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
 
@@ -104,13 +106,13 @@ def profile():
 @api.route('/search', methods=['POST', 'GET'])
 @cross_origin()
 def search():
-    return search_general(request.method, request.get_data(), cursor)
+    return search_general(request.method, request.get_data(), conn)
 
 @api.route('/recentlyviewed', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def recently_viewed():
-    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), conn)
 
 ################Created by Bill################
 @api.route('/favourite', methods=['GET', 'PUT'])
@@ -235,12 +237,12 @@ def dashboard():
 @jwt_required()
 @cross_origin()
 def get_my_recipes():
-    return search_users_recipes(get_jwt_identity(), cursor)
+    return search_users_recipes(get_jwt_identity(), conn)
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
 def find_recipe(r_id):
-    return search_detailed(cursor, r_id)
+    return search_detailed(conn, r_id)
 
 @api.route('/reviews/recipeid=<id>', methods=['GET', 'POST'])
 @cross_origin()
@@ -283,6 +285,8 @@ def reviews(id):
                 "Rating":rating
             })
         return response, 200
+    elif request.method == 'POST':
+        return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
@@ -295,20 +299,20 @@ def reviews(id):
 @jwt_required() # To ensure that the user is logged in
 @cross_origin()
 def post_recipe():
-    return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
+    return contrib_post_recipe(get_jwt_identity(), request.get_data(), conn)
 
 @api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
 @jwt_required()
 @cross_origin()
 def edit_recipe(r_id):
     if request.method == 'PUT':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return contrib_edit_recipe(data, cursor, conn, r_id)
+        if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
+            return contrib_edit_recipe(data, conn, r_id)
         else:
             return dict(msg="User does not own this recipe.")
     elif request.method == 'GET':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return search_detailed(cursor, r_id)
+        if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
+            return search_detailed(conn, r_id)
         else:
             return dict(msg="User does not own this recipe.")
 
@@ -318,17 +322,18 @@ def edit_recipe(r_id):
 @cross_origin()
 def review(r_id):
     data = request.get_data()
-    return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
+    print(data)
+    return contrib_review_recipe(get_jwt_identity(), r_id, data, conn)
 
-@api.route('/eaten/recipeid=<id>', methods=['POST'])
+@api.route('/eaten/recipeid=<id>', methods=['POST', 'PUT'])
+@jwt_required()
 @cross_origin()
 def eaten(id):
     data = json.loads(request.get_data())
     response = {}
     
     r_id = data["r_id"]
-    dateString = datetime.today().strftime('%d/%m/%Y')
-
+    dateString = date.today().strftime('%d/%m/%Y')
 
     email = get_jwt_identity()
     query = """
@@ -344,7 +349,12 @@ def eaten(id):
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
-    cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    try:
+        cursor.execute("INSERT INTO meal_history(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, dateString))
+    except Exception:
+        conn.rollback()
+    else:
+        conn.commit()
 
     return (response, 200)
 
@@ -352,7 +362,7 @@ def eaten(id):
 @jwt_required()
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def overview():
-    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = auth_get_uid(get_jwt_identity(), conn)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
@@ -381,7 +391,7 @@ def overview():
     print(overview)
     
     response = {
-        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium', 'manganese'],
+        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium'],
         'overview' : overview
     }
     return response, 200
@@ -403,7 +413,10 @@ def find_imbalance(u_id):
                         
                         """, ( u_id, '2022-06-26', '2022-07-26'))
         actual_intake = 0
-        record = cursor.fetchone()[0]
+        try:
+            record = cursor.fetchone()[0]
+        except (TypeError, psycopg2.ProgrammingError):
+            record = None
         print(record)
         if(record is not None):
             actual_intake = float(record)
@@ -469,26 +482,35 @@ def recommend():
     }
     return response, 200
 
-@api.route('/setGoal', methods=['POST'])
+@api.route('/setGoal', methods=['POST', 'GET'])
 @jwt_required()
 @cross_origin()
 def setGoal():
-    data = json.loads(request.get_data())
-    
-    try:
-        caloricGoal = data['goal']
-    except KeyError:
-        return ("msg: wrong key", 401)
-
     u_id = auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
-    #To do: need to add goal column
-    cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
+    if request.method == 'POST':
+        data = json.loads(request.get_data())
+        
+        try:
+            caloricGoal = data['goal']
+            timeframe = data0['timeframe']
+        except KeyError:
+            return ("msg: wrong key", 401)
 
 
-    return ({'msg' : 'Success'}, 200)
+
+        #To do: need to add goal column
+        cursor.execute("UPDATE users SET goal_%s = %s WHERE id = %s;", (timeframe, caloricGoal, u_id))
+
+
+        return ({'msg' : 'Success'}, 200)
+
+    elif request.method == 'GET':
+        cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
+        row = cursor.fetchone()
+        return ({'goals' : row}, 200)
 
 def getUserId():
     # This section is to verify user identity
@@ -502,4 +524,4 @@ def getUserId():
         return None
 
 if __name__ == '__main__':
-    api.run()
+    api.run(debug=True)

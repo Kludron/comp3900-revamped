@@ -27,6 +27,7 @@ function Welcome () {
     <main className="welcome-screen">
       <div className="big-wrapper light">
         <img src={Shape} alt="" className="shape"></img>
+        <img src={Shape} alt="" className="shape2"></img>
         <header>
           <div className="container">
             <div className="logo">

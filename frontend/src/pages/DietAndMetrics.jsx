@@ -8,6 +8,8 @@ import axios from 'axios';
 import { Typography } from "@mui/material";
 import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
+import './Dashboard.css';
+import profile_background from '../img/profile-background.jpeg';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
@@ -105,7 +107,7 @@ function DietAndMetrics() {
 			console.log(headers)
 			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
-				console.log(response);
+				alert('You have successfully set a Goal!')
 			}).catch(err => {
 				console.log(err);
 			})
@@ -140,6 +142,8 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
+	const [recommend, setRecommend] = React.useState([]);
+
 	const Recommendations = async () => {
 		let headers = {
 			headers: {
@@ -149,6 +153,27 @@ function DietAndMetrics() {
 		axios.get('http://localhost:5000/recommend', headers)
 		.then((response) => {
 			console.log(response);
+			response.data.recipes.forEach(rid => {
+				console.log(rid);
+				let headers = {
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				}
+				axios.get(`http://localhost:5000/view/recipe/${rid}`, headers)
+				.then((response) => {
+					console.log(response)
+					setRecommend(recommend => [...recommend, {
+						id: rid,
+						name: response.data.Name,
+						description: response.data.Description, 
+						instructions: response.data.Instructions,
+						ingredients: response.data.Ingredients, 
+						cuisine: response.data.Cuisine, 
+						mealtype: response.data.MealType, 
+						servingsize: response.data.ServingSize
+					}]);
+				});
+			})
 		}).catch((err) => {
 			alert(err);
 		})
@@ -168,12 +193,18 @@ function DietAndMetrics() {
 		})
 	}
 
+	const viewRecipe = (recipeID,key) => {
+		console.log('viewed ' + recipeID);
+		navigate(`/view/recipe/${recipeID}`);
+	}
+
 	React.useEffect(() => {
 		Recommendations();
 		intakeOverview();
 	}, []);
 
 	return <div className="wrapper">
+			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>
@@ -234,9 +265,24 @@ function DietAndMetrics() {
 						</Box>
 					}
 				</div>
+				<hr className="break"></hr>
+				<h2>Recommendations</h2>
 				<div className='recommend_section'>
-					<h2>Recommendations</h2>
+					{recommend.map((recipe,key) => {
+						return (
+            <div className='recipe_box' key={key}>
+              <div className="details">
+                <h3 className="rec_name">{recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serves: {recipe.servingsize}</p>
+                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+              </div>
+            </div>
+          )})}
 				</div>
+				<hr className="break"></hr>
 				<div className='intakeoverview_section'>
 					<h2>Intake Overview</h2>
 				</div>

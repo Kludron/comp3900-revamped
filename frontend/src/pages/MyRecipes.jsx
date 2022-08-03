@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
+import profile_background from '../img/profile-background.jpeg';
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -79,6 +80,7 @@ function MyRecipes() {
 	}, [])
 
 	return <>
+		<img className='profile-background' src={profile_background} alt='profile background'></img>
 		<div className="wrapper">
 			<NavBar/>
 			<div className="main-content">

@@ -8,7 +8,6 @@ body {
     width: 100%;
     min-height: 100vh;
     overflow: hidden;
-    background-color: var(--backgroundColor);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -16,7 +15,7 @@ body {
 
 .container {
     position: relative;
-    max-width: 81rem;
+    max-width: 83rem;
     width: 100%;
     margin: 0 auto;
     padding: 0 3rem;
@@ -37,7 +36,6 @@ header .container {
 .logo {
     display: flex;
     align-items: center;
-    cursor: pointer;
 }
   
 .logo img {
@@ -47,7 +45,6 @@ header .container {
 }
   
 .logo h3 {
-    color: var(--darkTwo);
     font-size: 1.55rem;
     line-height: 1.2;
     font-weight: 700;
@@ -78,16 +75,14 @@ header .container {
   
   .big-title {
     font-size: 1.4rem;
-    color: var(--darkOne);
     text-transform: capitalize;
-    line-height: 1.4;
+    line-height: 1.5;
   }
   
   .text {
-    color: var(--lightOne);
     font-size: 1.1rem;
     margin: 1.9rem 0 2.5rem;
-    max-width: 600px;
+    max-width: 700px;
     line-height: 2.3;
   }
   
@@ -100,18 +95,20 @@ header .container {
     position: absolute;
     z-index: 0;
     width: 80%;
-    bottom: -100px;
-    left: 0px;
+    bottom: -120px;
+    right: 220px;
     opacity: 0.5;
-  }
+}
 
-
-
-
-
-
-
-
+.shape2 {
+    transform: scaleX(-1);
+    position: absolute;
+    z-index: 0;
+    width: 80%;
+    bottom: -120px;
+    right: 220px;
+    opacity: 0.25;
+}
 .signuplogin-btn {
     position: absolute;
     top: 50%;

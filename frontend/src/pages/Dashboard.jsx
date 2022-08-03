@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import './Dashboard.css'
-import Meat from "../ingredients/meat.json";
-import Vegetables from "../ingredients/vegetables&greens.json";
-import Seafood from "../ingredients/seafood.json";
-import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
 import Button from '@mui/material/Button';
@@ -16,11 +12,11 @@ import { paperClasses } from '@mui/material';
 /* Dashboard Page */
 function Dashboard () {
 
-  const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [bookmarkedRecipe, setbookmarkedRecipe] = useState([])
   
   const user = localStorage.getItem('username');
+  const [userData, setuserData] = useState([]);
 
   //Gets user's authorisation token
   const token = localStorage.getItem('token');
@@ -40,6 +36,18 @@ function Dashboard () {
   React.useEffect(() => {
     loadDashboard();
   }, [])
+  //Loads user profile details
+  const loadProfile = async () => {
+    const headers = {
+      "Authorization": `Bearer ${token}`
+    }
+    const response = await axios.get('http://localhost:5000/profile', {headers: headers});
+    setuserData({
+      email: response.data.Email,
+      username: response.data.Username,
+      points: response.data.Points,
+    });
+  };
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid, key) => {
@@ -80,6 +88,7 @@ function Dashboard () {
   };
 
   const showBookmark = (id) => {
+    console.log(bookmarkedRecipe)
     if (bookmarkedRecipe.includes(id)) {
       return '★'
     } else {
@@ -118,78 +127,20 @@ function Dashboard () {
   }
 
   React.useEffect(() => {
+    loadProfile();
     /*if (!token) {
       navigate('/login');
     }*/
-  });
+  },[]);
 
   return <div>
-    {/* left title and search bar */}
-    <div className="pantry-upper">
-      <h3 style={{marginTop: 25}}>My Pantry</h3>
-      <input 
-        className="ingredient-search"
-        type="search" 
-        placeholder="Search.." 
-        onChange={event => {
-          setQuery(event.target.value)
-        }}
-      />
-      {AllIngredients.filter((post) => {
-        if (query === ""){
-          //returns empty
-          return post;
-        } else if (post.name.toString().toLowerCase().includes(query.toString().toLowerCase())) {
-          //returns filtered array
-          return post;
-        }
-      }).map((post, key) => {
-        return (
-          <div className="pantry-ingredients" key={key}>
-            <button>
-              {post.name}
-            </button>
-          </div>
-        )
-      })}
-
-      {/* left pantry box */}
-      <div className="pantrybox">
-        {/* ingredient boxes */}
-        <div className='ingredientBox'>
-          <h4>Meat</h4>
-          {Meat.map((post, index) => (
-            <div key={index}>
-              <button>{post.name}</button>
-            </div>
-          ))}
+    <div className="recipeBox">
+      <div className="upper-section">
+        <div className="title_bar">
+          <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
+          <h2 className='head'>Welcome {userData.username}!</h2>
+          <Avatar className="avatar" onClick={handleClick} sx={{ margin: 3, bgcolor: 'primary.main'}}></Avatar>
         </div>
-        <div className='ingredientBox'>
-          <h4>Seafood</h4>
-          {Seafood.map((post,index) => (
-            <div key={index}>
-              <button>{post.name}</button>
-            </div>
-          ))}
-        </div>
-        <div className='ingredientBox'>
-          <h4>Vegetables & greens</h4>
-          {Vegetables.map((post,index) => (
-            <div key={index}>
-              <button>{post.name}</button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-
-  {/* right title and search bar */}
-    <div className='recipe_screen'>
-      <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
-      <Avatar onClick={handleClick} sx={{ margin: 3, position: 'absolute', right: 20 }}></Avatar>
-      <h2>Welcome {user}, to F1V3GUY5 RECIPES</h2>
-      {/* right recipes box */}
-      <div className="recipeBox">
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
           setRecipes([]);
           console.log('submitted successfully');
@@ -215,22 +166,26 @@ function Dashboard () {
             });
           }}
         />
-        <div className='list_recipes'>
-          {recipes.map((recipe, key) => {
-            return (
-              <div className='recipe_box' key={key}>
-                <button onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</button>
-                <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
-                <h3>Name: {recipe.name}</h3>
+      </div>
+      <hr className="break"></hr>
+      <h3 className="search_results">Search Results:</h3>
+      <div className='list_recipes'>
+        {recipes.map((recipe, key) => {
+          return (
+            <div className='recipe_box' key={key}>
+              <Button className="btn" variant="outlined" onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
+              <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
+              <div className="details">
+                <h3 className="rec_name">{recipe.name}</h3>
                 <p>Cuisine: {recipe.cuisine}</p>
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>
-                <p>Serving Size: {recipe.servingsize}</p>
-                <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
+                <p>Serves: {recipe.servingsize}</p>
+                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
               </div>
-            )
-          })}
-        </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   </div>;

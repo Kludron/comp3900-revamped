@@ -4,6 +4,11 @@ import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import profile_background from '../img/profile-background.jpeg';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { Chip } from '@mui/material';
 
 const token = localStorage.getItem('token');
 /* Profile Page */
@@ -18,6 +23,10 @@ function Profile() {
   const navigate = useNavigate();
   const previous = () => {
     navigate('/dashboard');
+  };
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
   };
   const changePassword = () => {
     navigate('/change-password');
@@ -47,49 +56,44 @@ function Profile() {
   }, []);
 
   console.log(userData);
-  return <>
-    <div>
-      <NavBar />
+  return <div className='profile'>
+      <img className='profile-background' src={profile_background} alt='profile background'></img>
+      <NavBar/>
       <div className="main-content">
-        <button onClick={previous}>Go Back</button>
-        <UserInfo userData={userData} />
+        <Button className='go-back' variant='contained' onClick={previous}>Go Back</Button>
+        <Button className='logout' variant='contained' onClick={logout}>Logout</Button>
+        <div className="header">
+          <h1>My Profile</h1>
+          <div className='userdata_field'>
+            <div className='attribute'>
+              <p>Username:</p>
+              <p>Password</p>
+              <p>Email:</p>
+              <p>Points:</p>
+            </div>
+            <div className="info"> 
+              <p>
+                {userData.username}
+                <Button variant='contained' size='small' onClick={changeUsername}>Change Username</Button>
+              </p>
+              <p>
+                ********
+                <Button variant='contained' size='small' onClick={changePassword}>Change Password</Button>
+              </p>
+              <p>{userData.email}</p>
+              <p>{userData.points}</p>
+            </div>
+          </div>
+        </div>
 
-        <h2 className='allergies-title'>Allergies</h2>
+        <h1 className='allergies-title'>Allergies</h1>
         <Allergens allAllergens={allAllergens} usersAllergens={usersAllergens} setUsersAllergens={setUsersAllergens} />
 
       </div>
     </div>
-  </>
 }
 
 export default Profile;
-
-function UserInfo({ userData }) {
-  const navigate = useNavigate();
-  const changePassword = () => {
-    navigate('/change-password');
-  };
-  const changeUsername = () => {
-    navigate('/change-username');
-  };
-
-  return <div>
-    <div className="header">
-      <h2>My Profile</h2>
-      <div className='userdata_field' >
-        <h4>Username: {userData.username}</h4>
-        <p>Email: {userData.email}</p>
-        <p>Points: {userData.points}</p>
-      </div>
-    </div>
-    <div className="info">
-      <div className='change-button'>
-        <button onClick={changeUsername}>Change Username</button>
-        <button onClick={changePassword}>Change Password</button>
-      </div>
-    </div>
-  </div>
-};
 
 function Allergens({ allAllergens, usersAllergens, setUsersAllergens }) {
   return <div className='allergens'>
@@ -112,9 +116,9 @@ function SelectAllergens({ allAllergens, usersAllergens, setUsersAllergens }) {
     <div className='selections'>
       {allAllergens.map((allergen, key) => {
         return (
-          <button key={key} className='selection' onClick={() => appendList(allergen)}>
+          <Button key={key} className='selection' variant='contained' size='small' color='primary' onClick={() => appendList(allergen)}>
             {allergen}
-          </button>
+          </Button>
         )
       })}
     </div>
@@ -151,11 +155,13 @@ function UsersAllergen({ usersAllergens, setUsersAllergens }) {
       {usersAllergens.map((allergen, key) => {
           console.log(allergen);
           return (
-            <div key={key} className='allergies-box-element'>{allergen}</div>
+            <Chip key={key} label={allergen}       className='allergies-box-element' color='info'/>
             )
           })}
     </div>
-    <button onClick={Reset}>Reset</button>
-    <button onClick={Save}>Save</button>
+    <div className='reset-save-button'>
+      <Button variant='contained' color='error' startIcon={<DeleteIcon />} onClick={Reset}>Reset</Button>
+      <Button variant='contained' endIcon={<SaveIcon />} onClick={Save}>Save</Button>
+    </div>
   </div>
 };
