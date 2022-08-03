@@ -96,7 +96,7 @@ export default function MultipleSelect({ submit }) {
   }, []);
   
   const options = ingredientsList.map((option) => {
-    //console.log(option.name);
+    // console.log(option.name);
 		const firstLetter = option.name.Name[0].toUpperCase();
 		return {
 			firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
