@@ -176,10 +176,7 @@ def auth_forgot_password(data, credentials) -> tuple:
     reset_code = "23489" #placeholder
 
     receiver_email = data['email']
-    message = """
-    Subject: Hi there
-
-    This is your password reset code """ + reset_code
+    message = "This is your password reset code " + reset_code
 
     sentEmail = sendEmail(receiver_email, message, credentials)
     return {'msg': 'Success'}, 200

@@ -35,8 +35,8 @@ api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
 
 api.secret_key = 'REPLACE ME - this value is here as a placeholder.'
-
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -65,10 +65,14 @@ def index():
 def test_api_request():
     if 'credentials' not in flask.session:
         return flask.redirect('authorize')
-
+        
+    global flask_session_credential
+    flask_session_credential = flask.session['credentials']
+    print(flask_session_credential)
+    
     # Load credentials from the session.
     credentials = google.oauth2.credentials.Credentials(
-        **flask.session['credentials'])
+        **flask_session_credential)
 
     sentEmail = sendEmail('nathan.quan5@gmail.com', 'message: testing authentication', credentials)
 
@@ -175,12 +179,13 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    if 'credentials' not in flask.session:
-        return flask.redirect('authorize')
+    print(flask_session_credential)
 
+    if(not flask_session_credential):
+        return {'msg' : 'Developer email needs to be authorised for website'}, 500
     # Load credentials from the session.
     credentials = google.oauth2.credentials.Credentials(
-        **flask.session['credentials'])
+        **flask_session_credential)
 
     return auth_forgot_password(request.get_data(), credentials)
     
