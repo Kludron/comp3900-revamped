@@ -1,3 +1,7 @@
+.recipe_details {
+    background-color: #4dabf5;
+}
+
 .recipe_details .upper{
     font-family: "Poppins", sans-serif;
     display: flex;
@@ -10,9 +14,10 @@
     font-size: 25pt;
 }
 .recipe_details .lower {
-   justify-content: center;
-   align-items: center;
-   flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-left: 10vw;
 }
 
 .v1 {
@@ -23,10 +28,22 @@
     margin-top: 1vw;
     border-radius: 10px;
 }
+
+.recipe_details .lower .instructions {
+    font-size: 20pt;
+    width: 35vw;
+}
+
 .recipe_details .lower .recipe_instruction {
+    font-size: 20pt;
 }
 
 .recipe_details .lower .recipe_ingredients {
     float: right;
+    margin-right: 8vw;
+    width: 35vw;
 }
 
+.recipe_details .lower .recipe_ingredients .ingredient_values {
+    font-size: 20pt;
+}

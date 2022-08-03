@@ -53,27 +53,8 @@ function Recipe () {
 		getRecipe();
 	}, []);
 
-	return (
-		<div>
-			<Button onClick={() => goBack()}>←Go Back</Button>
-			<div className='recipe_details'>
-				<div className='upper'>
-					<h2 className='recipe_name'>{recipe.name}</h2>
-					<p className='recipe_description'>Description: {recipe.description}</p>
-					<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
-					<p className='recipe_servingsize'>Serves: {recipe.servingsize} people</p>
-					<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
-					<button onClick={() => goToComments(recipeid)}>See Reviews & Comments</button>
-				</div>
-				<div className="lower">
-					<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
-					<div className='v1'></div>
-					<div className='recipe_ingredients'>Ingredients: 
-						{ingredients.map((i,key) => {
-							return (
-								<div className="ingredient_values" key={key}>
-									<li>Name: {i.Name}</li>
-									<li>Energy: {i.Energy} kJ</li>
+	/*
+	<li>Energy: {i.Energy} kJ</li>
 									<li>Carbohydrates: {i.Carbohydrates}g</li>
 									<li>Fat: {i.Fat}g</li>
 									<li>Fibre: {i.Fibre}g</li>
@@ -87,6 +68,32 @@ function Recipe () {
 									<li>Grams: {i.Grams}g</li>
 									<li>Quantity: {i.Quantity}</li>
 									<li>Millilitres: {i.Millilitres}mL</li>
+	*/
+
+	return (
+		<div>
+			<div className='recipe_details'>
+				<Button onClick={() => goBack()}>←Go Back</Button>
+				<div className='upper'>
+					<h2 className='recipe_name'>{recipe.name}</h2>
+					<p className='recipe_description'>Description: {recipe.description}</p>
+					<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
+					<p className='recipe_servingsize'>Serves: {recipe.servingsize} people</p>
+					<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
+					<button onClick={() => goToComments(recipeid)}>See Reviews & Comments</button>
+				</div>
+				<div className="lower">
+					<div className="instructions">
+						<h2 className='recipe_instruction'>Instructions: </h2>
+						 {recipe.instructions}
+					</div>
+					<div className='v1'></div>
+					<div className='recipe_ingredients'>
+						<h2 className='ingredients'>Ingredients: </h2>
+						{ingredients.map((i,key) => {
+							return (
+								<div className="ingredient_values" key={key}>
+									<li>{i.Name}</li>
 								</div>
 							)
 						})}
