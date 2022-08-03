@@ -157,7 +157,7 @@ def search_detailed(conn, r_id) -> tuple:
         try:
             r_id = int(r_id)
         except ValueError:
-            return {'msg' : 'Invalid recipe ID'}
+            return {'msg' : 'Invalid recipe ID'}, 404
 
         query = """
             SELECT r.name, r.description, c.name, m.name, r.servingSize, r.instructions
