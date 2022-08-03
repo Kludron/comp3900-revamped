@@ -1,5 +1,6 @@
 .recipeBox {
     font-family: "Poppins", sans-serif;
+    letter-spacing: 0.3px;
 }
 
 .search_bars {
@@ -24,20 +25,27 @@
 .search_bars .ingredient_bar .bar {
     background-color: white;
     width: 95vw;
+    border-radius: 5px;
 }
 
 .search_bars .remaining_bars .bar2 {
     width: 25vw;
     background-color: white;
+    border-radius: 5px;
 }
 
 .search_bars .remaining_bars .btn{
     width: 8vw;
-    background-color: white;
 }
 .recipeBox .upper-section {
-    background-color: lightblue;
+    background-color: #4dabf5;
     border-radius: 10px;
+}
+
+.recipeBox .upper-section .title_bar .head {
+    color: white;
+    font-size: 25pt;
+    font-family: "Poppins", sans-serif;
 }
 .recipe_screen {
     border-style: solid;
@@ -92,18 +100,13 @@ p {
 }
 
 .list_recipes .recipe_box {
-    box-shadow: 1px 1px lightblue;
+    box-shadow: 3px 3px 5px rgb(212, 212, 212);
     border: 1px solid lightgray;
     border-radius: 5px;
     background-color: lightblue;
     width: 48%;
     height: 10%;
     margin: 2px;
-}
-
-.logout_btn {
-    width: 10vw;
-    margin-left: 1vw
 }
 
 .recipeBox .upper-section .title_bar {
@@ -115,6 +118,7 @@ p {
 .recipeBox .upper-section .title_bar .logout_btn {
     width: 8vw;
     margin-left: 2vw;
+    background-color: white;
 }
 
 .recipeBox .upper-section .title_bar .avatar {
@@ -122,12 +126,41 @@ p {
     cursor: pointer;
 }
 
-.recipeBox .upper-section .title_bar .head {
-    font-size: 20pt;
-    font-family: "Poppins", sans-serif;
-}
-
 .recipeBox .list_recipes {
     background-color: white;
     border-radius: 10px;
+}
+
+.recipeBox .list_recipes {
+    box-shadow: 0px 15px grey;
+}
+
+.recipeBox .list_recipes .recipe_box .btn{
+    position: relative;
+    background-color: white;
+    float: right;
+    margin: 8px;
+}
+
+.recipeBox .list_recipes .recipe_box .details{
+    font-family: "Poppins", sans-serif;
+    margin-left: 1.5vw;
+}
+
+.recipeBox .list_recipes .recipe_box .details .rec_name{
+    font-size: 17pt;
+}
+
+.recipeBox .list_recipes .recipe_box .details > p {
+    color: grey;
+}
+
+.recipeBox .list_recipes .recipe_box .details .see_recipe_button {
+    float: right;
+    margin-right: 8px;
+    top: -8px
+}
+
+.search_results {
+    margin: 1vw;
 }

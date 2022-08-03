@@ -16,11 +16,10 @@ import { paperClasses } from '@mui/material';
 /* Dashboard Page */
 function Dashboard () {
 
-  const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
-  
+
   const user = localStorage.getItem('username');
 
   //Gets user's authorisation token
@@ -101,7 +100,7 @@ function Dashboard () {
     <div className="recipeBox">
       <div className="upper-section">
         <div className="title_bar">
-          <Button className='logout_btn' variant='contained' onClick={logout}>Logout</Button>
+          <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
           <h2 className='head'>Welcome {user}!</h2>
           <Avatar className="avatar" onClick={handleClick} sx={{ margin: 3, bgcolor: 'primary.main'}}></Avatar>
         </div>
@@ -132,18 +131,21 @@ function Dashboard () {
         />
       </div>
       <hr className="break"></hr>
+      <h3 className="search_results">Search Results:</h3>
       <div className='list_recipes'>
         {recipes.map((recipe, key) => {
           return (
             <div className='recipe_box' key={key}>
-              <button onClick={() => handleBookmark()}>{bookmarkStar}</button>
-              <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
-              <h3>Name: {recipe.name}</h3>
-              <p>Cuisine: {recipe.cuisine}</p>
-              <p>Description: {recipe.description}</p>
-              <p>Mealtype: {recipe.mealtype}</p>
-              <p>Serving Size: {recipe.servingsize}</p>
-              <button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
+              <Button className="btn" variant="outlined" onClick={() => handleBookmark()}>{bookmarkStar}</Button>
+              <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
+              <div className="details">
+                <h3 className="rec_name">{recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serves: {recipe.servingsize}</p>
+                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+              </div>
             </div>
           )
         })}

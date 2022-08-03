@@ -177,7 +177,7 @@ export default function MultipleSelect({ submit }) {
           </FormControl>
         </div>
         <div>
-          <Button variant="outlined"
+          <Button variant="contained"
             className="btn"
             sx={{ mt: 3, mb: 3 }}
             type="submit" 
