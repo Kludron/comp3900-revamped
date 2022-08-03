@@ -56,8 +56,32 @@ function Dashboard () {
   }
 
   // Bookmark function for recipes
-  const handleBookmark = () => {
-    if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
+  const handleBookmark = async (id) => {
+    console.log(id);
+    let headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    };
+    let body = {
+      "recipeid" : id,
+    }
+    if(bookmarkStar === '☆'){
+      setbookmarkStar('★');
+    } else {
+      setbookmarkStar('☆');
+    }
+    /*if(bookmarkStar === '☆'){
+      axios.post("http://localhost:5000/bookmark", body, {headers:headers})
+      .then((response) => {
+        console.log(response);
+        alert('You have successfully bookmarked this recipe!');
+        setbookmarkStar('★');
+      }).catch((err) => {
+        console.log(err)
+        alert('There was a problem bookmarking this recipe.')
+      })
+    }*/
+    /*if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
       setfavourite(true);
       setbookmarkStar('★');
       console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
@@ -65,7 +89,7 @@ function Dashboard () {
       setfavourite(false);
       setbookmarkStar('☆');
       console.log('unbookmarked'); //As above
-    }
+    }*/
   };
 
   const handleClick = () => {
