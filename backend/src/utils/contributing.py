@@ -134,110 +134,120 @@ def contrib_edit_recipe(data, conn, r_id):
             5. update the ingredients
             """
 
-            # Update basic information
-            try:
-                cursor.execute("""
-                UPDATE recipes
-                SET
-                    name=%s,
-                    description=%s,
-                    servingsize=%s,
-                    instructions=%s
-                WHERE
-                    id=%s;
-                """, (name, description, servingsize, instructions, r_id))
-                conn.commit()
-            except psycopg2.errors.InFailedSqlTransaction:
-                conn.rollback()
+            query = ""
+            args = []
+            if any([name,description,servingsize,instructions]):
+                query += "UPDATE recipes SET "
+            
+            if description:
+                args.append(description)
+            if servingsize:
+                query += " servingsize=%s "
+                args.append(servingsize)
+            if instructions:
+                query += " instructions=%s "
+                args.append(instructions)
+
+            if any([name,description,servingsize,instructions]):
+                query += " WHERE id=%s"
+                args.append(r_id)
+                try:
+                    cursor.execute(query, tuple(args))
+                except Exception as e:
+                    conn.rollback()
+                else:
+                    conn.commit()
+
 
             # Grab the cuisine id
-            cursor.execute("SELECT id FROM cuisines WHERE name=%s", (cuisine, ))
-            try:
-                c_id = cursor.fetchone()[0]
-            except ValueError:
-                return {'msg' : 'Invalid cuisine'}, 400
+            if cuisine:
+                cursor.execute("SELECT id FROM cuisines WHERE name=%s", (cuisine, ))
+                try:
+                    c_id = cursor.fetchone()[0]
+                    try:
+                        cursor.execute("UPDATE recipes SET cuisine=%s WHERE id=%s", (c_id, r_id))
+                    except Exception:
+                        conn.rollback()
+                    else:
+                        conn.commit()
+                except ValueError:
+                    return {'msg' : 'Invalid cuisine'}, 400
 
             # Grab the mealtype id
-            cursor.execute("SELECT id FROM mealtypes WHERE name=%s", (mealtype, ))
-            try:
-                m_id = cursor.fetchone()[0]
-            except ValueError:
-                return {'msg' : 'Invalid mealtype'}, 400
-
-            # Update mealtype & cuisine
-            try:
-                cursor.execute("""
-                UPDATE recipes
-                SET
-                    cuisine=%s,
-                    mealtype=%s
-                WHERE
-                    id=%s;
-                """, (c_id, m_id, r_id))
-                conn.commit()
-            except psycopg2.errors.InFailedSqlTransaction:
-                conn.rollback()
+            if mealtype:
+                cursor.execute("SELECT id FROM mealtypes WHERE name=%s", (mealtype, ))
+                try:
+                    m_id = cursor.fetchone()[0]
+                    try:
+                        cursor.execute("UPDATE recipes SET mealtype=%s WHERE id=%s", (m_id, r_id))
+                    except Exception:
+                        conn.rollback()
+                    else:
+                        conn.commit()
+                except ValueError:
+                    return {'msg' : 'Invalid mealtype'}, 400
 
             # Update ingredients
             #   1. Compare new ingredients to previous ingredients
             #   2. Upload new ingredients
-            prevlist = grab_ingredients(conn, r_id)
-            prevIngredients=list()
-            for ingredient in prevlist:
-                i_name, i_quantity, i_grams, i_millilitres = ingredient
-                prevIngredients.append(dict(
-                    name = i_name,
-                    quantity = i_quantity,
-                    grams = i_grams,
-                    millilitres = i_millilitres
-                ))
+            if newIngredients:
+                prevlist = grab_ingredients(conn, r_id)
+                prevIngredients=list()
+                for ingredient in prevlist:
+                    i_name, i_quantity, i_grams, i_millilitres = ingredient
+                    prevIngredients.append(dict(
+                        name = i_name,
+                        quantity = i_quantity,
+                        grams = i_grams,
+                        millilitres = i_millilitres
+                    ))
 
-            if not prevIngredients:
-                return {'msg' : 'Could not load previous ingredients in recipe'}, 400 # [TODO: Maybe change this error code?]
+                if not prevIngredients:
+                    return {'msg' : 'Could not load previous ingredients in recipe'}, 400 # [TODO: Maybe change this error code?]
 
-            # Add new ingredients into the database
-            for ingredient in prevIngredients:
-                if ingredient not in newIngredients:
-                    toAdd.append(ingredient)
-                    try:
-                        i_name = ingredient["name"]
-                        i_quantity = ingredient["quantity"]
-                        i_grams = ingredient["grams"]
-                        i_millilitres = ingredient["millilitres"]
-                        # Grab ingredient id
-                        cursor.execute("SELECT id FROM ingredients WHERE name=%s", (i_name,))
-                        i_id = cursor.fetchone()[0]
-                        # Add ingredient into the database
+                # Delete old ingredients
+                # Add new ingredients
+
+                for ingredient in newIngredients:
+                    if ingredient not in prevIngredients:
                         try:
-                            cursor.execute(
-                                "INSERT INTO recipe_ingredients(r_id, ingredient, quantity, grams, millilitres) VALUES (%s, %s, %s, %s, %s) "
-                                , (r_id, i_id, i_quantity, i_grams, i_millilitres) 
-                            )
-                            conn.commit()
-                        except psycopg2.errors.InFailedSqlTransaction:
-                            conn.rollback()
-                    except (KeyError, psycopg2.ProgrammingError, ValueError):
-                        return {'msg' : 'Invalid request parameters (ingredients)'}, 403
+                            i_name = ingredient["Name"]
+                            # Grab ingredient id
+                            cursor.execute("SELECT id FROM ingredients WHERE name=%s", (i_name,))
+                            i_id = cursor.fetchone()[0]
+                            # Add ingredient into the database
+                            try:
+                                cursor.execute(
+                                    "INSERT INTO recipe_ingredients(r_id, ingredient, quantity, grams, millilitres) VALUES (%s, %s, %s, %s, %s) "
+                                    , (r_id, i_id, 0, 0, 0) 
+                                )
+                            except Exception:
+                                conn.rollback()
+                            else:
+                                conn.commit()
+                        except (KeyError, psycopg2.ProgrammingError, ValueError) as e:
+                            return {'msg' : 'Invalid request parameters (ingredients)'}, 400
 
-            # Remove old ingredients from the database
-            for ingredient in newIngredients:
-                if ingredient not in prevIngredients:
-                    try:
-                        # Grab ingredient details
-                        i_name = ingredient["name"]
-                        cursor.execute("SELECT id FROM ingredients WHERE name=%s", (i_name,))
-                        i_id = cursor.fetchone()[0]
-
-                        # Delete the ingredient
+                # Remove old ingredients from the database
+                for ingredient in prevIngredients:
+                    if ingredient not in newIngredients:
                         try:
-                            cursor.execute("DELETE FROM recipe_ingredients WHERE r_id=%s AND i_id=%s", (r_id,i_id))
-                            conn.commit()
-                        except psycopg2.errors.InFailedSqlTransaction:
-                            conn.rollback()
-                    except (KeyError, ValueError):
-                        return {'msg' : 'Invalid request parameters (ingredients)'}, 403
-            conn.commit()
-        except Exception:
+                            # Grab ingredient details
+                            
+                            i_name = ingredient["name"]
+                            cursor.execute("SELECT id FROM ingredients WHERE name=%s", (i_name,))
+                            i_id = cursor.fetchone()[0]
+
+                            # Delete the ingredient
+                            try:
+                                cursor.execute("DELETE FROM recipe_ingredients r WHERE r.r_id=%s AND r.ingredient=%s", (r_id,i_id))
+                                conn.commit()
+                            except psycopg2.errors.InFailedSqlTransaction:
+                                conn.rollback()
+                        except (ValueError, KeyError) as e:
+                            return {'msg' : 'Invalid request parameters (ingredients)'}, 400
+            return {'msg' : 'Successfully updated'}, 200
+        except Exception as e:
             return {'msg' : 'An error occured while editing the recipe'}, 400
 
 def contrib_review_recipe(email, r_id, data, conn) -> tuple:

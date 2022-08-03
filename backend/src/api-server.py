@@ -244,20 +244,20 @@ def reviews(id):
 def post_recipe():
     return contrib_post_recipe(get_jwt_identity(), request.get_data(), conn)
 
-@api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
+@api.route('/my-recipes/recipeid=<r_id>', methods=['POST', 'GET'])
 @jwt_required()
 @cross_origin()
 def edit_recipe(r_id):
-    if request.method == 'PUT':
+    if request.method == 'POST':
         if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
-            return contrib_edit_recipe(data, conn, r_id)
+            return contrib_edit_recipe(request.get_data(), conn, r_id)
         else:
-            return dict(msg="User does not own this recipe.")
+            return dict(msg="User does not own this recipe."), 403
     elif request.method == 'GET':
         if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
             return search_detailed(conn, r_id)
         else:
-            return dict(msg="User does not own this recipe.")
+            return dict(msg="User does not own this recipe."), 403
 
 
 @api.route('/contrib/review/recipe=<r_id>', methods=['POST', 'PUT'])
