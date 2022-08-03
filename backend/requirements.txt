@@ -4,3 +4,7 @@ python-dotenv
 psycopg2-binary
 flask_cors
 platformdirs
+requests
+google-auth
+google-auth-oauthlib
+google-api-python-client

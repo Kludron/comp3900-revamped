@@ -9,6 +9,7 @@ import { Typography } from "@mui/material";
 import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
 import './Dashboard.css';
+import profile_background from '../img/profile-background.jpeg';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
@@ -203,6 +204,7 @@ function DietAndMetrics() {
 	}, []);
 
 	return <div className="wrapper">
+			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>

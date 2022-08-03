@@ -4,7 +4,11 @@ import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import profile_background from '../img/profile-background.jpeg';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { Chip } from '@mui/material';
 
 const token = localStorage.getItem('token');
 /* Profile Page */
@@ -50,41 +54,14 @@ function Profile() {
   React.useEffect(() => {
     loadProfile();
   }, []);
-  
-  const [query, setQuery] = useState('');
-  const [allergyList, setAllergyList] = useState([]);
-  const appendList = (allergy) => {
-    setAllergyList(allergyList => [...allergyList, allergy]);
-    console.log(allergyList)
-  };
-
-  const Reset = () => {
-    setAllergyList([]);
-  }
-
-  const Save = async () => {
-    let headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-    };
-    var body = {
-      allergyList
-    };
-    axios.put("http://localhost:5000/profile", body, headers)
-    .then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-      alert(error);
-    });
-  }
 
   console.log(userData);
   return <div className='profile'>
-      <NavBar />
+      <img className='profile-background' src={profile_background} alt='profile background'></img>
+      <NavBar/>
       <div className="main-content">
-      <Button variant='contained' onClick={previous}>← Go Back</Button>
-      <Button variant='contained' onClick={logout}>Logout</Button>
+        <Button className='go-back' variant='contained' onClick={previous}>Go Back</Button>
+        <Button className='logout' variant='contained' onClick={logout}>Logout</Button>
         <div className="header">
           <h1>My Profile</h1>
           <div className='userdata_field'>
@@ -94,16 +71,18 @@ function Profile() {
               <p>Email:</p>
               <p>Points:</p>
             </div>
-          <div className="info"> 
-            <p>{userData.username}</p>
-            <p>********</p>
-            <p>{userData.email}</p>
-            <p>{userData.points}</p>
-          </div>
-          <div className='change-button'>
-            <Button variant='outlined' onClick={changeUsername}>Change Username</Button>
-            <Button variant='outlined' onClick={changePassword}>Change Password</Button>
-          </div>
+            <div className="info"> 
+              <p>
+                {userData.username}
+                <Button variant='contained' size='small' onClick={changeUsername}>Change Username</Button>
+              </p>
+              <p>
+                ********
+                <Button variant='contained' size='small' onClick={changePassword}>Change Password</Button>
+              </p>
+              <p>{userData.email}</p>
+              <p>{userData.points}</p>
+            </div>
           </div>
         </div>
 
@@ -137,9 +116,9 @@ function SelectAllergens({ allAllergens, usersAllergens, setUsersAllergens }) {
     <div className='selections'>
       {allAllergens.map((allergen, key) => {
         return (
-          <button key={key} className='selection' onClick={() => appendList(allergen)}>
+          <Button key={key} className='selection' variant='contained' size='small' color='primary' onClick={() => appendList(allergen)}>
             {allergen}
-          </button>
+          </Button>
         )
       })}
     </div>
@@ -176,13 +155,13 @@ function UsersAllergen({ usersAllergens, setUsersAllergens }) {
       {usersAllergens.map((allergen, key) => {
           console.log(allergen);
           return (
-            <div key={key} className='allergies-box-element'>{allergen}</div>
+            <Chip key={key} label={allergen}       className='allergies-box-element' color='info'/>
             )
           })}
     </div>
     <div className='reset-save-button'>
-      <button onClick={Reset}>Reset</button>
-      <button onClick={Save}>Save</button>
+      <Button variant='contained' color='error' startIcon={<DeleteIcon />} onClick={Reset}>Reset</Button>
+      <Button variant='contained' endIcon={<SaveIcon />} onClick={Save}>Save</Button>
     </div>
   </div>
 };
