@@ -1,5 +1,5 @@
-id,username,pass_hash,email,points
-3,Bill,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0
-2,demob1,12ae173e2933cb80f11122abb7551a10e2d8a313b202307bd68cbec571058d57,demob@demob.com,0
-4,BingBong,b95bc64ab3f9deb31e746dcf128645add3d8b00506eb3d8efc1bec7eb7ced535,jolateon@hotmail.com,0
-1,sample,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0
+id,username,pass_hash,email,points,goal_daily,goal_weekly
+1,Liam,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0,0,0
+2,Ed,df3b585ca9d8399a7245d33e57195495216bb243d8316e186b1eca9458eae74c,edmond.lung@hotmail.com,0,0,0
+4,ed,678d3dd5f95a9451c87c59103f74b31f6e9e8ff5529dd6e4af9cd18a9931f153,email@email,0,0,0
+3,nathan,d8ad0a6c4735f4089208d45431a73304991da5491d779ac08e0c9ec0b15170e9,Nathan.quan5@gmail.com,0,0,0
