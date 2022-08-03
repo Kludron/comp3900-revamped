@@ -3,3 +3,4 @@ flask-jwt-extended
 python-dotenv
 psycopg2-binary
 flask_cors
+platformdirs
