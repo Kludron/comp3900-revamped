@@ -101,8 +101,8 @@ function CreateRecipeForm ({ submit }) {
 	});
 
 	return (<>
-		<h2>Create a Recipe</h2>
 		<TextField
+			className='field'
 			sx={{ width: 400 }}
 			margin="normal"
 			required
@@ -112,6 +112,7 @@ function CreateRecipeForm ({ submit }) {
 			onChange={e => setRecipeName(e.target.value)}
 		/>
 		<TextField
+			className='field'
 			sx={{ width: 400 }}
 			margin="normal"
 			required
@@ -120,7 +121,7 @@ function CreateRecipeForm ({ submit }) {
 			type="text"
 			onChange={e => setDescription(e.target.value)}
 		/>
-		<FormControl sx={{ m: 2, width: 200}}>
+		<FormControl className='field' sx={{ m: 2, width: 200}}>
 			<InputLabel id="Cuisine_selectbox">Select Cuisine</InputLabel>
 			<Select
 				value={cuisineName}
@@ -140,7 +141,7 @@ function CreateRecipeForm ({ submit }) {
 				))}
 			</Select>
 		</FormControl>
-		<FormControl sx={{ m: 2, width: 200}}>
+		<FormControl className='field' sx={{ m: 2, width: 200}}>
 			<InputLabel id="Mealtype_selectbox">Select Meal Type *</InputLabel>
 			<Select
 				required
@@ -162,6 +163,7 @@ function CreateRecipeForm ({ submit }) {
 			</Select>
 		</FormControl>
 		<Autocomplete
+			className='field'
 			required
 			multiple
 			id="grouped"
@@ -173,6 +175,7 @@ function CreateRecipeForm ({ submit }) {
 			renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
 		/>
 		<TextField
+			className='field'
 			required
 			placeholder="Eg. 3"
 			margin="normal"
@@ -181,6 +184,7 @@ function CreateRecipeForm ({ submit }) {
 			onChange={e => setServingSize(e.target.value)}
 		/>
 		<TextField
+			className='field'
 			required
 			label="Recipe Instructions"
 			sx={{ width: 400}}
@@ -194,7 +198,6 @@ function CreateRecipeForm ({ submit }) {
 			variant="outlined"
 			onChange={e => setInstructions(e.target.value)}
 		/>
-		<br />
 		<Button
 			sx={{ mt: 3, mb: 2 }}
 			id='login'
