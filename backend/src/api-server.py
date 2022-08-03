@@ -22,7 +22,6 @@ from utils.customising import *
 from utils.contributing import *
 from utils.authentication import *
 from utils.searching import *
-from utils.gmail_auth import *
 
 api = Flask(__name__)
 cors = CORS(api)
@@ -51,31 +50,7 @@ api.config['CORS_HEADERS'] = 'Content-Type'
 #           Authentication Routes           #
 #                                           # 
 #############################################
-@app.route('/admin')
-def do_index():
-    return index()
 
-@app.route('/admin/test')
-def do_test_api_request():
-    return test_api_request()
-
-@app.route('/admin/authorize')
-def do_authorize():
-    return authorize()
-
-@app.route('/admin/oauth2callback')
-def do_oauth2callback():
-    return oauth2callback()
-
-@app.route('/admin/revoke')
-def do_revoke():
-    return revoke()
-
-@app.route('/admin/clear')
-def do_clear_credentials():
-    return clear_credentials()
-
-    
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
 def login():
@@ -102,11 +77,8 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    data = json.loads(request.get_data())
-    u_id = data['email']
-    return auth_forgot_password(u_id, cursor, conn)
+    auth_forgot_password(request.get_data())
 
-     
 # Haven't tested this yet
 # @api.after_request()
 # @jwt_required()
@@ -489,15 +461,4 @@ def setGoal():
         return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
-    # When running locally, disable OAuthlib's HTTPs verification.
-    # ACTION ITEM for developers:
-    #     When running in production *do not* leave this option enabled.
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
     api.run(debug=True)
-
-    """
-    # Specify a hostname and port that are set as a valid redirect URI
-    # for your API project in the Google API Console.
-    app.run('localhost', 8080, debug=True)
-    """
