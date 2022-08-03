@@ -12,21 +12,28 @@ ul.navBar {
     overflow: auto;
 }
 
+.CustomLink {
+    margin: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 ul.navBar li {
     display: block;
     height: 20%;
-    background-color: #dddddd;
+    background-color: #4dabf5;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 ul.navBar li.active {
-    background-color: #4CAF50;
+    background-color: #1769aa;
     color: white;
 }
 
-ul.navBar li:hover {
-  background-color: #555;
-  color: white;
-};
+.navBar-text {
+    color: white
+}
+

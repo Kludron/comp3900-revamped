@@ -116,7 +116,7 @@ function SelectAllergens({ allAllergens, usersAllergens, setUsersAllergens }) {
     <div className='selections'>
       {allAllergens.map((allergen, key) => {
         return (
-          <Button key={key} className='selection' variant='contained' size='small' color='success' onClick={() => appendList(allergen)}>
+          <Button key={key} className='selection' variant='contained' size='small' color='primary' onClick={() => appendList(allergen)}>
             {allergen}
           </Button>
         )
