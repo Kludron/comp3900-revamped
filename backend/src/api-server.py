@@ -348,7 +348,10 @@ def find_imbalance(u_id):
                         
                         """, ( u_id, '2022-06-26', '2022-07-26'))
         actual_intake = 0
-        record = cursor.fetchone()[0]
+        try:
+            record = cursor.fetchone()[0]
+        except (TypeError, psycopg2.ProgrammingError):
+            record = None
         print(record)
         if(record is not None):
             actual_intake = float(record)
@@ -430,7 +433,7 @@ def setGoal():
         return {'msg' : 'Authentication error'}, 403
 
     #To do: need to add goal column
-    cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
+    cursor.execute("UPDATE users SET goal = %s WHERE id = %s;", (caloricGoal, u_id))
 
 
     return ({'msg' : 'Success'}, 200)
