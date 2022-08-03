@@ -1,7 +1,32 @@
-.recipe_details {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.recipe_details .upper{
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .recipe_details .recipe_name {
     font-size: 25pt;
 }
+.recipe_details .lower {
+   justify-content: center;
+   align-items: center;
+   flex-direction: row;
+}
+
+.v1 {
+    border-left: 4px solid lightgrey;
+    height: 100vh;
+    position: absolute;
+    left: 50vw;
+    margin-top: 1vw;
+    border-radius: 10px;
+}
+.recipe_details .lower .recipe_instruction {
+}
+
+.recipe_details .lower .recipe_ingredients {
+    float: right;
+}
+

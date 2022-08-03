@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Typography } from "@mui/material";
 import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
+import './Dashboard.css';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
@@ -85,32 +86,44 @@ function DietAndMetrics() {
 
 	const handleSubmit = async () => {
 		var today = new Date();
-		var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth()+1).padStart(2, '0');
+		var yyyy = today.getFullYear();
+		var date = dd+'/'+mm+'/'+yyyy;
 		if(isWeekly){
 			const body = {
-				goal: caloricIntakeWeekly,
-				timeframe: 'Weekly',
-				date: date
+				"goal": caloricIntakeWeekly,
+				"timeframe": 'Weekly',
+				"date": date
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				}
 			};
-			const response = await axios.post("http://localhost:5000/setGoal", headers, body);
-			console.log(response);
+			console.log(headers)
+			axios.post("http://localhost:5000/setGoal", body, headers)
+			.then(response => {
+				alert('You have successfully set a Goal!')
+			}).catch(err => {
+				console.log(err);
+			})
 		} else {
 			const body = {
-				goal: caloricIntakeDaily,
-				timeframe: 'Daily',
-				date: date
+				"goal": caloricIntakeDaily,
+				"timeframe": 'Daily',
+				"date": date
 			};
 			console.log(body);
 			let headers = {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${token}`
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				}
 			};
-			axios.post("http://localhost:5000/setGoal", headers, body)
+			axios.post("http://localhost:5000/setGoal", body, headers)
 			.then(response => {
 				console.log(response);
 			}).catch(err => {
@@ -128,13 +141,38 @@ function DietAndMetrics() {
 		setisWeekly(event.target.checked);
   };
 
-	const recommend = async () => {
+	const [recommend, setRecommend] = React.useState([]);
+
+	const Recommendations = async () => {
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
 		};
-		axios.get('http://localhost:5000/recommend')
+		axios.get('http://localhost:5000/recommend', headers)
 		.then((response) => {
 			console.log(response);
+			response.data.recipes.forEach(rid => {
+				console.log(rid);
+				let headers = {
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				}
+				axios.get(`http://localhost:5000/view/recipe/${rid}`, headers)
+				.then((response) => {
+					console.log(response)
+					setRecommend(recommend => [...recommend, {
+						id: rid,
+						name: response.data.Name,
+						description: response.data.Description, 
+						instructions: response.data.Instructions,
+						ingredients: response.data.Ingredients, 
+						cuisine: response.data.Cuisine, 
+						mealtype: response.data.MealType, 
+						servingsize: response.data.ServingSize
+					}]);
+				});
+			})
 		}).catch((err) => {
 			alert(err);
 		})
@@ -142,9 +180,11 @@ function DietAndMetrics() {
 
 	const intakeOverview = async () => {
 		let headers = {
-			"Authorization": `Bearer ${token}`
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
 		};
-		axios.get('http://localhost:5000/intake_overview')
+		axios.get('http://localhost:5000/intake_overview', headers)
 		.then((response) => {
 			console.log(response);
 		}).catch((err) => {
@@ -152,8 +192,13 @@ function DietAndMetrics() {
 		})
 	}
 
+	const viewRecipe = (recipeID,key) => {
+		console.log('viewed ' + recipeID);
+		navigate(`/view/recipe/${recipeID}`);
+	}
+
 	React.useEffect(() => {
-		recommend();
+		Recommendations();
 		intakeOverview();
 	}, []);
 
@@ -218,9 +263,24 @@ function DietAndMetrics() {
 						</Box>
 					}
 				</div>
+				<hr className="break"></hr>
+				<h2>Recommendations</h2>
 				<div className='recommend_section'>
-					<h2>Recommendations</h2>
+					{recommend.map((recipe,key) => {
+						return (
+            <div className='recipe_box' key={key}>
+              <div className="details">
+                <h3 className="rec_name">{recipe.name}</h3>
+                <p>Cuisine: {recipe.cuisine}</p>
+                <p>Description: {recipe.description}</p>
+                <p>Mealtype: {recipe.mealtype}</p>
+                <p>Serves: {recipe.servingsize}</p>
+                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+              </div>
+            </div>
+          )})}
 				</div>
+				<hr className="break"></hr>
 				<div className='intakeoverview_section'>
 					<h2>Intake Overview</h2>
 				</div>

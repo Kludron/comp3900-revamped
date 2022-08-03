@@ -35,7 +35,7 @@ function Comments () {
   }, [])
   console.log(comments);
   
-  return <div>
+  return <div className="comments">
     <button className="comment-go-back" onClick={goBack}>←Go Back</button>
     <CommentBar recipeid={recipeid}/>
     <div>
@@ -67,6 +67,12 @@ function CommentBar ({ recipeid }) {
   
   
   const submitComment = async () => {
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must create an account to comment and rate the recipe.')
+      navigate(`/view/recipe/${recipeid}`);
+    }
     var headers = {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`

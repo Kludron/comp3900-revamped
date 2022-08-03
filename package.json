@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "react-heart": "^1.0.6",
     "react-select": "^5.4.0"
   }

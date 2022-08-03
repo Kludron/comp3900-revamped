@@ -1,7 +1,7 @@
 from hashlib import sha256
 import psycopg2
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 import json
 from flask import (
     Flask,
@@ -24,11 +24,13 @@ from utils.authentication import *
 from utils.searching import *
 
 api = Flask(__name__)
+cors = CORS(api)
+api.config['CORS_HEADERS'] = 'Content-Type'
+
 api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
-
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -41,7 +43,7 @@ except Exception as e:
 
 jwt = JWTManager(api)
 cors = CORS(api)
-# api.config['CORS_HEADERS'] = 'Content-Type'
+api.config['CORS_HEADERS'] = 'Content-Type'
 
 #############################################
 #                                           #
@@ -52,25 +54,25 @@ cors = CORS(api)
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
 def login():
-    return auth_login(request.get_data(), cursor)
+    return auth_login(request.get_data(), conn)
 
 @api.route('/auth/register', methods=['POST'])
 @cross_origin()
 def register():
-    return auth_register(request.get_data(), cursor, conn)
+    return auth_register(request.get_data(), conn)
 
 
 @api.route('/auth/change-password', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change_password():
-    return auth_change_password(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_change_password(request.get_data(), get_jwt_identity(), conn)
 
 @api.route('/auth/change-username', methods=['PUT'])
 @jwt_required()
 @cross_origin()
 def change_username():
-    return auth_change_username(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_change_username(request.get_data(), get_jwt_identity(), conn)
 
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
@@ -88,9 +90,9 @@ def reset():
 @cross_origin()
 def profile():
     if request.method == 'GET':
-        return auth_get_profile(get_jwt_identity(), cursor)
+        return auth_get_profile(get_jwt_identity(), conn)
     elif request.method == 'PUT':
-        return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
+        return customise_profile(request.get_data(), get_jwt_identity(), conn)
 
 #############################################
 #                                           #
@@ -101,13 +103,13 @@ def profile():
 @api.route('/search', methods=['POST', 'GET'])
 @cross_origin()
 def search():
-    return search_general(request.method, request.get_data(), cursor)
+    return search_general(request.method, request.get_data(), conn)
 
-@api.route('/recentlyviewed', methods=['GET'])
+@api.route('/recentlyviewed', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def recently_viewed():
-    return auth_update_viewed(request.get_data(), get_jwt_identity(), cursor, conn)
+    return auth_update_viewed(request.get_data(), get_jwt_identity(), conn)
 
 ################Created by Bill################
 @api.route('/favourite', methods=['GET', 'PUT'])
@@ -178,12 +180,12 @@ def favourite():
 @jwt_required()
 @cross_origin()
 def get_my_recipes():
-    return search_users_recipes(get_jwt_identity(), cursor)
+    return search_users_recipes(get_jwt_identity(), conn)
 
 @api.route('/view/recipe/<r_id>', methods=['GET'])
 @cross_origin()
 def find_recipe(r_id):
-    return search_detailed(cursor, r_id)
+    return search_detailed(conn, r_id)
 
 @api.route('/reviews/recipeid=<id>', methods=['GET', 'POST'])
 @cross_origin()
@@ -226,6 +228,8 @@ def reviews(id):
                 "Rating":rating
             })
         return response, 200
+    elif request.method == 'POST':
+        return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
@@ -238,20 +242,20 @@ def reviews(id):
 @jwt_required() # To ensure that the user is logged in
 @cross_origin()
 def post_recipe():
-    return contrib_post_recipe(get_jwt_identity(), request.get_data(), cursor, conn)
+    return contrib_post_recipe(get_jwt_identity(), request.get_data(), conn)
 
 @api.route('/my-recipes/recipeid=<r_id>', methods=['PUT', 'GET'])
 @jwt_required()
 @cross_origin()
 def edit_recipe(r_id):
     if request.method == 'PUT':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return contrib_edit_recipe(data, cursor, conn, r_id)
+        if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
+            return contrib_edit_recipe(data, conn, r_id)
         else:
             return dict(msg="User does not own this recipe.")
     elif request.method == 'GET':
-        if auth_recipe_uploader(get_jwt_identity(), cursor, r_id):
-            return search_detailed(cursor, r_id)
+        if auth_recipe_uploader(get_jwt_identity(), conn, r_id):
+            return search_detailed(conn, r_id)
         else:
             return dict(msg="User does not own this recipe.")
 
@@ -261,112 +265,196 @@ def edit_recipe(r_id):
 @cross_origin()
 def review(r_id):
     data = request.get_data()
-    return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
+    print(data)
+    return contrib_review_recipe(get_jwt_identity(), r_id, data, conn)
 
-@api.route('/eaten/recipeid=<id>', methods=['POST'])
+@api.route('/eaten/recipeid=<id>', methods=['POST', 'PUT'])
+@jwt_required()
 @cross_origin()
 def eaten(id):
     data = json.loads(request.get_data())
     response = {}
     
     r_id = data["r_id"]
-    dateString = datetime.today().strftime('%d/%m/%Y')
-    u_id = getUserId()
+    dateString = date.today().strftime('%d/%m/%Y')
+
+    email = get_jwt_identity()
+    query = """
+    SELECT u.id FROM users u WHERE lower(u.email)=%s;
+    """
+    cursor.execute(query, (email,))
+    try:
+        u_id = cursor.fetchone()
+    except TypeError:
+        return {'msg' : 'Authentication Error'}, 403
+
     if not u_id:
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
-    cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    try:
+        cursor.execute("INSERT INTO meal_history(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, dateString))
+    except Exception:
+        conn.rollback()
+    else:
+        conn.commit()
 
     return (response, 200)
 
 @api.route('/intake_overview', methods=['GET'])
-@cross_origin()
-def IntakeOverview():
-    #Grain 
-    #Vegetables
-    #Fruit
-    #Dairy 
-    #Meat
-    #Fatty
-
-    data = json.loads(request.get_data())
-    response = {}
-    
-    r_id = data["r_id"]
-    u_id = getUserId()
+@jwt_required()
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def overview():
+    u_id = auth_get_uid(get_jwt_identity(), conn)
     if not u_id:
-        return ("msg: user does not exist", 401)
+        return {'msg' : 'Authentication error'}, 403
 
-    #Note: Combine with ingredients table. Limit to last 50 meals
-    cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    cursor.execute("""
+                    SELECT
+                    SUM(energy) AS energy,
+                    SUM(protein) AS protein, 
+                    SUM(fat) AS fat,
+                    SUM(fibre) AS fibre,
+                    SUM(sugars) AS sugars,
+                    SUM(carbohydrates) AS carbohydrates,
+                    SUM(calcium) AS calcium,
+                    SUM(iron) AS iron,
+                    SUM(magnesium) AS magnesium
+                    FROM (
+                            SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                            FROM (SELECT r_id FROM meal_history WHERE u_id = 1 ORDER BY date BETWEEN '2022-06-26' AND '2022-08-26') AS history
+                            JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                            JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                    ) ingredientHistory
+                     
+                    """, (u_id, '2022-06-26', '2022-08-26'))
 
-    return (response, 200)
+    overview = cursor.fetchone()
+    print("overview test")
+    print(overview)
+    
+    response = {
+        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium'],
+        'overview' : overview
+    }
+    return response, 200
+
+def find_imbalance(u_id):
+    check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), ('iron', 12), ('magnesium', 400)]
+
+    nutrient_diff = 0
+    recommended_nutrient = ""
+
+    for nutrient in check_nutrients:
+        cursor.execute("""SELECT SUM(protein) 
+                        FROM (      SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                                    FROM (SELECT r_id FROM meal_history WHERE u_id = %s ORDER BY date BETWEEN %s AND %s) AS history
+                                    JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                                    JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                        ) ingredientHistory;
+                        
+                        
+                        """, ( u_id, '2022-06-26', '2022-07-26'))
+        actual_intake = 0
+        try:
+            record = cursor.fetchone()[0]
+        except (TypeError, psycopg2.ProgrammingError):
+            record = None
+        print(record)
+        if(record is not None):
+            actual_intake = float(record)
+   
+        expected_intake = nutrient[1]
+        diff = expected_intake - actual_intake
+        if(abs(diff) > nutrient_diff):
+            nutrient_diff = diff
+            recommended_nutrient = nutrient[0]
+    
+    return nutrient_diff, recommended_nutrient
+
+def find_recipe_more(recommended_nutrient, amount):
+    sort = ''
+    if amount > 0:
+        sort = 'DESC'   #higher values will be at the start of the table
+    elif amount < 0:
+        sort = 'ASC'    #lower values will be at the start of the table
+    
+
+
+    #Actual implementation, but doesn't work
+    query = """ SELECT r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                    FROM (                        
+                        SELECT recipe_ingredients.r_id, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                        FROM recipe_ingredients
+                        JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+                    ) r_id_with_nutrients
+                    ORDER BY {} {};
+                """.format(recommended_nutrient, sort)
+    cursor.execute(query)
+
+    recommended_recipes = []
+ 
+    recipes = cursor.fetchall()
+    count = 0
+    for recipe in recipes:
+        recommended_recipes.append(recipe[0])
+        if count >= 2:
+            break
+        count += 1
+
+    return recommended_recipes
 
 @api.route('/recommend', methods=['GET'])
-@cross_origin()
+@jwt_required()
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def recommend():
-    grainGoal =  33
-    vegetablesGoal = 16
-    fruitGoal = 16
-    dairyGoal = 15 
-    meatGoal = 12
-    fattyGoal = 7
+   
+    #u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = 1
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
-    response = []
+    nutrient_diff, recommended_nutrient = find_imbalance(u_id)
 
-    #to do: Combine with ingredients table. Limit to last 50 meals
-    cursor.execute("SELECT * from mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
-    grain, vegetables, fruit, dairy, meat, fatty = getIntakeOverview()
-
-    goalDiff = {
-        "grain" : abs(grainGoal - grain),
-        "vegetables" : abs(vegetablesGoal - vegetables),
-        "fruit" : abs(fruitGoal - fruit),
-        "dairy" : abs(dairyGoal - dairy),
-        "meat" : abs(meatGoal - meat),
-        "fatty" : abs(fattyGoal - fatty)
-    }
-
-    #Imbalance if difference is > 15%
-    for key, value in goalDiff.items():
-        if value > 15:
-            response.append(key)
+    #Find the single largest nutrient imbalance and recommend 3 recipes to bring diet back into balance
+    recipes = find_recipe_more(recommended_nutrient, nutrient_diff)
     
     #Returning a list of food categories that need improvement on
-    return response
+    response = {
+        'recipes' : recipes
+    }
+    return response, 200
 
-@api.route('/setGoal', methods=['POST'])
+@api.route('/setGoal', methods=['POST', 'GET'])
+@jwt_required()
 @cross_origin()
 def setGoal():
-    data = json.loads(request.get_data())
-    response = {}
-    
-    try:
-        caloricGoal = data["goal"]
-    except KeyError():
-        return {"msg: wrong key", 401}
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
-    u_id = getUserId()
-    if(u_id == None):
-        return ("msg: user does not exist", 401)
+    if request.method == 'POST':
+        data = json.loads(request.get_data())
+        
+        try:
+            caloricGoal = data['goal']
+            timeframe = data0['timeframe']
+        except KeyError:
+            return ("msg: wrong key", 401)
 
-    #To do: need to add goal column
-    cursor.execute("UPDATE users SET goal = %s WHERE u_id = %s;", (caloricGoal, u_id))
 
-    return (response, 200)
 
-def getUserId():
-    # This section is to verify user identity
-    email = get_jwt_identity()
-    query = "SELECT id FROM users WHERE email=%s"
-    cursor.execute(query, (email,))
-    try:
-        uploader = cursor.fetchone()[0]
-        return uploader
-    except IndexError:
-        return None
+        #To do: need to add goal column
+        cursor.execute("UPDATE users SET goal_%s = %s WHERE id = %s;", (timeframe, caloricGoal, u_id))
 
+
+        return ({'msg' : 'Success'}, 200)
+
+    elif request.method == 'GET':
+        cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
+        row = cursor.fetchone()
+
+        return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
-    api.run()
+    api.run(debug=True)
