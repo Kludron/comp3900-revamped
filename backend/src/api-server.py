@@ -1,7 +1,7 @@
 from hashlib import sha256
 import psycopg2
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 import json
 from flask import (
     Flask,
@@ -268,14 +268,15 @@ def review(r_id):
     print(data)
     return contrib_review_recipe(get_jwt_identity(), r_id, data, conn)
 
-@api.route('/eaten/recipeid=<id>', methods=['POST'])
+@api.route('/eaten/recipeid=<id>', methods=['POST', 'PUT'])
+@jwt_required()
 @cross_origin()
 def eaten(id):
     data = json.loads(request.get_data())
     response = {}
     
     r_id = data["r_id"]
-    dateString = datetime.today().strftime('%d/%m/%Y')
+    dateString = date.today().strftime('%d/%m/%Y')
 
     email = get_jwt_identity()
     query = """
@@ -291,7 +292,12 @@ def eaten(id):
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
-    cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    try:
+        cursor.execute("INSERT INTO meal_history(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, dateString))
+    except Exception:
+        conn.rollback()
+    else:
+        conn.commit()
 
     return (response, 200)
 
