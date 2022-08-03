@@ -7,3 +7,10 @@
     width: 100%;
     margin-left: 20vw;
 }
+
+.recipe_box {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: aqua;
+    width: 48%;
+}

@@ -31,7 +31,7 @@ function LoginForm ({ submit }) {
       type="password"
       id="password"
       onChange={e => setPassword(e.target.value)}
-    /><br />
+    />
     <Button
       sx={{ mt: 3, mb: 2 }}
       id='login'

@@ -1,2 +1,2 @@
 FLASK_APP=src/api-server.py
-FLASKENV=development
+FLASK_DEBUG=1
