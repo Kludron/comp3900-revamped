@@ -4,7 +4,6 @@ import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import AllIngredients from "../ingredients/allingredients.json";
 import Button from '@mui/material/Button';
 
 const token = localStorage.getItem('token');

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecipeDetails.css';
+import Button from '@mui/material/Button';
 
 /* Recipe Page */
 function Recipe () {
@@ -54,7 +55,7 @@ function Recipe () {
 
 	return (
 		<div className='recipe_details'>
-			<button onClick={() => goBack()}>←Go Back</button>
+			<Button onClick={() => goBack()}>←Go Back</Button>
 			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
 			<p className='recipe_description'>Description: {recipe.description}</p>
 			<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
