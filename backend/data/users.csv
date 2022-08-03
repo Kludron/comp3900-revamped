@@ -1,1 +1,2 @@
 id,username,pass_hash,email,points,goal_daily,goal_weekly
+1,Liam,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0,0,0
