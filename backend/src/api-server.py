@@ -77,7 +77,9 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    auth_forgot_password(request.get_data())
+    data = json.loads(request.get_data())
+    email = data['email']
+    return auth_forgot_password(email, cursor, conn)
 
 # Haven't tested this yet
 # @api.after_request()
