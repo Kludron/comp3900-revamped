@@ -10,10 +10,16 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useNavigate } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 
 function EditRecipe ({submit}) {
   
 	const navigate = useNavigate();
+	const previous = () => {
+		navigate('/profile');
+	};
 
 	//Obtains recipeID from the URL
 	const recipeid = window.location.pathname.split('/')[3];
@@ -154,101 +160,119 @@ function EditRecipe ({submit}) {
 
 
 	return(<>
-		<h2>Edit Your Recipe</h2>
-		<TextField
-			sx={{ width: 400 }}
-			margin="normal"
-			required
-			label={"Recipe Name: "+recipeData.name}
-			type="text"
-			onChange={e => setRecipeName(e.target.value)}
-		/>
-		<TextField
-			sx={{ width: 400 }}
-			margin="normal"
-			required
-			label={"Description: "+recipeData.description}
-			defaultValue={recipeData.description}
-			type="text"
-			onChange={e => setDescription(e.target.value)}
-		/>
-		<FormControl sx={{ m: 2, width: 200}}>
-			<InputLabel id="Cuisine_selectbox">Select Cuisine</InputLabel>
-			<Select
-				value={cuisineName}
-				onChange={handleChangeCuisine}
-				input={<OutlinedInput label="Cuisines" />}
-				MenuProps={MenuProps}
-				defaultValue=""
-			>
-				{cuisineList.map((name) => (
-					<MenuItem
-						key={name}
-						value={name}
-						style={getStylesCuisine(name, cuisineName, theme)}
-					>
-						{name}
-					</MenuItem>
-				))}
-			</Select>
-		</FormControl>
-		<FormControl sx={{ m: 2, width: 200}}>
-			<InputLabel id="Mealtype_selectbox">Select Meal Type</InputLabel>
-			<Select
-				required
-				value={mealtypeName}
-				onChange={handleChangeMealtype}
-				input={<OutlinedInput label="Mealtype" />}
-				MenuProps={MenuProps}
-				defaultValue=""
-			>
-				{mealtypeList.map((name) => (
-					<MenuItem
-						key={name}
-						value={name}
-						style={getStylesMealtype(name, mealtypeName, theme)}
-					>
-						{name}
-					</MenuItem>
-				))}
-			</Select>
-		</FormControl>
-		<Autocomplete
-			required
-			multiple
-			id="grouped"
-			options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-			groupBy={(option) => option.firstLetter}
-			getOptionLabel={(option) => option.Name}
-			sx={{ m: 1, width: 400 }}
-			onChange={handleChangeIngredients}
-			renderInput={(params) => <TextField {...params} label="Ingredients: " />}
-		/>
-		<TextField
-			required
-			margin="normal"
-			label={"Serving Size: "+recipeData.servingsize}
-			type="text"
-			onChange={e => setServingSize(e.target.value)}
-		/>
-		<TextField
-			required
-			label={"Instructions: "+recipeData.instructions}
-			sx={{ width: 400}}
-			defaultValue={recipeData.instructions}
-			multiline={true}
-			rows={8}
-			margin="normal"
-			autoFocus={true}
-			variant="outlined"
-			onChange={e => setInstructions(e.target.value)}
-		/>
-		<br />
-		<Button
-			sx={{ mt: 3, mb: 2 }}
-			id='login'
-			variant="contained" onClick={onSubmit}>Submit
-		</Button>
+		<body>
+    	<main>
+				<Button className="go_back" variant='contained' onClick={previous}>← Go Back</Button>
+				<Box
+					className="box"
+					sx={{
+						marginTop: 0,
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+				}}>
+					<Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}></Avatar>
+					<Typography className="Sign-in" component="h1" variant="h5">
+						Edit Your Recipe
+					</Typography>
+					<TextField
+						sx={{ width: 400 }}
+						margin="normal"
+						required
+						label={"Recipe Name: "+recipeData.name}
+						type="text"
+						onChange={e => setRecipeName(e.target.value)}
+					/>
+					<TextField
+						sx={{ width: 400 }}
+						margin="normal"
+						required
+						label={"Description: "+recipeData.description}
+						defaultValue={recipeData.description}
+						type="text"
+						onChange={e => setDescription(e.target.value)}
+					/>
+					<FormControl sx={{ m: 2, width: 400}}>
+						<InputLabel id="Cuisine_selectbox">Select Cuisine</InputLabel>
+						<Select
+							value={cuisineName}
+							onChange={handleChangeCuisine}
+							input={<OutlinedInput label="Cuisines" />}
+							MenuProps={MenuProps}
+							defaultValue=""
+						>
+							{cuisineList.map((name) => (
+								<MenuItem
+									key={name}
+									value={name}
+									style={getStylesCuisine(name, cuisineName, theme)}
+								>
+									{name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl sx={{ m: 2, width: 400}}>
+						<InputLabel id="Mealtype_selectbox">Select Meal Type</InputLabel>
+						<Select
+							required
+							value={mealtypeName}
+							onChange={handleChangeMealtype}
+							input={<OutlinedInput label="Mealtype" />}
+							MenuProps={MenuProps}
+							defaultValue=""
+						>
+							{mealtypeList.map((name) => (
+								<MenuItem
+									key={name}
+									value={name}
+									style={getStylesMealtype(name, mealtypeName, theme)}
+								>
+									{name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<Autocomplete
+						required
+						multiple
+						id="grouped"
+						options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+						groupBy={(option) => option.firstLetter}
+						getOptionLabel={(option) => option.Name}
+						sx={{ m: 1, width: 400 }}
+						onChange={handleChangeIngredients}
+						renderInput={(params) => <TextField {...params} label="Ingredients: " />}
+					/>
+					<TextField
+						sx={{ m: 2, width: 400 }}
+						required
+						margin="normal"
+						label={"Serving Size: "+recipeData.servingsize}
+						type="text"
+						onChange={e => setServingSize(e.target.value)}
+					/>
+					<TextField
+						required
+						label={"Instructions: "+recipeData.instructions}
+						sx={{ width: 400}}
+						defaultValue={recipeData.instructions}
+						multiline={true}
+						rows={8}
+						margin="normal"
+						autoFocus={true}
+						variant="outlined"
+						onChange={e => setInstructions(e.target.value)}
+					/>
+					<br />
+					<Button
+						sx={{ mt: 3, mb: 2 }}
+						id='login'
+						variant="contained" onClick={onSubmit}>Submit
+					</Button>
+				</Box>
+			</main>
+		</body>
 	</>)
 }
 
