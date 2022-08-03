@@ -1,4 +1,1 @@
-id,username,pass_hash,email,points,goal
-1,sample,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0,0
-2,BingBong,df3b585ca9d8399a7245d33e57195495216bb243d8316e186b1eca9458eae74c,jolateon@hotmail.com,0,0
-3,Bill,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0,0
+id,username,pass_hash,email,points,goal_daily,goal_weekly
