@@ -326,7 +326,7 @@ def overview():
     print(overview)
     
     response = {
-        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium', 'manganese'],
+        'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium'],
         'overview' : overview
     }
     return response, 200
