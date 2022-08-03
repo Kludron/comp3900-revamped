@@ -4,6 +4,7 @@ import './Favourite.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import profile_background from '../img/profile-background.jpeg';
 
 /* Favourite Recipes Page */
 function Favourite() {
@@ -24,9 +25,10 @@ function Favourite() {
   }, []);
 
   return <div>
+    <img className='profile-background' src={profile_background} alt='profile background'></img>
     <NavBar />
     <div className="main-content">
-      <h2>Favorite Recipe</h2>
+      <h2>Favourite Recipe</h2>
       <div>
         {bookmarks.map((recipe, key) => {
           return (

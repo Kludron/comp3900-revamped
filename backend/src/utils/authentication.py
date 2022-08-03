@@ -12,6 +12,7 @@ from flask_jwt_extended import (
     create_access_token
 )
 import psycopg2
+from utils.gmail_auth import * 
 
 # JWT Authentication Information
 JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
@@ -168,31 +169,23 @@ def auth_change_username(data, identity, conn) -> tuple:
                 conn.rollback()
             return {"msg": "Success"}, 200
 
-def auth_forgot_password(data) -> tuple:
-    data = json.loads(data)
+def auth_forgot_password(u_id, cursor, conn) -> tuple:
     response = {}
 
-    reset_code = "23489" #placeholder
+    temp_pwd = 'dslfj1' #placeholder
+    passhash = hashlib.sha256(str(temp_pwd + HASH_SALT).encode('utf8')).hexdigest()
+    #0bda9232c7881aa1771b8fc3b585d9b1c388a4eb1ed80bf0a580a1ebc89db3ab
 
-    if type(data) is dict:
-        #Email details
-        sender_email = "allofrandomness@gmail.com"
-        receiver_email = data['email']
-        message = """
-        Subject: Hi there
+    cursor.execute("UPDATE users SET pass_hash = %s WHERE email = %s;", (passhash, u_id))
+    conn.commit()
+ 
+    message = """
+    Subject: Hi there
 
-        This is your password reset code """ + reset_code
+    This is your password temporary password """ + temp_pwd
 
-        #Setting up email connection
-        port = 465  # For SSL
-        password = "iamrandom123#"
-        context = ssl.create_default_context() # Create a secure SSL context
-
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-            server.login("allofrandomness@gmail.com", password)
-            server.sendmail(sender_email, receiver_email, message)
-    pass
+    sendEmail(u_id, message)
+    return {'msg': 'Success'}, 200
 
 def auth_jwt_refresh(expiry, identity, response) -> tuple:
      # If the user is active within 5 minutes after their token expires, refresh their expiry time.

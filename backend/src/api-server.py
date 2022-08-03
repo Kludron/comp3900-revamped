@@ -77,7 +77,9 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    auth_forgot_password(request.get_data())
+    data = json.loads(request.get_data())
+    email = data['email']
+    return auth_forgot_password(email, cursor, conn)
 
 # Haven't tested this yet
 # @api.after_request()
@@ -92,7 +94,7 @@ def profile():
     if request.method == 'GET':
         return auth_get_profile(get_jwt_identity(), conn)
     elif request.method == 'PUT':
-        return customise_profile(request.get_data(), get_jwt_identity(), conn)
+        return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
 
 #############################################
 #                                           #
