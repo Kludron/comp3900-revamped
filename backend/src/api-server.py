@@ -274,7 +274,6 @@ def eaten(id):
     r_id = data["r_id"]
     dateString = datetime.today().strftime('%d/%m/%Y')
 
-
     email = get_jwt_identity()
     query = """
     SELECT u.id FROM users u WHERE lower(u.email)=%s;
@@ -289,7 +288,7 @@ def eaten(id):
         return ("msg: user does not exist", 401)
 
     #Note: need to add caloric values to ingredients
-    cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
+    cursor.execute("INSERT INTO mealHistory(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, TO_DATE(dateString, 'DD/MM/YYYY')))
 
     return (response, 200)
 
@@ -417,27 +416,36 @@ def recommend():
     }
     return response, 200
 
-@api.route('/setGoal', methods=['POST'])
+@api.route('/setGoal', methods=['POST', 'GET'])
 @jwt_required()
 @cross_origin()
 def setGoal():
-    data = json.loads(request.get_data())
-    
-    try:
-        caloricGoal = data['goal']
-    except KeyError:
-        return ("msg: wrong key", 401)
-
     u_id = auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
-    #To do: need to add goal column
-    cursor.execute("UPDATE users SET goal = %s WHERE id = %s;", (caloricGoal, u_id))
+    if request.method == 'POST':
+        data = json.loads(request.get_data())
+        
+        try:
+            caloricGoal = data['goal']
+            timeframe = data0['timeframe']
+        except KeyError:
+            return ("msg: wrong key", 401)
 
 
-    return ({'msg' : 'Success'}, 200)
 
+        #To do: need to add goal column
+        cursor.execute("UPDATE users SET goal_%s = %s WHERE id = %s;", (timeframe, caloricGoal, u_id))
+
+
+        return ({'msg' : 'Success'}, 200)
+
+    elif request.method == 'GET':
+        cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
+        row = cursor.fetchone()
+
+        return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
     api.run()
