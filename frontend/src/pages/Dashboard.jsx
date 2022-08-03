@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import './Dashboard.css'
-import Meat from "../ingredients/meat.json";
-import Vegetables from "../ingredients/vegetables&greens.json";
-import Seafood from "../ingredients/seafood.json";
-import AllIngredients from "../ingredients/allingredients.json";
 import axios from 'axios';
 import MultipleSelect from '../components/MultipleSelect';
 import Button from '@mui/material/Button';
@@ -19,14 +15,26 @@ function Dashboard () {
   const [recipes, setRecipes] = useState([]);
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
-
-  const user = localStorage.getItem('username');
+  const [userData, setuserData] = useState([]);
 
   //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
   //React Navigation Function
   const navigate = useNavigate();
+
+  //Loads user profile details
+  const loadProfile = async () => {
+    const headers = {
+      "Authorization": `Bearer ${token}`
+    }
+    const response = await axios.get('http://localhost:5000/profile', {headers: headers});
+    setuserData({
+      email: response.data.Email,
+      username: response.data.Username,
+      points: response.data.Points,
+    });
+  };
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid, key) => {
@@ -91,17 +99,18 @@ function Dashboard () {
   }
 
   React.useEffect(() => {
+    loadProfile();
     /*if (!token) {
       navigate('/login');
     }*/
-  });
+  },[]);
 
   return <div>
     <div className="recipeBox">
       <div className="upper-section">
         <div className="title_bar">
           <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
-          <h2 className='head'>Welcome {user}!</h2>
+          <h2 className='head'>Welcome {userData.username}!</h2>
           <Avatar className="avatar" onClick={handleClick} sx={{ margin: 3, bgcolor: 'primary.main'}}></Avatar>
         </div>
         <MultipleSelect submit={(mealtypeName, cuisineName, ingredientsName, searchQuery) => {
