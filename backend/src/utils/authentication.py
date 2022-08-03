@@ -13,19 +13,20 @@ from flask_jwt_extended import (
 )
 import psycopg2
 from utils.gmail_auth import * 
+import os
 
 # JWT Authentication Information
-JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
+JWT_KEY = os.environ.get("JWT_KEY")
 JWT_EXPIRY = datetime.timedelta(hours=1)
 
 # User hashing information
-HASH_SALT = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+HASH_SALT = os.environ.get("HASH_SALT")
 
 # Database server information
-DB_HOST = '45.77.234.200'
-DB_NAME = 'comp3900db'
-DB_USER = 'comp3900_user'
-DB_PASS =  'yckAPfc9MX42N4'
+DB_HOST = os.environ.get("DB_HOST")
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
 
 RVSTORAGE = 10 # Recently Viewed Storage
 

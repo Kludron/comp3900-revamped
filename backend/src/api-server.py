@@ -24,6 +24,7 @@ from utils.authentication import *
 from utils.searching import *
 
 api = Flask(__name__)
+
 cors = CORS(api)
 api.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -31,6 +32,8 @@ api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
+
+jwt = JWTManager(api)
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -40,10 +43,6 @@ try:
     cursor = conn.cursor()
 except Exception as e:
     sys.stderr.write("An error occurred while connecting to the database:\n{}\n".format(e))
-
-jwt = JWTManager(api)
-cors = CORS(api)
-api.config['CORS_HEADERS'] = 'Content-Type'
 
 #############################################
 #                                           #
@@ -428,39 +427,39 @@ def recommend():
     }
     return response, 200
 
-@api.route('/setGoal', methods=['POST', 'GET'])
-@jwt_required()
-@cross_origin()
-def setGoal():
-    u_id = auth_get_uid(get_jwt_identity(), conn)
-    if not u_id:
-        return {'msg' : 'Authentication error'}, 403
+# @api.route('/setGoal', methods=['POST', 'GET'])
+# @jwt_required()
+# @cross_origin()
+# def setGoal():
+#     u_id = auth_get_uid(get_jwt_identity(), conn)
+#     if not u_id:
+#         return {'msg' : 'Authentication error'}, 403
 
-    if request.method == 'POST':
-        data = json.loads(request.get_data())
+#     if request.method == 'POST':
+#         data = json.loads(request.get_data())
         
-        try:
-            caloricGoal = data['goal']
-            timeframe = data['timeframe']
-        except KeyError:
-            return ("msg: wrong key", 401)
+#         try:
+#             caloricGoal = data['goal']
+#             timeframe = data['timeframe']
+#         except KeyError:
+#             return ("msg: wrong key", 401)
 
 
 
-        #To do: need to add goal column
-        if timeframe.lower() == 'weekly':
-            cursor.execute("UPDATE users SET goal_weekly = %s WHERE id = %s;", (caloricGoal, u_id))
-        elif timeframe.lower() == 'daily':
-            cursor.execute("UPDATE users SET goal_daily = %s WHERE id = %s;", (caloricGoal, u_id))
+#         #To do: need to add goal column
+#         if timeframe.lower() == 'weekly':
+#             cursor.execute("UPDATE users SET goal_weekly = %s WHERE id = %s;", (caloricGoal, u_id))
+#         elif timeframe.lower() == 'daily':
+#             cursor.execute("UPDATE users SET goal_daily = %s WHERE id = %s;", (caloricGoal, u_id))
 
 
-        return ({'msg' : 'Success'}, 200)
+#         return ({'msg' : 'Success'}, 200)
 
-    elif request.method == 'GET':
-        cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
-        row = cursor.fetchone()
+#     elif request.method == 'GET':
+#         cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
+#         row = cursor.fetchone()
 
-        return ({'goals' : row}, 200)
+#         return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
-    api.run(debug=True)
+    api.run(host='localhost', debug=True)
