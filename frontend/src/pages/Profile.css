@@ -1,5 +1,5 @@
 .profile-background {
-    position: absolute;
+    position: fixed;
     opacity: 0.3;
     width: 100%;
     z-index: -1;

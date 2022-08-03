@@ -198,6 +198,8 @@ function DietAndMetrics() {
 		})
 	}
 
+	const [intake, setIntake] = React.useState([]);
+
 	const intakeOverview = async () => {
 		let headers = {
 			headers: {
@@ -205,8 +207,19 @@ function DietAndMetrics() {
 			}
 		};
 		axios.get('http://localhost:5000/intake_overview', headers)
-		.then((response) => {
-			console.log(response);
+		.then((res) => {
+			console.log(res);
+			setIntake({
+				"energy": res.data.overview[0],
+				"protein": res.data.overview[1].toFixed(1),
+				"fat": res.data.overview[2].toFixed(1),
+				"fiber": res.data.overview[3].toFixed(1),
+				"sugars": res.data.overview[4].toFixed(1),
+				"carbohydrates": res.data.overview[5].toFixed(1),
+				"calcium": res.data.overview[6].toFixed(1),
+				"iron": res.data.overview[7].toFixed(1),
+				"magnesium": res.data.overview[8].toFixed(1),
+			});
 		}).catch((err) => {
 			alert(err);
 		})
@@ -226,7 +239,7 @@ function DietAndMetrics() {
 			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
-				<button onClick={previous}>Go Back</button>
+				<Button variant="contained" onClick={previous}>← Go Back</Button>
 				<h1 className="title">Diet/Metrics</h1>
 				{isGoal && 
 					<h3>Your Current Goal is {viewGoalDaily} Daily and {viewGoalWeekly} Weekly calories</h3>
@@ -307,9 +320,19 @@ function DietAndMetrics() {
 				<hr className="break"></hr>
 				<div className='intakeoverview_section'>
 					<h2>Intake Overview</h2>
+					<div className="intake">
+						<p>Energy: {intake.energy}kJ</p>
+						<p>Protein: {intake.protein}g</p>
+						<p>Fat: {intake.fat}g</p>
+						<p>Fiber {intake.fiber}g</p>
+						<p>Sugar: {intake.sugars}g</p>
+						<p>Carbohydrates: {intake.carbohydrates}g</p>
+						<p>Calcium: {intake.calcium}mg</p>
+						<p>Magnesium: {intake.magnesium}mg</p>
+					</div>
 				</div>
 			</div>
-        </div>
+		</div>
 }
 
 export default DietAndMetrics;

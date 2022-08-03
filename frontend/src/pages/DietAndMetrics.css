@@ -56,3 +56,8 @@
     background-color: lightgray;
     border: 0 none;
 }
+
+.main-content .intakeoverview_section {
+    background-color: #2196f3;
+    padding: 1vw;
+}
