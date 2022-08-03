@@ -1,3 +1,4 @@
+import os 
 from hashlib import sha256
 import psycopg2
 import sys
@@ -22,6 +23,7 @@ from utils.customising import *
 from utils.contributing import *
 from utils.authentication import *
 from utils.searching import *
+from utils.gmail.gmail_auth import *
 
 api = Flask(__name__)
 cors = CORS(api)
@@ -31,6 +33,10 @@ api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
+
+api.secret_key = 'REPLACE ME - this value is here as a placeholder.'
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -50,6 +56,29 @@ api.config['CORS_HEADERS'] = 'Content-Type'
 #           Authentication Routes           #
 #                                           # 
 #############################################
+@api.route('/')
+def do_index():
+    return index()
+
+@api.route('/test')
+def do_test_api_request():
+    return test_api_request()
+
+@api.route('/authorize')
+def do_authorize():
+    return authorize()
+
+@api.route('/oauth2callback')
+def do_oauth2callback():
+    return oauth2callback()
+
+@api.route('/revoke')
+def do_revoke():
+    return revoke()
+
+@api.route('/clear')
+def do_clear_credentials():
+    return clear_credentials()
 
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
@@ -77,7 +106,7 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    auth_forgot_password(request.get_data())
+    return auth_forgot_password(request.get_data())
 
 # Haven't tested this yet
 # @api.after_request()
@@ -461,4 +490,9 @@ def setGoal():
         return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
+    # When running locally, disable OAuthlib's HTTPs verification.
+    # ACTION ITEM for developers:
+    #     When running in production *do not* leave this option enabled.
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
     api.run(debug=True)

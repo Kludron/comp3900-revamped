@@ -12,7 +12,7 @@ from flask_jwt_extended import (
     create_access_token
 )
 import psycopg2
-
+from utils.gmail.gmail_auth import *
 # JWT Authentication Information
 JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
 JWT_EXPIRY = datetime.timedelta(hours=1)
@@ -174,25 +174,15 @@ def auth_forgot_password(data) -> tuple:
 
     reset_code = "23489" #placeholder
 
-    if type(data) is dict:
-        #Email details
-        sender_email = "allofrandomness@gmail.com"
-        receiver_email = data['email']
-        message = """
-        Subject: Hi there
+    receiver_email = data['email']
+    message = """
+    Subject: Hi there
 
-        This is your password reset code """ + reset_code
+    This is your password reset code """ + reset_code
 
-        #Setting up email connection
-        port = 465  # For SSL
-        password = "iamrandom123#"
-        context = ssl.create_default_context() # Create a secure SSL context
-
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-            server.login("allofrandomness@gmail.com", password)
-            server.sendmail(sender_email, receiver_email, message)
-    pass
+    sentEmail = sendEmail(receiver_email, message)
+    return {'msg': 'Success'}, 200
+ 
 
 def auth_jwt_refresh(expiry, identity, response) -> tuple:
      # If the user is active within 5 minutes after their token expires, refresh their expiry time.
