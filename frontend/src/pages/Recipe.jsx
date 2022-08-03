@@ -54,39 +54,46 @@ function Recipe () {
 	}, []);
 
 	return (
-		<div className='recipe_details'>
+		<body>
 			<Button onClick={() => goBack()}>←Go Back</Button>
-			<h2 className='recipe_name'>Recipe Name: {recipe.name}</h2>
-			<p className='recipe_description'>Description: {recipe.description}</p>
-			<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
-			<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
-			<p className='recipe_servingsize'>Serving Size: {recipe.servingsize}</p>
-			<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
-			<div className='recipe_ingredients'>Ingredients: 
-				{ingredients.map((i,key) => {
-					return (
-						<div className="ingredient_values" key={key}>
-							<li>Name: {i.Name}</li>
-							<li>Energy: {i.Energy} kJ</li>
-							<li>Carbohydrates: {i.Carbohydrates}g</li>
-							<li>Fat: {i.Fat}g</li>
-							<li>Fibre: {i.Fibre}g</li>
-							<li>Protein: {i.Protein}g</li>
-							<li>Sugars: {i.Sugars}g</li>
-							<li>Calcium: {i.Calcium}mg</li>
-							<li>Iron: {i.Iron}mg</li>
-							<li>Magnesium: {i.Magnesium}mg</li>
-							<li>Manganese: {i.Manganese}mg</li>
-							<li>Phosphorus: {i.Phosphorus}mg</li>
-							<li>Grams: {i.Grams}g</li>
-							<li>Quantity: {i.Quantity}</li>
-							<li>Millilitres: {i.Millilitres}mL</li>
-						</div>
-					)
-				})}
+			<div className='recipe_details'>
+				<div className='upper'>
+					<h2 className='recipe_name'>{recipe.name}</h2>
+					<p className='recipe_description'>Description: {recipe.description}</p>
+					<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
+					<p className='recipe_servingsize'>Serves: {recipe.servingsize} people</p>
+					<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
+					<button onClick={() => goToComments(recipeid)}>See Reviews & Comments</button>
+				</div>
+				<div className="lower">
+					<p className='recipe_instruction'>Instructions: {recipe.instructions}</p>
+					<div className='v1'></div>
+					<div className='recipe_ingredients'>Ingredients: 
+						{ingredients.map((i,key) => {
+							return (
+								<div className="ingredient_values" key={key}>
+									<li>Name: {i.Name}</li>
+									<li>Energy: {i.Energy} kJ</li>
+									<li>Carbohydrates: {i.Carbohydrates}g</li>
+									<li>Fat: {i.Fat}g</li>
+									<li>Fibre: {i.Fibre}g</li>
+									<li>Protein: {i.Protein}g</li>
+									<li>Sugars: {i.Sugars}g</li>
+									<li>Calcium: {i.Calcium}mg</li>
+									<li>Iron: {i.Iron}mg</li>
+									<li>Magnesium: {i.Magnesium}mg</li>
+									<li>Manganese: {i.Manganese}mg</li>
+									<li>Phosphorus: {i.Phosphorus}mg</li>
+									<li>Grams: {i.Grams}g</li>
+									<li>Quantity: {i.Quantity}</li>
+									<li>Millilitres: {i.Millilitres}mL</li>
+								</div>
+							)
+						})}
+					</div>
+				</div>
 			</div>
-			<button onClick={() => goToComments(recipeid)}>See Comments</button>
-		</div>
+		</body>
 	);
 }
 

@@ -162,6 +162,7 @@ function DietAndMetrics() {
 				.then((response) => {
 					console.log(response)
 					setRecommend(recommend => [...recommend, {
+						id: rid,
 						name: response.data.Name,
 						description: response.data.Description, 
 						instructions: response.data.Instructions,
