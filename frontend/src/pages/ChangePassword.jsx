@@ -38,7 +38,7 @@ function ChangePassword () {
 				}}>
 					<Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}></Avatar>
 					<Typography className="Sign-in" component="h1" variant="h5">
-						Change Username
+						Change Password
 					</Typography>
 					<ChangePasswordForm submit={async (newpassword, repassword) => {
 						console.log(newpassword,repassword)
