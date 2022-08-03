@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import './EditRecipe.css';
 
 function EditRecipe ({submit}) {
   
@@ -176,6 +177,7 @@ function EditRecipe ({submit}) {
 						Edit Your Recipe
 					</Typography>
 					<TextField
+						className='field'
 						sx={{ width: 400 }}
 						margin="normal"
 						required
@@ -184,6 +186,7 @@ function EditRecipe ({submit}) {
 						onChange={e => setRecipeName(e.target.value)}
 					/>
 					<TextField
+						className='field'
 						sx={{ width: 400 }}
 						margin="normal"
 						required
@@ -192,7 +195,8 @@ function EditRecipe ({submit}) {
 						type="text"
 						onChange={e => setDescription(e.target.value)}
 					/>
-					<FormControl sx={{ m: 2, width: 400}}>
+					<FormControl sx={{ m: 2, width: 400}}
+						className='field'>
 						<InputLabel id="Cuisine_selectbox">Select Cuisine</InputLabel>
 						<Select
 							value={cuisineName}
@@ -212,7 +216,7 @@ function EditRecipe ({submit}) {
 							))}
 						</Select>
 					</FormControl>
-					<FormControl sx={{ m: 2, width: 400}}>
+					<FormControl className='field' sx={{ m: 2, width: 400}}>
 						<InputLabel id="Mealtype_selectbox">Select Meal Type</InputLabel>
 						<Select
 							required
@@ -234,6 +238,7 @@ function EditRecipe ({submit}) {
 						</Select>
 					</FormControl>
 					<Autocomplete
+						className='field'
 						required
 						multiple
 						id="grouped"
@@ -245,6 +250,7 @@ function EditRecipe ({submit}) {
 						renderInput={(params) => <TextField {...params} label="Ingredients: " />}
 					/>
 					<TextField
+						className='field'
 						sx={{ m: 2, width: 400 }}
 						required
 						margin="normal"
@@ -253,6 +259,7 @@ function EditRecipe ({submit}) {
 						onChange={e => setServingSize(e.target.value)}
 					/>
 					<TextField
+						className='field'
 						required
 						label={"Instructions: "+recipeData.instructions}
 						sx={{ width: 400}}
