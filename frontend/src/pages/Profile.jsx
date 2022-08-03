@@ -160,8 +160,8 @@ function UsersAllergen({ usersAllergens, setUsersAllergens }) {
           })}
     </div>
     <div className='reset-save-button'>
-      <Button variant='contained' color='error' startIcon={<DeleteIcon />} onClick={Reset}>Reset</Button>
-      <Button variant='contained' endIcon={<SaveIcon />} onClick={Save}>Save</Button>
+      <Button variant='contained' color='error' startIcon={<DeleteIcon />} onClick={Reset}>RESET</Button>
+      <Button variant='contained' endIcon={<SaveIcon />} onClick={Save}>SAVE</Button>
     </div>
   </div>
 };

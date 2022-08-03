@@ -10,6 +10,7 @@ import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
 import './Dashboard.css';
 import profile_background from '../img/profile-background.jpeg';
+import SaveIcon from '@mui/icons-material/Save';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
@@ -203,11 +204,11 @@ function DietAndMetrics() {
 		intakeOverview();
 	}, []);
 
-	return <div className="wrapper">
+	return <div className="DAM-wrapper">
 			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
-				<button onClick={previous}>Go Back</button>
+				<Button className="go-back" variant='contained' onClick={previous}>Go Back</Button>
 				<h1 className="title">Diet/Metrics</h1>
 				<h2 className="title">Set Calorie Goal</h2>
 				<div className='calorie_bar'>
@@ -237,7 +238,8 @@ function DietAndMetrics() {
 							/>
 							<Button 
 								sx={{ mt: 3, mb: 2 }}
-								variant='outlined'
+								variant='contained'
+								endIcon={<SaveIcon />}
 								onClick={handleSubmit}>Save</Button>
 						</Box>
 					}
@@ -260,8 +262,10 @@ function DietAndMetrics() {
 							/>
 							<Button 
 								sx={{ mt: 3, mb: 2 }}
-								variant='outlined'
+								variant='contained'
+								endIcon={<SaveIcon />}
 								onClick={handleSubmit}>Save</Button>
+								
 						</Box>
 					}
 				</div>

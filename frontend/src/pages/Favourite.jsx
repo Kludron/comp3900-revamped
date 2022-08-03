@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@mui/material";
+import profile_background from '../img/profile-background.jpeg';
 
 const token = localStorage.getItem('token');
 /* Favourite Recipes Page */
@@ -34,11 +35,13 @@ function Favourite() {
   console.log(bookmarkIds)
   
   return <div>
+    <img className='profile-background' src={profile_background} alt='profile background'></img>
     <NavBar />
     <div className="main-content">
-      <button onClick={previous}>Go Back</button>
-      <h2>Favourite Recipe</h2>
-      <div>
+      <Button className="go-back" variant='contained' onClick={previous}>Go Back</Button>
+      <h1>Favourite Recipe</h1>
+      <hr className="favourite-hr"/>
+      <div className="list_bookmarked_recipes">
         {recipes.map((recipe, key) => {
           return (
             <BookmarkedRecipe key={key} recipe={recipe} bookmarkIds={bookmarkIds} setBookmarkIds={setBookmarkIds}/>
@@ -109,15 +112,15 @@ function BookmarkedRecipe({ key, recipe, bookmarkIds, setBookmarkIds }) {
   }
 
   return <div className='recipe_box' key={key}>
-  <Button className="btn" variant="outlined" onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
-  <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
-  <div className="details">
-    <h3 className="rec_name">{recipe.name}</h3>
-    <p>Cuisine: {recipe.cuisine}</p>
-    <p>Description: {recipe.description}</p>
-    <p>Mealtype: {recipe.mealtype}</p>
-    <p>Serves: {recipe.servingsize}</p>
-    <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+    <Button className="btn" variant="outlined" onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
+    <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
+    <div className="details">
+      <h3 className="rec_name">{recipe.name}</h3>
+      <p>Cuisine: {recipe.cuisine}</p>
+      <p>Description: {recipe.description}</p>
+      <p>Mealtype: {recipe.mealType}</p>
+      <p>Serves: {recipe.servingSize}</p>
+      <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+    </div>
   </div>
-</div>
 }

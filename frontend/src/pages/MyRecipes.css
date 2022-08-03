@@ -1,9 +1,12 @@
-.wrapper {
+.my-recipe-wrapper {
     display: flex;
     position: relative;
 }
 
-.wrapper .main-content {
+.my-recipe-wrapper .main-content {
     width: 100%;
-    margin-left: 20vw;
+}
+
+.my-recipe-hr {
+    border-top: 1vh dashed;
 }
