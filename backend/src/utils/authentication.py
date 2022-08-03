@@ -91,10 +91,14 @@ def auth_register(data, cursor, conn) -> tuple:
         return (response, 401)
 
     #Continue to create account for new user
-    cursor.execute(
-        "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
-        (name, passhash, email)
-    )
+    try:
+        cursor.execute(
+            "INSERT INTO users(username, pass_hash, email) VALUES (%s, %s, %s);", 
+            (name, passhash, email)
+        )
+        conn.commit()
+    except psycopg2.errors.InFailedSqlTransaction:
+        conn.rollback()
 
     #Move repeat code into function
     #Check if user already has an account
@@ -129,12 +133,14 @@ def auth_change_password(data, identity, cursor, conn) -> tuple:
         email = identity
         passhash = hashlib.sha256(str(newpwd + HASH_SALT).encode('utf8')).hexdigest()
 
-        cursor.execute(
-            "UPDATE users SET pass_hash = %s WHERE email = %s;", 
-            (passhash, email)
-        )
-
-        conn.commit()
+        try:
+            cursor.execute(
+                "UPDATE users SET pass_hash = %s WHERE email = %s;", 
+                (passhash, email)
+            )
+            conn.commit()
+        except psycopg2.errors.InFailedSqlTransaction:
+            conn.rollback()
         return {"msg": "Success"}, 200
 
 def auth_change_username(data, identity, cursor, conn) -> tuple:
@@ -147,12 +153,14 @@ def auth_change_username(data, identity, cursor, conn) -> tuple:
         username = data['newusername']
         email = identity
 
-        cursor.execute(
-            "UPDATE users SET username = %s WHERE email = %s;", 
-            (username, email)
-        )
-
-        conn.commit()
+        try:
+            cursor.execute(
+                "UPDATE users SET username = %s WHERE email = %s;", 
+                (username, email)
+            )
+            conn.commit()
+        except psycopg2.errors.InFailedSqlTransaction:
+            conn.rollback()
         return {"msg": "Success"}, 200
 
 def auth_forgot_password(data) -> tuple:
@@ -236,7 +244,7 @@ def auth_update_viewed(data, email, cursor, conn):
         nStored = cursor.fetchone()[0]
     except TypeError:
         return {'msg' : 'An error occured when grabbing users recently viewed recipes'}, 500
-    except ProgrammingError:
+    except psycopg2.ProgrammingError:
         nStored = 0
 
     if isinstance(recipes, list):
@@ -244,17 +252,29 @@ def auth_update_viewed(data, email, cursor, conn):
         nDelete = max(0, len(recipes) + nStored - RVSTORAGE)
         # Delete n recentlyViewed from the database
         if nDelete > 0:
-            cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s", (u_id, nDelete))
+            try:
+                cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
+                conn.commit()
+            except psycopg2.errors.InFailedSqlTransaction:
+                conn.rollback()
 
         # Insert recently viewed recipes into the db
         for recipe in recipes:
             try:
                 r_id = recipe['r_id']
             except KeyError: # Invalid recipe entry. Ignore it
-                pass
-            cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s)", (u_id, r_id))
-
-    conn.commit()
+                continue
+            try:
+                cursor.execute("INSERT INTO user_recentlyviewed(u_id, r_id) VALUES (%s, %s);", (u_id, r_id))
+                conn.commit()
+            except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+                conn.rollback()
+        
+    try:
+        cursor.execute("SELECT r_id FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
+        return {'Recipes':[recipe[0] for recipe in cursor.fetchall()]}
+    except (TypeError, psycopg2.ProgrammingError, psycopg2.errors.InFailedSqlTransaction):
+        return {'Recipes':[]}
     return {'msg' : 'Successfully updated recently viewed table'}, 200
 
 
@@ -307,7 +327,10 @@ def auth_get_profile(email, cursor):
         WHERE ua.a_id = a.id
         AND ua.u_id = %s;
     """, (u_id,))
-    usersAllergens = cursor.fetchall()
+    try:
+        usersAllergens = cursor.fetchall()
+    except psycopg2.ProgrammingError:
+        usersAllergens = []
     response = {
         'Username' : username,
         'Email' : email,

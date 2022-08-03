@@ -228,6 +228,8 @@ def reviews(id):
                 "Rating":rating
             })
         return response, 200
+    elif request.method == 'POST':
+        return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
@@ -263,6 +265,7 @@ def edit_recipe(r_id):
 @cross_origin()
 def review(r_id):
     data = request.get_data()
+    print(data)
     return contrib_review_recipe(get_jwt_identity(), r_id, data, cursor, conn)
 
 @api.route('/eaten/recipeid=<id>', methods=['POST'])
@@ -440,4 +443,4 @@ def setGoal():
 
 
 if __name__ == '__main__':
-    api.run()
+    api.run(debug=True)

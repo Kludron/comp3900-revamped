@@ -161,15 +161,19 @@ def search_detailed(cursor, r_id) -> tuple:
     """
     cursor.execute(query, (r_id,))
 
-    recipe = cursor.fetchone()
-    if not recipe:
+    try:
+        recipe = cursor.fetchone()
+    except psycopg2.ProgrammingError:
         return {'msg' : 'Recipe does not exist'}, 401
         
     r_name, r_description, c_name, m_name, r_sS, r_instructions = recipe
     
     # Adjust this to use the grab_ingredients function.
     cursor.execute("SELECT ingredient,quantity,grams,millilitres FROM recipe_ingredients WHERE r_id=%s", (r_id,))
-    ingredients = cursor.fetchall()
+    try:
+        ingredients = cursor.fetchall()
+    except psycopg2.ProgrammingError:
+        return {'msg' : 'Unable to grab ingredients'}, 400
 
     response = {
         "Name" : r_name,
@@ -251,7 +255,7 @@ def search_users_recipes(email, cursor) -> tuple:
     cursor.execute("SELECT id FROM recipes WHERE uploader=%s", (u_id,))
     try:
         recipes = [row[0] for row in cursor.fetchall()]
-    except TypeError:
+    except (TypeError, psycopg2.ProgrammingError):
         # Does this occur when user hasn't uploaded?
         return {'msg' : 'Something went wrong retrieving recipes'}, 500
 
