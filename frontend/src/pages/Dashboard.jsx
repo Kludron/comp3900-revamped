@@ -133,7 +133,7 @@ function Dashboard () {
     <div className="recipeBox">
       <div className="upper-section">
         <div className="title_bar">
-          <Button className='logout_btn' variant='outlined' onClick={logout}>Logout</Button>
+          <Button className='logout_btn' variant='contained' onClick={logout}>Logout</Button>
           <h2 className='head'>Welcome {userData.username}!</h2>
           <Avatar className="avatar" onClick={handleClick} sx={{ margin: 3, bgcolor: 'primary.main'}}></Avatar>
         </div>

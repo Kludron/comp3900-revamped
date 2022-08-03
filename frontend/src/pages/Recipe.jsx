@@ -80,7 +80,7 @@ function Recipe () {
 					<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
 					<p className='recipe_servingsize'>Serves: {recipe.servingsize} people</p>
 					<p className='recipe_cuisine'>Cuisine: {recipe.cuisine}</p>
-					<button onClick={() => goToComments(recipeid)}>See Reviews & Comments</button>
+					<Button className="comments" variant='outlined' onClick={() => goToComments(recipeid)}>See Reviews & Comments</Button>
 				</div>
 				<div className="lower">
 					<div className="instructions">

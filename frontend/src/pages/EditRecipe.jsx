@@ -31,6 +31,7 @@ function EditRecipe ({submit}) {
 		}
 		const response = await axios.get(`http://localhost:5000/view/recipe/${recipeid}`, headers);
 		console.log(response);
+		console.log(response.data.Ingredients);
 		setrecipeData({
 			name: response.data.Name,
 			description: response.data.Description, 
@@ -158,8 +159,7 @@ function EditRecipe ({submit}) {
 			sx={{ width: 400 }}
 			margin="normal"
 			required
-			label="Recipe Name:"
-			value={recipeData.name}
+			label={"Recipe Name: "+recipeData.name}
 			type="text"
 			onChange={e => setRecipeName(e.target.value)}
 		/>
@@ -167,8 +167,8 @@ function EditRecipe ({submit}) {
 			sx={{ width: 400 }}
 			margin="normal"
 			required
-			label="Description"
-			value={recipeData.description}
+			label={"Description: "+recipeData.description}
+			defaultValue={recipeData.description}
 			type="text"
 			onChange={e => setDescription(e.target.value)}
 		/>
@@ -193,7 +193,7 @@ function EditRecipe ({submit}) {
 			</Select>
 		</FormControl>
 		<FormControl sx={{ m: 2, width: 200}}>
-			<InputLabel id="Mealtype_selectbox">Select Meal Type *</InputLabel>
+			<InputLabel id="Mealtype_selectbox">Select Meal Type</InputLabel>
 			<Select
 				required
 				value={mealtypeName}
@@ -222,21 +222,20 @@ function EditRecipe ({submit}) {
 			getOptionLabel={(option) => option.Name}
 			sx={{ m: 1, width: 400 }}
 			onChange={handleChangeIngredients}
-			renderInput={(params) => <TextField {...params} label="Select Ingredient(s)" />}
+			renderInput={(params) => <TextField {...params} label="Ingredients: " />}
 		/>
 		<TextField
 			required
-			value={recipeData.servingsize}
 			margin="normal"
-			label="Serving Size (No. of People)"
+			label={"Serving Size: "+recipeData.servingsize}
 			type="text"
 			onChange={e => setServingSize(e.target.value)}
 		/>
 		<TextField
 			required
-			label="Recipe Instructions"
+			label={"Instructions: "+recipeData.instructions}
 			sx={{ width: 400}}
-			value={recipeData.instructions}
+			defaultValue={recipeData.instructions}
 			multiline={true}
 			rows={8}
 			margin="normal"

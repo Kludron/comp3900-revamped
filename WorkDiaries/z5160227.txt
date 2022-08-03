@@ -44,3 +44,6 @@ Week 7
 - Discussed with Nathan about working on different backend routes to meet our user story requirements.
 - Have moved onto being able to comment/rate the recipe. (in the works)
 
+Week 8
+
+
