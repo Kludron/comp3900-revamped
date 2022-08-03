@@ -4,11 +4,13 @@
     width: 85%;
 }
 
-.bookmarked-recipes {
-    display: flex;
-}
-.bookmarked-recipes > * {
-    background-color: blueviolet;
-    margin: 20px;
-}
 
+.recipe_box {
+    box-shadow: 3px 3px 5px rgb(212, 212, 212);
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: lightblue;
+    width: 48%;
+    height: 10%;
+    margin: 2px;
+}
