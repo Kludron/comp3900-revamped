@@ -168,7 +168,8 @@ def auth_change_username(data, identity, conn) -> tuple:
                 conn.rollback()
             return {"msg": "Success"}, 200
 
-def auth_forgot_password(data) -> tuple:
+#CHECK: I moved it to api-server.py
+def auth_forgot_password(data, credentials) -> tuple:
     data = json.loads(data)
     response = {}
 
@@ -180,7 +181,7 @@ def auth_forgot_password(data) -> tuple:
 
     This is your password reset code """ + reset_code
 
-    sentEmail = sendEmail(receiver_email, message)
+    sentEmail = sendEmail(receiver_email, message, credentials)
     return {'msg': 'Success'}, 200
  
 
