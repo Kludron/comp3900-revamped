@@ -329,9 +329,10 @@ def overview():
                      
                     """, (u_id, '2022-06-26', '2022-08-26'))
 
-    overview = cursor.fetchone()
-    print("overview test")
-    print(overview)
+    try:
+        overview = cursor.fetchone()
+    except Exception:
+        return {'msg' : 'Overview error'}, 500
     
     response = {
         'keys' : ['energy', 'protein', 'fat', 'fibre', 'sugars', 'carbohydrates', 'calcium', 'iron', 'magnesium'],
@@ -360,7 +361,7 @@ def find_imbalance(u_id):
             record = cursor.fetchone()[0]
         except (TypeError, psycopg2.ProgrammingError):
             record = None
-        print(record)
+        # print(record)
         if(record is not None):
             actual_intake = float(record)
    
@@ -429,7 +430,7 @@ def recommend():
 @jwt_required()
 @cross_origin()
 def setGoal():
-    u_id = auth_get_uid(get_jwt_identity(), cursor)
+    u_id = auth_get_uid(get_jwt_identity(), conn)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
@@ -438,14 +439,17 @@ def setGoal():
         
         try:
             caloricGoal = data['goal']
-            timeframe = data0['timeframe']
+            timeframe = data['timeframe']
         except KeyError:
             return ("msg: wrong key", 401)
 
 
 
         #To do: need to add goal column
-        cursor.execute("UPDATE users SET goal_%s = %s WHERE id = %s;", (timeframe, caloricGoal, u_id))
+        if timeframe.lower() == 'weekly':
+            cursor.execute("UPDATE users SET goal_weekly = %s WHERE id = %s;", (caloricGoal, u_id))
+        elif timeframe.lower() == 'daily':
+            cursor.execute("UPDATE users SET goal_daily = %s WHERE id = %s;", (caloricGoal, u_id))
 
 
         return ({'msg' : 'Success'}, 200)

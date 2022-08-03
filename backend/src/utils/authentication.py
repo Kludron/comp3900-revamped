@@ -126,45 +126,47 @@ def auth_logout() -> tuple:
     pass
 
 def auth_change_password(data, identity, conn) -> tuple:
-    try:
-        data = json.loads(data)
-    except json.decoder.JSONDecodeError:
-        return {'msg':'Invalid parameters'}, 401
-
-    if type(data) is dict:
-        newpwd = data['newpassword']
-        email = identity
-        passhash = hashlib.sha256(str(newpwd + HASH_SALT).encode('utf8')).hexdigest()
-
+    with conn.cursor() as cursor:
         try:
-            cursor.execute(
-                "UPDATE users SET pass_hash = %s WHERE email = %s;", 
-                (passhash, email)
-            )
-            conn.commit()
-        except psycopg2.errors.InFailedSqlTransaction:
-            conn.rollback()
-        return {"msg": "Success"}, 200
+            data = json.loads(data)
+        except json.decoder.JSONDecodeError:
+            return {'msg':'Invalid parameters'}, 401
+
+        if type(data) is dict:
+            newpwd = data['newpassword']
+            email = identity
+            passhash = hashlib.sha256(str(newpwd + HASH_SALT).encode('utf8')).hexdigest()
+
+            try:
+                cursor.execute(
+                    "UPDATE users SET pass_hash = %s WHERE email = %s;", 
+                    (passhash, email)
+                )
+                conn.commit()
+            except psycopg2.errors.InFailedSqlTransaction:
+                conn.rollback()
+            return {"msg": "Success"}, 200
 
 def auth_change_username(data, identity, conn) -> tuple:
-    try:
-        data = json.loads(data)
-    except json.decoder.JSONDecodeError:
-        return {'msg':'Invalid parameters'}, 401
-
-    if type(data) is dict:
-        username = data['newusername']
-        email = identity
-
+    with conn.cursor() as cursor:
         try:
-            cursor.execute(
-                "UPDATE users SET username = %s WHERE email = %s;", 
-                (username, email)
-            )
-            conn.commit()
-        except psycopg2.errors.InFailedSqlTransaction:
-            conn.rollback()
-        return {"msg": "Success"}, 200
+            data = json.loads(data)
+        except json.decoder.JSONDecodeError:
+            return {'msg':'Invalid parameters'}, 401
+
+        if type(data) is dict:
+            username = data['newusername']
+            email = identity
+
+            try:
+                cursor.execute(
+                    "UPDATE users SET username = %s WHERE email = %s;", 
+                    (username, email)
+                )
+                conn.commit()
+            except psycopg2.errors.InFailedSqlTransaction:
+                conn.rollback()
+            return {"msg": "Success"}, 200
 
 def auth_forgot_password(data) -> tuple:
     data = json.loads(data)

@@ -84,6 +84,10 @@ function DietAndMetrics() {
 	const [caloricIntakeDaily, setCalorieIntakeDaily] = React.useState(1900);
 	const [caloricIntakeWeekly, setCalorieIntakeWeekly] = React.useState(12600);
 
+	const [viewGoalWeekly, setViewGoalWeekly] = React.useState(0);
+	const [viewGoalDaily, setViewGoalDaily] = React.useState(0);
+	const [isGoal, setisGoal] = React.useState(false);
+
 	const handleSubmit = async () => {
 		var today = new Date();
 		var dd = String(today.getDate()).padStart(2, '0');
@@ -138,7 +142,10 @@ function DietAndMetrics() {
 		};
 		axios.get("http://localhost:5000/setGoal", headers)
 		.then(response => {
-			console.log(response);
+			console.log(response.data.goals)
+			setViewGoalWeekly(response.data.goals[1]);
+			setViewGoalDaily(response.data.goals[0]);
+			setisGoal(true);
 		}).catch(err => {
 			console.log(err);
 		})
@@ -219,6 +226,9 @@ function DietAndMetrics() {
 			<div className="main-content">
 				<button onClick={previous}>Go Back</button>
 				<h1 className="title">Diet/Metrics</h1>
+				{isGoal && 
+					<h3>Your Current Goal is {viewGoalDaily} Daily and {viewGoalWeekly} Weekly calories</h3>
+				}
 				<h2 className="title">Set Calorie Goal</h2>
 				<div className='calorie_bar'>
 					Daily
