@@ -13,16 +13,17 @@ function ChangeUsernameForm ({ submit }) {
 
 	return (<>
 		<TextField
+			sx={{ width: 300}}
 			margin="normal"
 			required
 			halfwidth="true"
 			label="New Username"
 			onChange={e => setNewUsername(e.target.value)}
 		/>
-		<br />
 		<Button
 			sx={{ mt: 3, mb: 2 }}
 			id='login'
+			size="large"
 			variant="contained" onClick={onSubmit}>Submit
 		</Button>
 	</>)

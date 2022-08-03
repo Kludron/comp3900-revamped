@@ -73,7 +73,7 @@ function Recipe () {
 	return (
 		<div>
 			<div className='recipe_details'>
-				<Button className='btn' variant="contained" onClick={() => goBack()}>←Go Back</Button>
+				<Button className='btn' variant="contained" onClick={() => goBack()}>← Go Back</Button>
 				<div className='upper'>
 					<h2 className='recipe_name'>{recipe.name}</h2>
 					<p className='recipe_description'>Description: {recipe.description}</p>

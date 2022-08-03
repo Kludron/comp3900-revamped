@@ -83,8 +83,8 @@ function Profile() {
   return <div className='profile'>
       <NavBar />
       <div className="main-content">
-      <button onClick={previous}>Go Back</button>
-      <Button variant='outlined' onClick={logout}>Logout</Button>
+      <Button variant='contained' onClick={previous}>← Go Back</Button>
+      <Button variant='contained' onClick={logout}>Logout</Button>
         <div className="header">
           <h1>My Profile</h1>
           <div className='userdata_field'>
@@ -101,8 +101,8 @@ function Profile() {
             <p>{userData.points}</p>
           </div>
           <div className='change-button'>
-            <button onClick={changeUsername}>Change Username</button>
-            <button onClick={changePassword}>Change Password</button>
+            <Button variant='outlined' onClick={changeUsername}>Change Username</Button>
+            <Button variant='outlined' onClick={changePassword}>Change Password</Button>
           </div>
           </div>
         </div>
