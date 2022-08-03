@@ -54,7 +54,7 @@ function Recipe () {
 	}, []);
 
 	return (
-		<body>
+		<div>
 			<Button onClick={() => goBack()}>←Go Back</Button>
 			<div className='recipe_details'>
 				<div className='upper'>
@@ -93,7 +93,7 @@ function Recipe () {
 					</div>
 				</div>
 			</div>
-		</body>
+		</div>
 	);
 }
 
