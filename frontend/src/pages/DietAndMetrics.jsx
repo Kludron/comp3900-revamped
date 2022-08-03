@@ -130,6 +130,18 @@ function DietAndMetrics() {
 				console.log(err);
 			})
 		}
+		let headers = {
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+			}
+		};
+		axios.get("http://localhost:5000/setGoal", headers)
+		.then(response => {
+			console.log(response);
+		}).catch(err => {
+			console.log(err);
+		})
 	}
 
 	const [checked, setChecked] = React.useState(true);
