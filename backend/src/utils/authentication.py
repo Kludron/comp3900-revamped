@@ -288,6 +288,7 @@ def auth_recipe_uploader(email, conn, r_id) -> bool:
         try:
             u_id = cursor.fetchone()[0]
         except (ValueError, TypeError, psycopg2.ProgrammingError):
+            print("Failed pulling u_id")
             return False
         # Check that the user id matches the recipe's uploader id
         query = """
@@ -302,10 +303,8 @@ def auth_recipe_uploader(email, conn, r_id) -> bool:
         try:
             if cursor.fetchone()[0]:
                 return True
-        except (ValueError, TypeError, psycopg2.ProgrammingError):
-            return False
-        finally:
-            # Fail close (fail false)
+        except (TypeError, psycopg2.ProgrammingError):
+            print("Failed fetching recipe")
             return False
 
 def auth_get_profile(email, conn):

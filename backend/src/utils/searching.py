@@ -266,7 +266,7 @@ def grab_ingredients(conn, r_id) -> list or None:
             FROM recipe_ingredients r
             JOIN
                 ingredients i on i.id = r.ingredient
-            WHERE r_id=%s";
+            WHERE r_id=%s
         """, (r_id, ))
         return cursor.fetchall()
 
