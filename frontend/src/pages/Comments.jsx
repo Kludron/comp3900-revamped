@@ -3,7 +3,7 @@ import './Comments.css'
 import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Rating, TextField } from "@mui/material";
+import { Button, Rating, TextField } from "@mui/material";
 
 const token = localStorage.getItem("token");
 
@@ -35,11 +35,11 @@ function Comments () {
   console.log(comments);
   
   return <div className="comments">
-    <button className="comment-go-back" onClick={goBack}>←Go Back</button>
+    <Button variant="contained" className="comment-go-back" onClick={goBack}>← Go Back</Button>
     <CommentBar recipeid={recipeid}/>
     <div>
       {comments.map((comment, key) => (
-        <Comment key={key} username={comment.Username} comment={comment.Content} rating={comment.Rating}/>
+        <Comment key={key} username={comment.Username} comment={comment.Content}/>
         ))}
     </div>
   </div>
@@ -47,7 +47,7 @@ function Comments () {
 
 export default Comments;
 
-function Comment ({username, comment, rating}) {
+function Comment ({username, comment}) {
   return <div className="comment">
     <div className="comment-user">
       <Avatar className="comment-user-icon"/>
@@ -65,11 +65,12 @@ function CommentBar ({ recipeid }) {
   const [rating, setRating] = React.useState(0);
   
   
+  const navigate = useNavigate();
   const submitComment = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('You must create an account to comment and rate the recipe.')
-      return;
+      navigate(`/view/recipe/${recipeid}`);
     }
     var headers = {
       "Content-Type": "application/json",
@@ -100,6 +101,6 @@ function CommentBar ({ recipeid }) {
       value={rating}
       onChange={e => setRating(e.target.value)}
     />
-    <button onClick={submitComment}>Comment</button>
+    <Button variant="outlined" onClick={submitComment}>Comment</Button>
   </div>
 }
