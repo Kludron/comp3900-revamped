@@ -1,6 +1,10 @@
 id,name,description,cuisine,mealtype,servingsize,uploader,instructions
 3,Pear Pasta,a prickly pasta,3,3,2,4,"1. Cut pears
 2. Boil Pasta"
+13,Tea,See what I did there,10,1,1,1,"1. Add water, tea bag and milk into a cup
+2. Put cup in microwave
+3. Heat up in microwave
+4. Throw in the trash because that's not how you make tea"
 2,Fruit Salad,Yummy Yummy,10,4,4,1,"1. Chop Apple
 2. Chop Pear
 3. Chop Banana
@@ -70,4 +74,3 @@ Place a tablespoon of scallop mix in the center of each pasta disc. Brush lightl
 3. Top with Honey
 
 4. Digest"
-13,<script>alert(1)</script>,<script>alert(1)</script>,10,1,1,1,Delete me
