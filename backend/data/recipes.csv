@@ -1,6 +1,17 @@
 id,name,description,cuisine,mealtype,servingsize,uploader,instructions
 3,Pear Pasta,a prickly pasta,3,3,2,4,"1. Cut pears
 2. Boil Pasta"
+5,Apple Crumble,Really yummy apple crumble,2,5,4,1,"1. Put all dry ingredients into a bowl
+2. Mix them until nice
+3. Chop and peel apples
+4. Preheat oven to 200*C
+5. Put stuff in oven
+6. Take out of oven after some time
+7. Let it cool a bit
+8. Digest
+9. After digest
+"
+15,Grilled Chicken,Yumm,12,2,3,1,1. Test
 13,Tea,See what I did there,10,1,1,1,"1. Add water, tea bag and milk into a cup
 2. Put cup in microwave
 3. Heat up in microwave
@@ -35,14 +46,6 @@ Step 4: Return the chicken to the pan
 Pour the blended mixture back into the skillet and add in the cream, sugar and fenugreek (if using). Stir the mixture to combine and then add the chicken to the sauce along with its juices. Simmer the chicken for an additional 8-10 minutes, until the chicken is cooked through and the sauce is thick.
 
 Step 5: Serve the chicken"
-5,Apple Crumble,Really yummy apple crumble,10,5,4,1,"1. Put all dry ingredients into a bowl
-2. Mix them until nice
-3. Chop and peel apples
-4. Preheat oven to 200*C
-5. Put stuff in oven
-6. Take out of oven after some time
-7. Let it cool a bit
-8. Digest"
 6,Turkish Coffee,Very yummy coffee,8,4,1,1,"1. Well. That's about it
 2. Add some cardamon seeds
 3. Chuck it on a stove
