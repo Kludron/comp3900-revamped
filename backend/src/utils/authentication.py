@@ -12,9 +12,7 @@ from flask_jwt_extended import (
     create_access_token
 )
 import psycopg2
-from utils.gmail_auth import * 
-import os
-
+from utils.gmail.gmail_auth import *
 # JWT Authentication Information
 JWT_KEY = os.environ.get("JWT_KEY")
 JWT_EXPIRY = datetime.timedelta(hours=1)
@@ -170,23 +168,19 @@ def auth_change_username(data, identity, conn) -> tuple:
                 conn.rollback()
             return {"msg": "Success"}, 200
 
-def auth_forgot_password(u_id, cursor, conn) -> tuple:
+#CHECK: I moved it to api-server.py
+def auth_forgot_password(data, credentials) -> tuple:
+    data = json.loads(data)
     response = {}
 
-    temp_pwd = 'dslfj1' #placeholder
-    passhash = hashlib.sha256(str(temp_pwd + HASH_SALT).encode('utf8')).hexdigest()
-    #0bda9232c7881aa1771b8fc3b585d9b1c388a4eb1ed80bf0a580a1ebc89db3ab
+    reset_code = "23489" #placeholder
 
-    cursor.execute("UPDATE users SET pass_hash = %s WHERE email = %s;", (passhash, u_id))
-    conn.commit()
- 
-    message = """
-    Subject: Hi there
+    receiver_email = data['email']
+    message = "This is your password reset code " + reset_code
 
-    This is your password temporary password """ + temp_pwd
-
-    sendEmail(u_id, message)
+    sentEmail = sendEmail(receiver_email, message, credentials)
     return {'msg': 'Success'}, 200
+ 
 
 def auth_jwt_refresh(expiry, identity, response) -> tuple:
      # If the user is active within 5 minutes after their token expires, refresh their expiry time.
