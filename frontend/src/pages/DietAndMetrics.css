@@ -1,21 +1,33 @@
-.wrapper {
-    position: fixed;
+.DAM-wrapper {
+    display: flex;
+    position: relative;
 }
 
-.wrapper .main-content .recommend_section .recipe_box .details{
+.h1 {
+    margin-left: 0;
+}
+
+.calorie_bar {
+    font-size: 1.3em;
+}
+
+.calorie_bar Slider {
+    font-size: 2em;
+}
+.DAM-wrapper .main-content .recommend_section .recipe_box .details{
     font-family: "Poppins", sans-serif;
     margin-left: 1.5vw;
 }
 
-.wrapper .main-content .recommend_section .recipe_box .details .rec_name{
+.DAM-wrapper .main-content .recommend_section .recipe_box .details .rec_name{
     font-size: 17pt;
 }
 
-.wrapper .main-content .recommend_section .recipe_box .details > p {
+.DAM-wrapper .main-content .recommend_section .recipe_box .details > p {
     color: grey;
 }
 
-.wrapper .main-content .recommend_section .recipe_box .details .see_recipe_button {
+.DAM-wrapper .main-content .recommend_section .recipe_box .details .see_recipe_button {
     float: right;
     margin-right: 8px;
     top: -8px
@@ -25,7 +37,7 @@
     box-shadow: 0px 15px grey;
 }
 
-.wrapper .main-content .recommend_section .recipe_box{
+.DAM-wrapper .main-content .recommend_section .recipe_box{
     box-shadow: 3px 3px 5px rgb(212, 212, 212);
     border: 1px solid lightgray;
     border-radius: 5px;
@@ -35,7 +47,7 @@
     margin: 2px;
 }
 
-.wrapper .main-content .recommend_section {
+.DAM-wrapper .main-content .recommend_section {
     display: flex;
     justify-content: space-around;
     align-content: center;
@@ -50,9 +62,4 @@
     border-radius: 30px;
     background-color: lightgray;
     border: 0 none;
-}
-
-.main-content .intakeoverview_section {
-    background-color: #2196f3;
-    padding: 1vw;
 }

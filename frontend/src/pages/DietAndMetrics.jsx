@@ -10,6 +10,7 @@ import './DietAndMetrics.css';
 import Switch from '@mui/material/Switch';
 import './Dashboard.css';
 import profile_background from '../img/profile-background.jpeg';
+import SaveIcon from '@mui/icons-material/Save';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
@@ -235,104 +236,104 @@ function DietAndMetrics() {
 		intakeOverview();
 	}, []);
 
-	return <div className="wrapper">
-			<img className='profile-background' src={profile_background} alt='profile background'></img>
-			<NavBar/>
-			<div className="main-content">
-				<Button className="btn" variant="contained" onClick={previous}>← Go Back</Button>
-				<h1 className="title">Diet/Metrics</h1>
-				{isGoal && 
-					<h3>Your Current Goal is {viewGoalDaily} Daily and {viewGoalWeekly} Weekly calories</h3>
+	return <div className="DAM-wrapper">
+		<img className='profile-background' src={profile_background} alt='profile background'></img>
+		<NavBar/>
+		<div className="main-content">
+			<Button className="go-back" variant='contained' onClick={previous}>← Go Back</Button>
+			<h1 className="title">Diet/Metrics</h1>
+			<h2 className="title">Set Calorie Goal</h2>
+			<div className='calorie_bar'>
+				Daily
+				<Switch
+					checked={checked}
+					onChange={handleSwitchChange}
+					inputProps={{ 'aria-label': 'controlled' }}
+					color="secondary"
+				></Switch> Weekly
+				{ !isWeekly && 
+					<Box sx={{ width: 500 }}>
+						<Typography>
+							Daily Caloric Intake: {caloricIntakeDaily}cal
+						</Typography>
+						<Slider
+							aria-label="Calorie Intake per Day"
+							defaultValue={1800}
+							getAriaValueText={valuetext}
+							step={50}
+							min={1400}
+							max={2200}
+							valueLabelDisplay="auto"
+							marks={marksDaily}
+							color="secondary"
+							onChange={handleChangeDaily}
+						/>
+						<Button 
+							sx={{ mt: 3, mb: 2 }}
+							variant='contained'
+							endIcon={<SaveIcon />}
+							onClick={handleSubmit}>Save</Button>
+					</Box>
 				}
-				<h2 className="title">Set Calorie Goal</h2>
-				<div className='calorie_bar'>
-					Daily
-					<Switch
-						checked={checked}
-						onChange={handleSwitchChange}
-						inputProps={{ 'aria-label': 'controlled' }}
-						color="secondary"
-					></Switch> Weekly
-					{ !isWeekly && 
-						<Box sx={{ width: 500 }}>
-							<Typography>
-								Daily Caloric Intake: {caloricIntakeDaily}cal
-							</Typography>
-							<Slider
-								aria-label="Calorie Intake per Day"
-								defaultValue={1800}
-								getAriaValueText={valuetext}
-								step={50}
-								min={1400}
-								max={2200}
-								valueLabelDisplay="auto"
-								marks={marksDaily}
-								color="secondary"
-								onChange={handleChangeDaily}
-							/>
-							<Button 
-								sx={{ mt: 3, mb: 2 }}
-								variant='outlined'
-								onClick={handleSubmit}>Save</Button>
-						</Box>
-					}
-					{ isWeekly && 
-						<Box sx={{ width: 500 }}>
-							<Typography>
-								Weekly Caloric Intake: {caloricIntakeWeekly}cal
-							</Typography>
-							<Slider
-								aria-label="Calorie Intake per Day"
-								defaultValue={12600}
-								getAriaValueText={valuetext}
-								step={100}
-								min={9800}
-								max={15400}
-								valueLabelDisplay="auto"
-								marks={marksWeekly}
-								color="secondary"
-								onChange={handleChangeWeekly}
-							/>
-							<Button 
-								sx={{ mt: 3, mb: 2 }}
-								variant='outlined'
-								onClick={handleSubmit}>Save</Button>
-						</Box>
-					}
-				</div>
-				<hr className="break"></hr>
-				<h2>Recommendations</h2>
-				<div className='recommend_section'>
-					{recommend.map((recipe,key) => {
-						return (
-            <div className='recipe_box' key={key}>
-              <div className="details">
-                <h3 className="rec_name">{recipe.name}</h3>
-                <p>Cuisine: {recipe.cuisine}</p>
-                <p>Description: {recipe.description}</p>
-                <p>Mealtype: {recipe.mealtype}</p>
-                <p>Serves: {recipe.servingsize}</p>
-                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
-              </div>
-            </div>
-          )})}
-				</div>
-				<hr className="break"></hr>
-				<div className='intakeoverview_section'>
-					<h2>Intake Overview</h2>
-					<div className="intake">
-						<p>Energy: {intake.energy}kJ</p>
-						<p>Protein: {intake.protein}g</p>
-						<p>Fat: {intake.fat}g</p>
-						<p>Fiber {intake.fiber}g</p>
-						<p>Sugar: {intake.sugars}g</p>
-						<p>Carbohydrates: {intake.carbohydrates}g</p>
-						<p>Calcium: {intake.calcium}mg</p>
-						<p>Magnesium: {intake.magnesium}mg</p>
+				{ isWeekly && 
+					<Box sx={{ width: 500 }}>
+						<Typography>
+							Weekly Caloric Intake: {caloricIntakeWeekly}cal
+						</Typography>
+						<Slider
+							aria-label="Calorie Intake per Day"
+							defaultValue={12600}
+							getAriaValueText={valuetext}
+							step={100}
+							min={9800}
+							max={15400}
+							valueLabelDisplay="auto"
+							marks={marksWeekly}
+							color="secondary"
+							onChange={handleChangeWeekly}
+						/>
+						<Button 
+							sx={{ mt: 3, mb: 2 }}
+							variant='contained'
+							endIcon={<SaveIcon />}
+							onClick={handleSubmit}>Save</Button>
+							
+					</Box>
+				}
+			</div>
+			<hr className="break"></hr>
+			<h2>Recommendations</h2>
+			<div className='recommend_section'>
+				{recommend.map((recipe,key) => {
+					return (
+					<div className='recipe_box' key={key}>
+						<div className="details">
+							<h3 className="rec_name">{recipe.name}</h3>
+							<p>Cuisine: {recipe.cuisine}</p>
+							<p>Description: {recipe.description}</p>
+							<p>Mealtype: {recipe.mealtype}</p>
+							<p>Serves: {recipe.servingsize}</p>
+							<Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+						</div>
+					</div>
+				)})}
+			</div>
+					<hr className="break"></hr>
+					<div className='intakeoverview_section'>
+						<h2>Intake Overview</h2>
+						<div className="intake">
+							<p>Energy: {intake.energy}kJ</p>
+							<p>Protein: {intake.protein}g</p>
+							<p>Fat: {intake.fat}g</p>
+							<p>Fiber {intake.fiber}g</p>
+							<p>Sugar: {intake.sugars}g</p>
+							<p>Carbohydrates: {intake.carbohydrates}g</p>
+							<p>Calcium: {intake.calcium}mg</p>
+							<p>Magnesium: {intake.magnesium}mg</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 }
 
 export default DietAndMetrics;
