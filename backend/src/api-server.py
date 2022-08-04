@@ -176,7 +176,7 @@ def favourite():
 def dashboard():
     response = {}
     if request.method == 'GET':
-        u_id = getUserId()
+        u_id = auth_get_uid(get_jwt_identity(), conn)
 
         # Grab Bookmarks
         cursor.execute("""
@@ -198,7 +198,7 @@ def dashboard():
         # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(request.get_data())
         if type(data) is dict:
-            u_id = getUserId()
+            u_id = auth_get_uid(get_jwt_identity(), conn)
             r_id = data['id']
             bookmarks_id = data['bookmarkedRecipe']
             if r_id in bookmarks_id: 
