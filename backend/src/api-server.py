@@ -1,3 +1,4 @@
+from getpass import getuser
 from hashlib import sha256
 import psycopg2
 import sys
@@ -168,6 +169,60 @@ def favourite():
         response["isSuccess"] = False
         response["msg"] = "The data provided is not valid"
     return response
+
+@api.route('/dashboard', methods=['GET', 'PUT'])
+@jwt_required()
+@cross_origin()
+def dashboard():
+    response = {}
+    if request.method == 'GET':
+        u_id = getUserId()
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r_id
+            FROM user_bookmarks
+            WHERE u_id = %s;
+        """, (u_id,))
+        bookmarks = cursor.fetchall()
+        response = {
+            'Bookmarks' : []
+        }
+
+        for id in bookmarks:
+            response["Bookmarks"].append(id[0])
+
+        return response, 200
+
+    elif request.method == 'PUT':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            u_id = getUserId()
+            r_id = data['id']
+            bookmarks_id = data['bookmarkedRecipe']
+            if r_id in bookmarks_id: 
+                cursor.execute("""
+                    DELETE FROM user_bookmarks
+                    WHERE u_id = %s
+                    AND r_id = %s
+                """, (u_id, r_id))
+                bookmarks_id.remove(r_id)
+            elif r_id not in bookmarks_id: 
+                cursor.execute("""
+                    INSERT INTO user_bookmarks (u_id, r_id)
+                    VALUES (%s, %s);
+                """, (u_id, r_id))
+                bookmarks_id.append(r_id)
+            else: 
+                response["msg"] = "Error with recipe id and bookmarks"
+                return response, 400
+
+            response['Bookmarks'] = bookmarks_id
+            return response, 200
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
+    return response, 400
 ###############################################
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application

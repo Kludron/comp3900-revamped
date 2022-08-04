@@ -13,16 +13,22 @@ import { paperClasses } from '@mui/material';
 function Dashboard () {
 
   const [recipes, setRecipes] = useState([]);
+<<<<<<< HEAD
   const [favourite, setfavourite] = useState(false);
   const [bookmarkStar, setbookmarkStar] = useState('☆');
   const [userData, setuserData] = useState([]);
 
+=======
+  const [bookmarkedRecipe, setbookmarkedRecipe] = useState([])
+  
+>>>>>>> 435a4d1b (bookmarked is working now)
   //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
   //React Navigation Function
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   //Loads user profile details
   const loadProfile = async () => {
     const headers = {
@@ -35,6 +41,20 @@ function Dashboard () {
       points: response.data.Points,
     });
   };
+=======
+  const loadDashboard = async () => {
+    var headers = {
+      "Authorization": `Bearer ${token}`
+    }
+    const response = await axios.get('http://localhost:5000/dashboard', {headers:headers});
+    setbookmarkedRecipe(response.data.Bookmarks);
+    console.log(bookmarkedRecipe)
+  };
+  
+  React.useEffect(() => {
+    loadDashboard();
+  }, [])
+>>>>>>> 435a4d1b (bookmarked is working now)
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid, key) => {
@@ -57,6 +77,7 @@ function Dashboard () {
 
   // Bookmark function for recipes
   const handleBookmark = async (id) => {
+<<<<<<< HEAD
     console.log(id);
     let headers = {
       "Content-Type": "application/json",
@@ -90,6 +111,31 @@ function Dashboard () {
       setbookmarkStar('☆');
       console.log('unbookmarked'); //As above
     }*/
+=======
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+    var body = {
+      id, 
+      bookmarkedRecipe
+    };
+    axios.put('http://localhost:5000/dashboard', body, { headers: headers })
+    .then((response) => {
+      console.log(response)
+      setbookmarkedRecipe(response.data.Bookmarks)
+    }).catch((error) => {
+      alert(error)
+    });
+  };
+
+  const showBookmark = (id) => {
+    if (bookmarkedRecipe.includes(id)) {
+      return '★'
+    } else {
+      return '☆'
+    }
+>>>>>>> 435a4d1b (bookmarked is working now)
   };
 
   const handleClick = () => {
@@ -162,6 +208,7 @@ function Dashboard () {
             });
           }}
         />
+<<<<<<< HEAD
       </div>
       <hr className="break"></hr>
       <h3 className="search_results">Search Results:</h3>
@@ -173,6 +220,15 @@ function Dashboard () {
               <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
               <div className="details">
                 <h3 className="rec_name">{recipe.name}</h3>
+=======
+        <div className='list_recipes'>
+          {recipes.map((recipe, key) => {
+            return (
+              <div className='recipe_box' key={key}>
+                <button onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</button>
+                <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
+                <h3>Name: {recipe.name}</h3>
+>>>>>>> 435a4d1b (bookmarked is working now)
                 <p>Cuisine: {recipe.cuisine}</p>
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>

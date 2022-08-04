@@ -32,7 +32,7 @@ function Favourite() {
       <div>
         {bookmarks.map((recipe, key) => {
           return (
-            <BookmarkedRecipe recipe={recipe} />
+            <BookmarkedRecipe key={key} recipe={recipe} />
           )
         })}
       </div>
