@@ -260,7 +260,7 @@ def search_detailed(conn, r_id) -> tuple:
 
         return response, 200
 
-def grab_ingredients(conn, r_id) -> list or None:
+def grab_ingredients(conn, r_id) -> list:
     with conn.cursor() as cursor:
         cursor.execute("""
             SELECT i.name,r.quantity,r.grams,r.millilitres 
@@ -269,7 +269,9 @@ def grab_ingredients(conn, r_id) -> list or None:
                 ingredients i on i.id = r.ingredient
             WHERE r_id=%s
         """, (r_id, ))
-        return cursor.fetchall()
+        results = cursor.fetchall()
+        print(results)
+        return results
 
 def search_users_recipes(email, conn) -> tuple:
     with conn.cursor() as cursor:

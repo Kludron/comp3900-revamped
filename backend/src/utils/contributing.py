@@ -135,22 +135,29 @@ def contrib_edit_recipe(data, conn, r_id):
             """
 
             query = ""
+            changes = []
             args = []
             if any([name,description,servingsize,instructions]):
                 query += "UPDATE recipes SET "
             
+            if name:
+                changes.append("name=%s")
+                args.append(name)
             if description:
+                changes.append("description=%s")
                 args.append(description)
             if servingsize:
-                query += " servingsize=%s "
+                changes.append("servingsize=%s")
                 args.append(servingsize)
             if instructions:
-                query += " instructions=%s "
+                changes.append("instructions=%s")
                 args.append(instructions)
 
             if any([name,description,servingsize,instructions]):
+                query += ','.join(changes)
                 query += " WHERE id=%s"
                 args.append(r_id)
+                print(query, tuple(args))
                 try:
                     cursor.execute(query, tuple(args))
                 except Exception as e:
@@ -203,7 +210,8 @@ def contrib_edit_recipe(data, conn, r_id):
                     ))
 
                 if not prevIngredients:
-                    return {'msg' : 'Could not load previous ingredients in recipe'}, 400 # [TODO: Maybe change this error code?]
+                    pass
+                    # return {'msg' : 'Could not load previous ingredients in recipe'}, 400 # [TODO: Maybe change this error code?]
 
                 # Delete old ingredients
                 # Add new ingredients
@@ -245,6 +253,7 @@ def contrib_edit_recipe(data, conn, r_id):
                             except psycopg2.errors.InFailedSqlTransaction:
                                 conn.rollback()
                         except (ValueError, KeyError) as e:
+
                             return {'msg' : 'Invalid request parameters (ingredients)'}, 400
             return {'msg' : 'Successfully updated'}, 200
         except Exception as e:
