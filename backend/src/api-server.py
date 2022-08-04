@@ -202,20 +202,28 @@ def dashboard():
             r_id = data['id']
             bookmarks_id = data['bookmarkedRecipe']
             if r_id in bookmarks_id: 
-                cursor.execute("""
-                    DELETE FROM user_bookmarks
-                    WHERE u_id = %s
-                    AND r_id = %s
-                """, (u_id, r_id))
-                bookmarks_id.remove(r_id)
-                conn.commit()
+                try:
+                    cursor.execute("""
+                        DELETE FROM user_bookmarks
+                        WHERE u_id = %s
+                        AND r_id = %s
+                    """, (u_id, r_id))
+                    bookmarks_id.remove(r_id)
+                except Exception:
+                    conn.rollback()
+                else:
+                    conn.commit()
             elif r_id not in bookmarks_id: 
-                cursor.execute("""
-                    INSERT INTO user_bookmarks (u_id, r_id)
-                    VALUES (%s, %s);
-                """, (u_id, r_id))
-                bookmarks_id.append(r_id)
-                conn.commit()
+                try:
+                    cursor.execute("""
+                        INSERT INTO user_bookmarks (u_id, r_id)
+                        VALUES (%s, %s);
+                    """, (u_id, r_id))
+                    bookmarks_id.append(r_id)
+                except Exception:
+                    conn.rollback()
+                else:
+                    conn.commit()
             else: 
                 response["msg"] = "Error with recipe id and bookmarks"
                 return response, 400
