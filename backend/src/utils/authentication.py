@@ -168,8 +168,7 @@ def auth_change_username(data, identity, conn) -> tuple:
                 conn.rollback()
             return {"msg": "Success"}, 200
 
-#CHECK: I moved it to api-server.py
-def auth_forgot_password(data, credentials) -> tuple:
+def auth_forgot_password(data, credentials, cursor, conn) -> tuple:
     data = json.loads(data)
     response = {}
 
@@ -178,6 +177,17 @@ def auth_forgot_password(data, credentials) -> tuple:
     receiver_email = data['email']
     message = "This is your password reset code " + reset_code
 
+    passhash = hashlib.sha256(str(reset_code + HASH_SALT).encode('utf8')).hexdigest()
+
+    try:
+        cursor.execute(
+            "UPDATE users SET pass_hash = %s WHERE email = %s;", 
+            (passhash, receiver_email)
+        )
+        conn.commit()
+    except psycopg2.errors.InFailedSqlTransaction:
+        conn.rollback()
+        
     sentEmail = sendEmail(receiver_email, message, credentials)
     return {'msg': 'Success'}, 200
  
