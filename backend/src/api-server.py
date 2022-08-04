@@ -539,7 +539,9 @@ def overview():
     return response, 200
 
 def find_imbalance(u_id):
-    check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), ('iron', 12), ('magnesium', 400)]
+    check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), 
+                        ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), 
+                        ('iron', 12), ('magnesium', 400)]
 
     nutrient_diff = 0
     recommended_nutrient = ""
