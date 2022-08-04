@@ -3,5 +3,5 @@ id,username,pass_hash,email,points,goal_daily,goal_weekly
 4,ed,678d3dd5f95a9451c87c59103f74b31f6e9e8ff5529dd6e4af9cd18a9931f153,email@email,0,1900,12600
 7,nathan.quan5@gmail.com,0bda9232c7881aa1771b8fc3b585d9b1c388a4eb1ed80bf0a580a1ebc89db3ab,nathan.quan5@gmail.com,0,0,0
 8,random,4bf5d2b76591e18921165db485e6e06f8a7a6c73b8b4573a31b0fe1f1428cb59,random@random.com,0,0,0
+1,Liam,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0,1900,12600
 5,Tianwei Mo,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0,0,0
-1,Liam,bb5f71fef7c7d5b16ad1f1fcd1b3756da183102589ba8dbc355dd854fd0ccb2d,sample@sample.com,0,1900,12600
