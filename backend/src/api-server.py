@@ -143,6 +143,7 @@ def favourite():
             );
         """, (u_id,))
         bookmarks = cursor.fetchall()
+        print(bookmarks)
         response = {
             'Bookmarks' : []
         }
@@ -161,8 +162,8 @@ def favourite():
         return response, 200
 
     elif request.method == 'PUT':
-        # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(request.get_data())
+        print(data)
         if type(data) is dict:
             email = get_jwt_identity()
             
@@ -176,7 +177,7 @@ def favourite():
 def dashboard():
     response = {}
     if request.method == 'GET':
-        u_id = getUserId()
+        u_id = auth_get_uid(get_jwt_identity(), conn)
 
         # Grab Bookmarks
         cursor.execute("""
@@ -195,25 +196,34 @@ def dashboard():
         return response, 200
 
     elif request.method == 'PUT':
-        # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(request.get_data())
         if type(data) is dict:
-            u_id = getUserId()
+            u_id = auth_get_uid(get_jwt_identity(), conn)
             r_id = data['id']
             bookmarks_id = data['bookmarkedRecipe']
             if r_id in bookmarks_id: 
-                cursor.execute("""
-                    DELETE FROM user_bookmarks
-                    WHERE u_id = %s
-                    AND r_id = %s
-                """, (u_id, r_id))
-                bookmarks_id.remove(r_id)
+                try:
+                    cursor.execute("""
+                        DELETE FROM user_bookmarks
+                        WHERE u_id = %s
+                        AND r_id = %s
+                    """, (u_id, r_id))
+                    bookmarks_id.remove(r_id)
+                except Exception:
+                    conn.rollback()
+                else:
+                    conn.commit()
             elif r_id not in bookmarks_id: 
-                cursor.execute("""
-                    INSERT INTO user_bookmarks (u_id, r_id)
-                    VALUES (%s, %s);
-                """, (u_id, r_id))
-                bookmarks_id.append(r_id)
+                try:
+                    cursor.execute("""
+                        INSERT INTO user_bookmarks (u_id, r_id)
+                        VALUES (%s, %s);
+                    """, (u_id, r_id))
+                    bookmarks_id.append(r_id)
+                except Exception:
+                    conn.rollback()
+                else:
+                    conn.commit()
             else: 
                 response["msg"] = "Error with recipe id and bookmarks"
                 return response, 400
@@ -254,11 +264,10 @@ def reviews(id):
             return {"msg" : "Recipe not found"}, 404
 
         cursor.execute("""
-            SELECT u.username, c.description, rr.rating
-            FROM users u, comments c, recipe_rating rr
+            SELECT u.username, c.description
+            FROM users u, comments c
             WHERE c.r_id = %s
-            AND rr.r_id = c.r_id
-            AND u.id = rr.u_id;
+            AND u.id = c.u_id;
         """, (id,))
         response = {
             "Comments":list()
@@ -266,26 +275,52 @@ def reviews(id):
 
         comments = cursor.fetchall()
         for comment in comments:
-            username, description, rating = comment
+            username, description = comment
             response["Comments"].append({
                 "Username":username,
                 "Content":description,
-                "Rating":rating
             })
         return response, 200
 
+#     # [TODO]: Replace the default '3' with a grab from the rating table
+#     # Consider restructuring this section
+#     if request.method == 'GET':
+#         if not str(id).isdigit():
+#             return {"msg" : "Recipe not found"}, 404
 
-        comments = cursor.fetchall()
-        for comment in comments:
-            username, description, rating = comment
-            response["Comments"].append({
-                "Username":username,
-                "Content":description,
-                "Rating":rating
-            })
-        return response, 200
-    elif request.method == 'POST':
-        return {'msg' : 'This is not implemented yet'}, 404
+#         cursor.execute("""
+#             SELECT u.username, c.description, rr.rating
+#             FROM users u, comments c, recipe_rating rr
+#             WHERE c.r_id = %s
+#             AND rr.r_id = c.r_id
+#             AND u.id = rr.u_id;
+#         """, (id,))
+#         response = {
+#             "Comments":list()
+#         }
+
+#         comments = cursor.fetchall()
+#         for comment in comments:
+#             username, description, rating = comment
+#             response["Comments"].append({
+#                 "Username":username,
+#                 "Content":description,
+#                 "Rating":rating
+#             })
+#         return response, 200
+
+
+#         comments = cursor.fetchall()
+#         for comment in comments:
+#             username, description, rating = comment
+#             response["Comments"].append({
+#                 "Username":username,
+#                 "Content":description,
+#                 "Rating":rating
+#             })
+#         return response, 200
+#     elif request.method == 'POST':
+#         return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
