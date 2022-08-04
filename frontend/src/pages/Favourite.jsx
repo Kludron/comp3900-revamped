@@ -9,17 +9,22 @@ import Button from '@mui/material/Button';
 
 /* Favourite Recipes Page */
 function Favourite() {
+
+  //Get token from local storage
   const token = localStorage.getItem('token');
+
+  //Store state variable
   const [bookmarks, setBookmarks] = useState([]);
 
+  //Sends API request to load Bookmarks
   const loadBookmarks = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
     }
     const response = await axios.get('http://localhost:5000/favourite', {headers:headers});
     console.log(response.data.Bookmarks);
-      setBookmarks(response.data.Bookmarks);
-  }
+    setBookmarks(response.data.Bookmarks);
+  };
 
   useEffect(() => {
     loadBookmarks();
@@ -43,6 +48,7 @@ function Favourite() {
 
 export default Favourite;
 
+/* Bookmark Function */
 function BookmarkedRecipe(r) {
   console.log(r.recipe)
   const recipe = r.recipe
@@ -59,7 +65,7 @@ function BookmarkedRecipe(r) {
     if (bookmarkStar === '☆' && favourite === false) { //Bookmarked
       setfavourite(true);
       setbookmarkStar('★');
-      console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
+      console.log('bookmarked');
     } else { //Un-bookmarked
       setfavourite(false);
       setbookmarkStar('☆');

@@ -5,11 +5,13 @@ import TextField from '@mui/material/TextField';
 /* Forgot Password Form */
 function ForgotPasswordForm({submit}) {
 
+  //Submits the parameters below through ForgotPasswordForm
 	const onSubmit = () => {
     submit(email);
   }
-	const [email, setEmail] = React.useState('');
 
+  //Store state variables
+	const [email, setEmail] = React.useState('');
 
 	return (<>
     <TextField

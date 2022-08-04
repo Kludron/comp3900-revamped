@@ -11,10 +11,11 @@ import './ForgotPassword.css';
 /* Forgot Password Page */
 function ForgotPassword () {
 
+	//React navigation functions
 	const navigate = useNavigate();
 	const goback = () => {
 		navigate('/login');
-	}
+	};
 
 	return(<>
 	<div>

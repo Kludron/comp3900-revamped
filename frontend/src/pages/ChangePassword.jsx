@@ -8,14 +8,16 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import './ChangeUsername.css';
 
+/* Change Password Page */
 function ChangePassword () {
 
+	//Navigate functions
 	const navigate = useNavigate();
-
 	const previous = () => {
 		navigate('/profile');
 	}
 	
+	//Checks password and re-type password fields are the same, returns true if same.
 	const checkPasswords = (password, repassword) => {
 		if(password !== repassword){
 			return alert("Passwords do not match, please try again");

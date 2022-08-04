@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 /* Recipe Page */
 function Recipe () {
 
+	//Store state variables
 	const [recipe, setRecipe] = useState({});
 	const [ingredients, setIngredients] = useState([]);
 
@@ -52,23 +53,6 @@ function Recipe () {
 	React.useEffect(() => {
 		getRecipe();
 	}, []);
-
-	/*
-	<li>Energy: {i.Energy} kJ</li>
-									<li>Carbohydrates: {i.Carbohydrates}g</li>
-									<li>Fat: {i.Fat}g</li>
-									<li>Fibre: {i.Fibre}g</li>
-									<li>Protein: {i.Protein}g</li>
-									<li>Sugars: {i.Sugars}g</li>
-									<li>Calcium: {i.Calcium}mg</li>
-									<li>Iron: {i.Iron}mg</li>
-									<li>Magnesium: {i.Magnesium}mg</li>
-									<li>Manganese: {i.Manganese}mg</li>
-									<li>Phosphorus: {i.Phosphorus}mg</li>
-									<li>Grams: {i.Grams}g</li>
-									<li>Quantity: {i.Quantity}</li>
-									<li>Millilitres: {i.Millilitres}mL</li>
-	*/
 
 	return (
 		<div>

@@ -5,8 +5,11 @@ import TextField from '@mui/material/TextField';
 
 /* Change Username Form */
 function ChangeUsernameForm ({ submit }) {
+	
+	//Store state variable
 	const [newUsername, setNewUsername] = React.useState('');
 	
+	//Submits the parameters below through ChangeUsernameForm
 	const onSubmit = () => {
 		submit(newUsername);
 	}

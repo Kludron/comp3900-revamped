@@ -10,16 +10,15 @@ import './Register.css';
 
 /* Register Page */
 function Register () {
+
   //Clear localstorage
   localStorage.clear();
 
-  //React navigate function
+  //React navigate functions
   const navigate = useNavigate();
-
-  //Navigate to Login page
   const login = () => {
     navigate('/login');
-  }
+  };
   
   //Checks the password and re-type password fields are the same before registering.
   const checkPasswords = (password, repassword) => {

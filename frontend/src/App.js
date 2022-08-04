@@ -22,6 +22,7 @@ import Recipe from './pages/Recipe';
 import CreateRecipe from './pages/CreateRecipe';
 import EditRecipe from './pages/EditRecipe';
 
+/* App.js Routes */
 function App() {
   return (
     <>

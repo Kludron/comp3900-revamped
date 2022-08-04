@@ -14,11 +14,11 @@ import LoginImg from '../img/login.jpg';
 /* Login Page */
 function Login () {
 
+  //Store state variable
   const [authenticated, setAuthenticated] = useState(false);
 
   //React navigate functions
   const navigate = useNavigate();
-  // Navigate to register page
   const register = () => {
     navigate('/register');
   }

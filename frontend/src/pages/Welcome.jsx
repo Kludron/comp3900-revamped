@@ -1,26 +1,28 @@
-import { Link, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import './Welcome.css';
 import Logo from '../img/logo.jpg';
 import Landing from '../img/landing.jfif';
 import Button from '@mui/material/Button';
 import Shape from '../img/shape.png';
+
 /* Welcome Page */
 function Welcome () {
 
-  const navigate = useNavigate();
+  //Clear localstorage
   localStorage.clear();
 
+  //React navigation functions
+  const navigate = useNavigate();
   const Guest = () => {
     navigate('/dashboard');
-  }
+  };
   const signup = () => {
     navigate('/login');
-  }
+  };
   const register = () => {
     navigate('/register');
-  }
+  };
 
   return <>
   <body>
@@ -46,7 +48,6 @@ function Welcome () {
             </div>
           </div>
         </header>
-
         <div className="showcase-area">
           <div className="container">
             <div className="left">
@@ -61,7 +62,6 @@ function Welcome () {
                 <Button variant="contained" onClick={Guest}>Continue As Guest</Button>
               </div>
             </div>
-
             <div className="right">
               <img src={Landing} alt="Landing" className="food" />
             </div>

@@ -10,14 +10,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { Chip } from '@mui/material';
 
+//Gets token from local storage
 const token = localStorage.getItem('token');
+
 /* Profile Page */
 function Profile() {
 
+  //Store state variables
   const [userData, setuserData] = useState({});
   const [usersAllergens, setUsersAllergens] = useState([]);
   const [allAllergens, setAllAllergens] = useState([]);
-  //Gets Auth Token
 
   //React navigate functions
   const navigate = useNavigate();
@@ -55,7 +57,6 @@ function Profile() {
     loadProfile();
   }, []);
 
-  console.log(userData);
   return <div className='profile'>
       <img className='profile-background' src={profile_background} alt='profile background'></img>
       <NavBar/>

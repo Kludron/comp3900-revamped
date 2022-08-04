@@ -5,14 +5,16 @@ import TextField from '@mui/material/TextField';
 
 /* Change Password Form */
 function ChangePasswordForm ({ submit }) {
+
+	//Store state variables
 	const [newpassword, setNewPassword] = React.useState('');
 	const [repassword, setRePassword] = React.useState('');
 
+	//Submits the parameters below through ChangePasswordForm
 	const onSubmit = () => {
 		submit(newpassword, repassword);
 	}
 
-    /*Possible indentation error*/
 		return (<>
 			<TextField
 				sx={{ width: 350 }}

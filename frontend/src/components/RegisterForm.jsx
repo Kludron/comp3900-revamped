@@ -5,11 +5,14 @@ import { TextField } from '@mui/material';
 
 /* Register Form Component */
 function RegisterForm ({ submit }) {
+
+  //Store state variables
   const [email, setEmail] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
 
+  //Submits the parameters below through RegisterForm
   const onSubmit = () => {
     submit(email, username, password, repassword);
   }

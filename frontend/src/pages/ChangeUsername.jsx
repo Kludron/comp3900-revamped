@@ -11,7 +11,7 @@ import './ChangeUsername.css';
 /* Change Username Page */
 function ChangeUsername () {
 
-	//React navigation page
+	//React navigation function
 	const navigate = useNavigate();
 	const previous = () => {
 		navigate('/profile');

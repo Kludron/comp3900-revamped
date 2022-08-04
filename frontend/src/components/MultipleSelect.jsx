@@ -11,6 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
 import '../pages/Dashboard.css';
 
+//Used to style the form elements
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -22,6 +23,7 @@ const MenuProps = {
   },
 };
 
+//Style mealtype field
 function getStylesMealtype(name, mealtypeName, theme) {
   return {
     fontWeight:
@@ -31,6 +33,7 @@ function getStylesMealtype(name, mealtypeName, theme) {
   };
 }
 
+//Style Cuisine Field
 function getStylesCuisine(name, cuisineName, theme) {
   return {
     fontWeight:
@@ -47,6 +50,8 @@ function getStylesCuisine(name, cuisineName, theme) {
 export default function MultipleSelect({ submit }) {
 
   const theme = useTheme();
+
+  //Store state variables
 	const [mealtypeName, setmealtypes] = React.useState([]);
   const [cuisineName, setCuisines] = React.useState([]);
   const [ingredientsName, setIngredients] = React.useState([]);
@@ -55,10 +60,12 @@ export default function MultipleSelect({ submit }) {
   const [ingredientsList, setIngredientsList] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
 
+  //Submits the parameters below through MultipleSelect
   const onSubmit = () => {
     submit(mealtypeName, cuisineName, ingredientsName, searchQuery);
   }
 
+  //Handle change of mealtype field
   const handleChangeMealtype = (event) => {
     const {
       target: { value },
@@ -68,6 +75,7 @@ export default function MultipleSelect({ submit }) {
     );
   };
 
+  //Handle change of Cuisine field
   const handleChangeCuisine = (event) => {
     const {
       target: { value },
@@ -77,6 +85,7 @@ export default function MultipleSelect({ submit }) {
     );
   };
 
+  //Handle change of Ingredients field
   const handleChangeIngredients = (event, value) => {
     setIngredients(value);
     console.log(value);
@@ -92,10 +101,12 @@ export default function MultipleSelect({ submit }) {
     })
   };
 
+  //Runs once on initial page loading
   React.useEffect(() => {
     getCuisines();
   }, []);
   
+  //Obtains the list of options of ingredients (~1000 options) and grouped by first letter
   const options = ingredientsList.map((option) => {
     //console.log(option.name);
 		const firstLetter = option.name.Name[0].toUpperCase();

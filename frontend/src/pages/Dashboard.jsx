@@ -12,9 +12,9 @@ import { paperClasses } from '@mui/material';
 /* Dashboard Page */
 function Dashboard () {
 
+  //Store state variables
   const [recipes, setRecipes] = useState([]);
   const [userData, setuserData] = useState([]);
-
   const [bookmarkedRecipe, setbookmarkedRecipe] = useState([])
   
   //Gets user's authorisation token
@@ -22,6 +22,10 @@ function Dashboard () {
 
   //React Navigation Function
   const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
+  }
 
   //Loads user profile details
   const loadProfile = async () => {
@@ -35,6 +39,8 @@ function Dashboard () {
       points: response.data.Points,
     });
   };
+
+  //Load bookmarked recipes for a user
   const loadDashboard = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
@@ -44,6 +50,7 @@ function Dashboard () {
     console.log(bookmarkedRecipe)
   };
   
+  //Run loadDashboard on initial page load
   React.useEffect(() => {
     loadDashboard();
   }, [])
@@ -60,11 +67,6 @@ function Dashboard () {
     existing.push(recent);
     localStorage.setItem('recent', JSON.stringify(existing));
     navigate(`/view/recipe/${recipeid}`);
-  }
-
-  const logout = () => {
-    localStorage.clear();
-    navigate('/');
   }
 
   // Bookmark function for recipes
@@ -86,6 +88,7 @@ function Dashboard () {
     });
   };
 
+  //Returns the correct symbol upon bookmarking a recipe
   const showBookmark = (id) => {
     if (bookmarkedRecipe.includes(id)) {
       return '★'
@@ -94,6 +97,7 @@ function Dashboard () {
     }
   };
 
+  //Handle click function 
   const handleClick = () => {
     if(localStorage.getItem('token') == null){
       alert('Please create an account to access your profile and our other services.');
@@ -102,6 +106,7 @@ function Dashboard () {
     };
   }
 
+  //Handle eatenRecipe function for a recipe
   const eatenRecipe = async (recipeid) => {
     if(localStorage.getItem('token') != null){
       var headers = {

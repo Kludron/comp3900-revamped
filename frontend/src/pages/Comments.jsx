@@ -5,11 +5,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Rating, TextField } from "@mui/material";
 
+//Gets token from local storage
 const token = localStorage.getItem("token");
 
 /* Recipe Comments Page */
 function Comments () {
 
+  //React navigation functions
   const navigate = useNavigate();
   const goBack = () => {
 		navigate(`/view/recipe/${recipeid}`);
@@ -17,8 +19,9 @@ function Comments () {
 
   //Obtains recipeID from URL
   const recipeid = window.location.pathname.split('/')[3];
-  const [comments, setComments] = useState([]);
   
+  //Store state variables
+  const [comments, setComments] = useState([]);
   
   //Loads Recipe comments from backend
   const loadComments = async () => {
@@ -29,10 +32,10 @@ function Comments () {
     setComments(response.data.Comments);
   }
   
+  //LoadComments on initial page load
   React.useEffect(() => {
     loadComments();
   }, [])
-  console.log(comments);
   
   return <div className="comments">
     <Button variant="contained" className="comment-go-back" onClick={goBack}>← Go Back</Button>

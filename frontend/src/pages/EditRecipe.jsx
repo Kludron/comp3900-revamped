@@ -15,6 +15,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import './EditRecipe.css';
 
+/* Edit Recipe Page */
 function EditRecipe ({submit}) {
   
 	const navigate = useNavigate();
@@ -28,6 +29,7 @@ function EditRecipe ({submit}) {
 	//Obtains authToken of user that was stored in localStorage
 	const token = localStorage.getItem('token');
 	
+	//Store state variables
 	const [recipeData, setrecipeData] = React.useState([]);
 
 	//Asynchronous function that pulls data from backend server to be displayed to user
@@ -50,6 +52,7 @@ function EditRecipe ({submit}) {
 		});
 	}
 
+	//Submits the changes taken from the EditRecipeForm and sends API request
 	const onSubmit = async () => {
 		const body = {
 			"name": recipeName,
@@ -75,6 +78,7 @@ function EditRecipe ({submit}) {
 		});
 	};
 
+	//Styling the form
 	const theme = useTheme();
 	const ITEM_HEIGHT = 48;
 	const ITEM_PADDING_TOP = 8;
@@ -87,10 +91,12 @@ function EditRecipe ({submit}) {
 		},
 	};
 
+	//Store state variables
 	const [cuisineList, setCuisineList] = React.useState([]);
   const [mealtypeList, setMealtypeList] =  React.useState([]);
   const [ingredientsList, setIngredientsList] = React.useState([]);
 
+	//Makes API request to get all of the mealtypes, cuisines and ingredients
 	const getCuisines = async () => {
     const configdata = await axios.get('http://localhost:5000/search');
     setMealtypeList(configdata.data.MealTypes);
@@ -105,6 +111,7 @@ function EditRecipe ({submit}) {
 		getRecipe();
 	}, [])
 
+	//Store state variables
 	const [recipeName, setRecipeName] = React.useState('');
 	const [description, setDescription] = React.useState('');
 	const [cuisineName, setCuisines] = React.useState('');
@@ -113,6 +120,7 @@ function EditRecipe ({submit}) {
 	const [servingsize, setServingSize] = React.useState('');
 	const [instructions, setInstructions] = React.useState('');
 
+	//Handle Cuisine change
 	const handleChangeCuisine = (event) => {
 		const {
 			target: { value },
@@ -120,6 +128,7 @@ function EditRecipe ({submit}) {
 		setCuisines(value);
 	};
 
+	//Handle Mealtype Change
 	const handleChangeMealtype = (event) => {
     const {
       target: { value },
@@ -127,11 +136,13 @@ function EditRecipe ({submit}) {
     setmealtypes(value);
   };
 
+	//Handle Ingredients Change
 	const handleChangeIngredients = (event, value) => {
     setIngredients(value);
     console.log(value);
   };
-
+	
+	//Style Cuisine Field
 	function getStylesCuisine(name, cuisines, theme) {
 		return {
 			fontWeight:
@@ -141,6 +152,7 @@ function EditRecipe ({submit}) {
 		};
 	};
 
+	//Style Mealtype Field
 	function getStylesMealtype(name, mealtypeName, theme) {
 		return {
 			fontWeight:
@@ -150,6 +162,7 @@ function EditRecipe ({submit}) {
 		};
 	};
 
+	//Creates options list and grouped by first letter
 	const options = ingredientsList.map((option) => {
     //console.log(option.name);
 		const firstLetter = option.name.Name[0].toUpperCase();
@@ -158,7 +171,6 @@ function EditRecipe ({submit}) {
 			...option.name,
 		};
 	});
-
 
 	return(<>
 		<body>

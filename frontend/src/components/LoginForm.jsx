@@ -6,12 +6,15 @@ import TextField from '@mui/material/TextField';
 /* Login Form Component */
 function LoginForm ({ submit }) {
 
+  //Store state variables
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  //Submits the parameters below through LoginForm
   const onSubmit = () => {
     submit(email, password);
   }
+  
   return (<>
     <TextField
       margin="normal"

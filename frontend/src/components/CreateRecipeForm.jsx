@@ -13,6 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 /* Create Recipe Form */
 function CreateRecipeForm ({ submit }) {
 
+	//Submits the parameters below through CreateRecipeForm
 	const onSubmit = () => {
 		submit(recipeName, description, cuisineName, mealtypeName, servingsize, ingredientsName, instructions);
 	};

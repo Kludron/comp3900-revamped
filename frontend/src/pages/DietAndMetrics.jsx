@@ -14,6 +14,8 @@ import SaveIcon from '@mui/icons-material/Save';
 
 /* Diet and Metrics Page */
 function DietAndMetrics() {
+
+	//Slider Bar marks for Daily setGoal
 	const marksDaily = [
 		{
 			value: 1400,
@@ -37,6 +39,7 @@ function DietAndMetrics() {
 		},
 	];
 
+	//Slider Bar marks for Weekly setGoal
 	const marksWeekly = [
 		{
 			value: 9800,
@@ -60,36 +63,43 @@ function DietAndMetrics() {
 		},
 	];
 
+	//React navigation functions
 	const navigate = useNavigate();
 	const previous = () => {
 		navigate('/dashboard');
 	};
 
+	//display value of a variable e.g Calories
 	function valuetext(value) {
 		return `${value}cal`;
 	}
 
+	//Handles change on daily slider bar
 	const handleChangeDaily = (event, value) => {
 		if (typeof value === 'number'){
 			setCalorieIntakeDaily(value);
 		}
 	};
 
+	//Handles change on weekly slider bar
 	const handleChangeWeekly = (event, value) => {
 		if (typeof value === 'number'){
 			setCalorieIntakeWeekly(value);
 		}
 	};
-	
+
+	//Gets token from local storage
 	const token = localStorage.getItem('token');
 
+
+	//Store state variables
 	const [caloricIntakeDaily, setCalorieIntakeDaily] = React.useState(1900);
 	const [caloricIntakeWeekly, setCalorieIntakeWeekly] = React.useState(12600);
-
 	const [viewGoalWeekly, setViewGoalWeekly] = React.useState(0);
 	const [viewGoalDaily, setViewGoalDaily] = React.useState(0);
 	const [isGoal, setisGoal] = React.useState(false);
 
+	//Handles submit of setGoal
 	const handleSubmit = async () => {
 		var today = new Date();
 		var dd = String(today.getDate()).padStart(2, '0');
@@ -153,17 +163,22 @@ function DietAndMetrics() {
 		})
 	}
 
+	//Store state variables
 	const [checked, setChecked] = React.useState(true);
 	const [isWeekly, setisWeekly] = React.useState(true);
 
+	//Handle Switch change
 	const handleSwitchChange = (event) => {
 		console.log(event.target.checked);
 		setChecked(event.target.checked);
 		setisWeekly(event.target.checked);
   };
 
+	//Store state variables
 	const [recommend, setRecommend] = React.useState([]);
 
+
+	//Recommendations API route function
 	const Recommendations = async () => {
 		let headers = {
 			headers: {
@@ -199,8 +214,11 @@ function DietAndMetrics() {
 		})
 	}
 
+	//Store state variables
 	const [intake, setIntake] = React.useState([]);
 
+
+	//Intake Overview API route function
 	const intakeOverview = async () => {
 		let headers = {
 			headers: {
@@ -226,6 +244,7 @@ function DietAndMetrics() {
 		})
 	}
 
+	//Navigate to view recipe page for a specific recipeID
 	const viewRecipe = (recipeID,key) => {
 		console.log('viewed ' + recipeID);
 		navigate(`/view/recipe/${recipeID}`);
@@ -242,6 +261,7 @@ function DietAndMetrics() {
 		<div className="main-content">
 			<Button className="go-back" variant='contained' onClick={previous}>← Go Back</Button>
 			<h1 className="title">Diet/Metrics</h1>
+			<h2>Your daily goal is {viewGoalDaily} and weekly goal is {viewGoalWeekly} Calories.</h2>
 			<h2 className="title">Set Calorie Goal</h2>
 			<div className='calorie_bar'>
 				Daily

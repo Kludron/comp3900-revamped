@@ -13,9 +13,11 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 /* MyRecipes Page */
 function MyRecipes() {
 
+	//Store state variables
 	const [myRecipes, setMyRecipes] = React.useState([]);
 	const [recentViewed, setRecentViewed] = React.useState([]);
 
+	//Get token from local storage
 	const token = localStorage.getItem('token');
 
 	//React navigate functions
@@ -26,16 +28,15 @@ function MyRecipes() {
 	const navigateRecipeForm = () => {
 		navigate('/create-recipe');
 	};
-	
 	const viewRecipe = (recipeID,key) => {
 		console.log('viewed ' + recipeID);
 		navigate(`/view/recipe/${recipeID}`);
-	}
-
+	};
 	const handleClick = (recipeID) => {
 		navigate(`/myRecipes/edit/${recipeID}`);
 	}
 
+	//Async API request to get recipes a user has created
 	async function getMyRecipes() {
 		let headers = {
 			headers: {
@@ -54,6 +55,7 @@ function MyRecipes() {
 		})
 	};
 
+	//API request for recently viewed recipes
 	async function getRecentlyViewed() {
 		//Retrieves list of recent recipes that user has viewed
 		const recent = JSON.parse(localStorage.getItem('recent'));
