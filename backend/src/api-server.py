@@ -35,7 +35,7 @@ api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
 
-api.secret_key = 'REPLACE ME - this value is here as a placeholder.'
+api.secret_key = 'REPLACE ME - this value is here as a placeholder.' # This is the actual secret required for sending emails using gmail
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 jwt = JWTManager(api)
