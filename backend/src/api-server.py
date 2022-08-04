@@ -274,11 +274,10 @@ def reviews(id):
             return {"msg" : "Recipe not found"}, 404
 
         cursor.execute("""
-            SELECT u.username, c.description, rr.rating
-            FROM users u, comments c, recipe_rating rr
+            SELECT u.username, c.description
+            FROM users u, comments c
             WHERE c.r_id = %s
-            AND rr.r_id = c.r_id
-            AND u.id = rr.u_id;
+            AND u.id = c.u_id;
         """, (id,))
         response = {
             "Comments":list()
@@ -286,26 +285,13 @@ def reviews(id):
 
         comments = cursor.fetchall()
         for comment in comments:
-            username, description, rating = comment
+            username, description = comment
             response["Comments"].append({
                 "Username":username,
                 "Content":description,
-                "Rating":rating
             })
         return response, 200
 
-
-        comments = cursor.fetchall()
-        for comment in comments:
-            username, description, rating = comment
-            response["Comments"].append({
-                "Username":username,
-                "Content":description,
-                "Rating":rating
-            })
-        return response, 200
-    elif request.method == 'POST':
-        return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
