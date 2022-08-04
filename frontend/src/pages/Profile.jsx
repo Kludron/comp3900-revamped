@@ -4,14 +4,11 @@ import './Profile.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-<<<<<<< HEAD
 import profile_background from '../img/profile-background.jpeg';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { Chip } from '@mui/material';
-=======
->>>>>>> 435a4d1b (bookmarked is working now)
 
 const token = localStorage.getItem('token');
 /* Profile Page */
@@ -24,6 +21,10 @@ function Profile() {
 
   //React navigate functions
   const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear();
+    navigate('/');
+  }
   const previous = () => {
     navigate('/dashboard');
   };
@@ -59,7 +60,6 @@ function Profile() {
       <img className='profile-background' src={profile_background} alt='profile background'></img>
       <NavBar/>
       <div className="main-content">
-<<<<<<< HEAD
         <Button className='go-back' variant='contained' onClick={previous}>Go Back</Button>
         <Button className='logout' variant='contained' onClick={logout}>Logout</Button>
         <div className="header">
@@ -85,11 +85,6 @@ function Profile() {
             </div>
           </div>
         </div>
-=======
-        <button onClick={previous}>Go Back</button>
-        <UserInfo userData={userData} />
->>>>>>> 435a4d1b (bookmarked is working now)
-
         <h1 className='allergies-title'>Allergies</h1>
         <Allergens allAllergens={allAllergens} usersAllergens={usersAllergens} setUsersAllergens={setUsersAllergens} />
 

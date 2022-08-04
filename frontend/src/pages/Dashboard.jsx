@@ -13,22 +13,16 @@ import { paperClasses } from '@mui/material';
 function Dashboard () {
 
   const [recipes, setRecipes] = useState([]);
-<<<<<<< HEAD
-  const [favourite, setfavourite] = useState(false);
-  const [bookmarkStar, setbookmarkStar] = useState('☆');
   const [userData, setuserData] = useState([]);
 
-=======
   const [bookmarkedRecipe, setbookmarkedRecipe] = useState([])
   
->>>>>>> 435a4d1b (bookmarked is working now)
   //Gets user's authorisation token
   const token = localStorage.getItem('token');
 
   //React Navigation Function
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   //Loads user profile details
   const loadProfile = async () => {
     const headers = {
@@ -41,7 +35,6 @@ function Dashboard () {
       points: response.data.Points,
     });
   };
-=======
   const loadDashboard = async () => {
     var headers = {
       "Authorization": `Bearer ${token}`
@@ -54,7 +47,6 @@ function Dashboard () {
   React.useEffect(() => {
     loadDashboard();
   }, [])
->>>>>>> 435a4d1b (bookmarked is working now)
 
   //Navigates to a dynamically rendered page for a specific recipe with recipeID
   const viewRecipe = (recipeid, key) => {
@@ -77,41 +69,6 @@ function Dashboard () {
 
   // Bookmark function for recipes
   const handleBookmark = async (id) => {
-<<<<<<< HEAD
-    console.log(id);
-    let headers = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    };
-    let body = {
-      "recipeid" : id,
-    }
-    if(bookmarkStar === '☆'){
-      setbookmarkStar('★');
-    } else {
-      setbookmarkStar('☆');
-    }
-    /*if(bookmarkStar === '☆'){
-      axios.post("http://localhost:5000/bookmark", body, {headers:headers})
-      .then((response) => {
-        console.log(response);
-        alert('You have successfully bookmarked this recipe!');
-        setbookmarkStar('★');
-      }).catch((err) => {
-        console.log(err)
-        alert('There was a problem bookmarking this recipe.')
-      })
-    }*/
-    /*if(bookmarkStar === '☆' && favourite === false) { //Bookmarked
-      setfavourite(true);
-      setbookmarkStar('★');
-      console.log('bookmarked'); //Still need to work out how to store this state and send state to backend
-    } else { //Un-bookmarked
-      setfavourite(false);
-      setbookmarkStar('☆');
-      console.log('unbookmarked'); //As above
-    }*/
-=======
     var headers = {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
@@ -135,7 +92,6 @@ function Dashboard () {
     } else {
       return '☆'
     }
->>>>>>> 435a4d1b (bookmarked is working now)
   };
 
   const handleClick = () => {
@@ -208,36 +164,24 @@ function Dashboard () {
             });
           }}
         />
-<<<<<<< HEAD
-      </div>
-      <hr className="break"></hr>
-      <h3 className="search_results">Search Results:</h3>
-      <div className='list_recipes'>
-        {recipes.map((recipe, key) => {
-          return (
-            <div className='recipe_box' key={key}>
-              <Button className="btn" variant="outlined" onClick={() => handleBookmark()}>{bookmarkStar}</Button>
-              <Button className='btn' variant="outlined" onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
-              <div className="details">
-                <h3 className="rec_name">{recipe.name}</h3>
-=======
+        <hr className="break"></hr>
+        <h3 className="search_results">Search Results:</h3>
         <div className='list_recipes'>
           {recipes.map((recipe, key) => {
             return (
               <div className='recipe_box' key={key}>
-                <button onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</button>
-                <button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</button>
+                <Button onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
+                <Button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
                 <h3>Name: {recipe.name}</h3>
->>>>>>> 435a4d1b (bookmarked is working now)
                 <p>Cuisine: {recipe.cuisine}</p>
                 <p>Description: {recipe.description}</p>
                 <p>Mealtype: {recipe.mealtype}</p>
                 <p>Serves: {recipe.servingsize}</p>
                 <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   </div>;
