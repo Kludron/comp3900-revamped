@@ -179,7 +179,7 @@ def change_username():
 def reset():
     print(flask_session_credential)
 
-    if(not flask_session_credential):
+    if not flask_session_credential:
         return {'msg' : 'Developer email needs to be authorised for website'}, 500
     # Load credentials from the session.
     credentials = google.oauth2.credentials.Credentials(
