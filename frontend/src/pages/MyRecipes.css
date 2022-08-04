@@ -1,6 +1,6 @@
 .my-recipe-wrapper {
     display: flex;
-    position: absolute;
+    position: relative;
 }
 
 .my-recipe-wrapper .main-content {

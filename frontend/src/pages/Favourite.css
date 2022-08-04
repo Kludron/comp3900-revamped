@@ -1,5 +1,5 @@
 .main-content {
-    position: fixed;
+    position: relative;
     left: 15%;
     width: 85%;
 }

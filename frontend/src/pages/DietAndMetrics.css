@@ -1,6 +1,7 @@
 .DAM-wrapper {
     display: flex;
     position: relative;
+    overflow: hidden;
 }
 
 .h1 {
