@@ -482,39 +482,39 @@ def recommend():
     }
     return response, 200
 
-# @api.route('/setGoal', methods=['POST', 'GET'])
-# @jwt_required()
-# @cross_origin()
-# def setGoal():
-#     u_id = auth_get_uid(get_jwt_identity(), conn)
-#     if not u_id:
-#         return {'msg' : 'Authentication error'}, 403
+@api.route('/setGoal', methods=['POST', 'GET'])
+@jwt_required()
+@cross_origin()
+def setGoal():
+    u_id = auth_get_uid(get_jwt_identity(), conn)
+    if not u_id:
+        return {'msg' : 'Authentication error'}, 403
 
-#     if request.method == 'POST':
-#         data = json.loads(request.get_data())
+    if request.method == 'POST':
+        data = json.loads(request.get_data())
         
-#         try:
-#             caloricGoal = data['goal']
-#             timeframe = data['timeframe']
-#         except KeyError:
-#             return ("msg: wrong key", 401)
+        try:
+            caloricGoal = data['goal']
+            timeframe = data['timeframe']
+        except KeyError:
+            return ("msg: wrong key", 401)
 
 
 
-#         #To do: need to add goal column
-#         if timeframe.lower() == 'weekly':
-#             cursor.execute("UPDATE users SET goal_weekly = %s WHERE id = %s;", (caloricGoal, u_id))
-#         elif timeframe.lower() == 'daily':
-#             cursor.execute("UPDATE users SET goal_daily = %s WHERE id = %s;", (caloricGoal, u_id))
+        #To do: need to add goal column
+        if timeframe.lower() == 'weekly':
+            cursor.execute("UPDATE users SET goal_weekly = %s WHERE id = %s;", (caloricGoal, u_id))
+        elif timeframe.lower() == 'daily':
+            cursor.execute("UPDATE users SET goal_daily = %s WHERE id = %s;", (caloricGoal, u_id))
 
 
-#         return ({'msg' : 'Success'}, 200)
+        return ({'msg' : 'Success'}, 200)
 
-#     elif request.method == 'GET':
-#         cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
-#         row = cursor.fetchone()
+    elif request.method == 'GET':
+        cursor.execute("SELECT goal_daily, goal_weekly FROM users WHERE id = %s;", (u_id, ))
+        row = cursor.fetchone()
 
-#         return ({'goals' : row}, 200)
+        return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
     api.run(host='localhost', debug=True)

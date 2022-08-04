@@ -239,7 +239,7 @@ function DietAndMetrics() {
 			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
-				<Button variant="contained" onClick={previous}>← Go Back</Button>
+				<Button className="btn" variant="contained" onClick={previous}>← Go Back</Button>
 				<h1 className="title">Diet/Metrics</h1>
 				{isGoal && 
 					<h3>Your Current Goal is {viewGoalDaily} Daily and {viewGoalWeekly} Weekly calories</h3>

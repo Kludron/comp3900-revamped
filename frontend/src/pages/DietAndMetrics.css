@@ -1,10 +1,5 @@
 .wrapper {
-    display: flex;
-    position: relative;
-}
-
-.h1 {
-    margin-left: 0;
+    position: fixed;
 }
 
 .wrapper .main-content .recommend_section .recipe_box .details{
