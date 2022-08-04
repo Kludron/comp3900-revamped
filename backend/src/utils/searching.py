@@ -110,7 +110,6 @@ def search_general(method, data, conn) -> tuple:
                     print(query, tuple(arguments))
                     cursor.execute(query, tuple(arguments))
                     results = cursor.fetchall()
-                    print(results)
                     __add_to_results(results)
 
                     return (responseval, 200)

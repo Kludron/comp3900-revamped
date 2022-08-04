@@ -254,7 +254,7 @@ def auth_update_viewed(data, email, conn):
                 try:
                     cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
                     conn.commit()
-                except psycopg2.errors.InFailedSqlTransaction:
+                except Exception:
                     conn.rollback()
 
             # Insert recently viewed recipes into the db
@@ -271,10 +271,13 @@ def auth_update_viewed(data, email, conn):
             
         try:
             cursor.execute("SELECT r_id FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
-            return {'Recipes':[recipe[0] for recipe in cursor.fetchall()]}
-        except (TypeError, psycopg2.ProgrammingError, psycopg2.errors.InFailedSqlTransaction):
-            return {'Recipes':[]}
-        return {'msg' : 'Successfully updated recently viewed table'}, 200
+            results = cursor.fetchall()
+            recipes = list()
+            for result in results:
+                recipes.append(result[0])
+            return {'Recipes':recipes}, 200
+        except Exception as e:
+            return {'Recipes':[]}, 200
 
 
 def auth_recipe_uploader(email, conn, r_id) -> bool:
