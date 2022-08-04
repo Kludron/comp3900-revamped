@@ -58,16 +58,15 @@ except Exception as e:
 def index():
   return print_index_table()
 
-
 @api.route('/test')
 def test_api_request():
     if 'credentials' not in flask.session:
         return flask.redirect('authorize')
-        
-    global flask_session_credential
+
     flask_session_credential = flask.session['credentials']
-    print(flask_session_credential)
-    
+    with open('utils/gmail/session_credential.json', 'w') as fp:
+        json.dump(flask_session_credential, fp)
+
     # Load credentials from the session.
     credentials = google.oauth2.credentials.Credentials(
         **flask_session_credential)
@@ -177,6 +176,9 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
+    with open('utils/gmail/session_credential.json', 'r') as fp:
+        flask_session_credential = json.load(fp)
+
     print(flask_session_credential)
 
     if not flask_session_credential:

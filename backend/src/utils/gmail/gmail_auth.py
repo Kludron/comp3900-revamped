@@ -4,7 +4,6 @@ import os
 import flask
 import requests
 
-
 import base64
 from email.message import EmailMessage
 import google.oauth2.credentials
@@ -15,21 +14,13 @@ import google.auth
 from googleapiclient.errors import HttpError
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
-CLIENT_SECRETS_FILE = "client_secret.json"
+CLIENT_SECRETS_FILE = "utils/gmail/client_secret.json"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
 SCOPES = ['https://www.googleapis.com/auth/gmail.send', 'https://mail.google.com/', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/drive.metadata.readonly']
 API_SERVICE_NAME = 'gmail'
 API_VERSION = 'v1'
-
-#app = flask.Flask(__name__)
-
-# Note: A secret key is included in the sample so that it works.
-# If you use this code in your application, replace this with a truly secret
-# key. See https://flask.palletsprojects.com/quickstart/#sessions.
-#app.secret_key = 'REPLACE ME - this value is here as a placeholder.'
-
 
 
 def credentials_to_dict(credentials):
