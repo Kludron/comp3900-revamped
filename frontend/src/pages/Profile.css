@@ -1,3 +1,10 @@
+.profile-background {
+    position: fixed;
+    opacity: 0.3;
+    width: 100%;
+    z-index: -1;
+}
+
 .main-content {
     position: relative;
     left: 15%;
@@ -8,8 +15,25 @@
     margin: 2vw;
 }
 
+.main-content .go-back {
+    margin: 2vw;
+}
+
+.main-content .logout {
+    margin: 2vw;
+}
+
 .userdata_field {
     display: flex;
+    width: 60%;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.attribute {
+    border-style: ridge;
+    border-right-style: groove;
+    border-width: 0.3vw;
+    border-right-width: 0.5vw;
 }
 
 .attribute p {
@@ -17,22 +41,28 @@
     font-weight: bold;
     display: flex;
     flex-direction: column;
-}
-
-.attribute p {
-    margin: 1vw;
+    padding: 1vw;
+    border-bottom-style: double;
 }
 
 .info {
-    margin-left: 2vw;
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    border-style: ridge;
+    border-left-style: none;
+    border-width: 0.3vw;    
 }
 .info p {
     font-size: 1.5vw;
-    display: flex;
-    flex-direction: column;
-    margin: 1vw;
+    padding: 1vw;
+    border-bottom-style: double;
 }
 
+.info p Button {
+    float: right;
+    font-size: 1vw;
+}
 /* .data {
     display: flex;
     flex-direction: column;
@@ -47,12 +77,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 3vw;
     align-self: flex-start;
 }
 
-.change-button button {
-    margin: 1vw;
+.change-button Button {
+    margin: 1vh;
 }
 
 .allergens {
@@ -70,14 +99,16 @@
 .selections {
     height: 40vh;
     width: 30vw;
-    border-style: ridge;
+    border-style: outset;
+    border-width: 0.4vw;
     display: flex;
     flex-wrap: wrap;
+    box-shadow: 10px 10px 5px #888888;
 }
 
-.selection {
+.selections .selection {
     align-self: center;
-    margin: 0.5vw;
+    margin-left: 0.5vw;
 }
 
 .added-allergies {
@@ -91,9 +122,11 @@
 .allergies-box {
     height: 40vh;
     width: 30vw;
-    border-style: ridge;
+    border-style: inset;
+    border-width: 0.4vw;
     display: flex;
     flex-wrap: wrap;
+    box-shadow: 10px 10px 5px #888888;
 }
 
 .allergies-box-element {
@@ -109,4 +142,8 @@
 .wrapper .main-content {
     width: 100%;
     margin-left: 20vw;
+}
+
+.profile .main-content .logout {
+    float: right;
 }

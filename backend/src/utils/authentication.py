@@ -14,17 +14,17 @@ from flask_jwt_extended import (
 import psycopg2
 from utils.gmail.gmail_auth import *
 # JWT Authentication Information
-JWT_KEY = '%_2>7$]?OVmqd"|-=q6"dz{|0=Nk\%0N'
+JWT_KEY = os.environ.get("JWT_KEY")
 JWT_EXPIRY = datetime.timedelta(hours=1)
 
 # User hashing information
-HASH_SALT = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+HASH_SALT = os.environ.get("HASH_SALT")
 
 # Database server information
-DB_HOST = '45.77.234.200'
-DB_NAME = 'comp3900db'
-DB_USER = 'comp3900_user'
-DB_PASS =  'yckAPfc9MX42N4'
+DB_HOST = os.environ.get("DB_HOST")
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
 
 RVSTORAGE = 10 # Recently Viewed Storage
 
@@ -248,7 +248,7 @@ def auth_update_viewed(data, email, conn):
                 try:
                     cursor.execute("DELETE FROM user_recentlyviewed WHERE u_id=%s LIMIT %s;", (u_id, nDelete))
                     conn.commit()
-                except psycopg2.errors.InFailedSqlTransaction:
+                except Exception:
                     conn.rollback()
 
             # Insert recently viewed recipes into the db
@@ -265,10 +265,13 @@ def auth_update_viewed(data, email, conn):
             
         try:
             cursor.execute("SELECT r_id FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
-            return {'Recipes':[recipe[0] for recipe in cursor.fetchall()]}
-        except (TypeError, psycopg2.ProgrammingError, psycopg2.errors.InFailedSqlTransaction):
-            return {'Recipes':[]}
-        return {'msg' : 'Successfully updated recently viewed table'}, 200
+            results = cursor.fetchall()
+            recipes = list()
+            for result in results:
+                recipes.append(result[0])
+            return {'Recipes':recipes}, 200
+        except Exception as e:
+            return {'Recipes':[]}, 200
 
 
 def auth_recipe_uploader(email, conn, r_id) -> bool:

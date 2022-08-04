@@ -55,7 +55,7 @@ function Welcome () {
                 <h1>Start Cooking Now.</h1>
               </div>
               <p className="text">
-                Welcome to our Recipe Recommendation System, brought to you by the team from F1V3GUY5 at COMP3900. You can continue as guest to enjoy the basic functionalities of our webpage but we recommend signing up to enjoy the full benefits!
+                Welcome to our Recipe Recommendation System, brought to you by the team from F1V3GUY5 at COMP3900. You can continue as guest to enjoy the basic functionalities of our webpage but we recommend signing up to enjoy the full experience!
               </p>
               <div className="cta">
                 <Button variant="contained" onClick={Guest}>Continue As Guest</Button>

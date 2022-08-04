@@ -12,7 +12,6 @@
     width: 96%;
     align-items: center;
     justify-content: center;
-
 }
 
 .search_bars .remaining_bars {
@@ -58,18 +57,6 @@
 
 .recipe_screen {
     width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: scroll;
-}
-
-.pantrybox {
-    border-style: solid;
-    border-color: pink;
-    margin-top: 15;
-    width: 90%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -157,7 +144,7 @@ p {
 .recipeBox .list_recipes .recipe_box .details .see_recipe_button {
     float: right;
     margin-right: 8px;
-    top: -8px
+    top: -8px;
 }
 
 .search_results {

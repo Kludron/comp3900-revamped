@@ -26,6 +26,7 @@ from utils.searching import *
 from utils.gmail.gmail_auth import *
 
 api = Flask(__name__)
+
 cors = CORS(api)
 api.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -37,6 +38,7 @@ api.config["JWT_FORM_KEY"] = 'token'
 api.secret_key = 'REPLACE ME - this value is here as a placeholder.'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+jwt = JWTManager(api)
 # Command to access the database
 # psql -h 45.77.234.200 -U comp3900_user -d comp3900db
 # yckAPfc9MX42N4
@@ -46,10 +48,6 @@ try:
     cursor = conn.cursor()
 except Exception as e:
     sys.stderr.write("An error occurred while connecting to the database:\n{}\n".format(e))
-
-jwt = JWTManager(api)
-cors = CORS(api)
-api.config['CORS_HEADERS'] = 'Content-Type'
 
 #############################################
 #                                           #
@@ -203,7 +201,7 @@ def profile():
     if request.method == 'GET':
         return auth_get_profile(get_jwt_identity(), conn)
     elif request.method == 'PUT':
-        return customise_profile(request.get_data(), get_jwt_identity(), conn)
+        return customise_profile(request.get_data(), get_jwt_identity(), cursor, conn)
 
 #############################################
 #                                           #
@@ -278,6 +276,60 @@ def favourite():
         response["isSuccess"] = False
         response["msg"] = "The data provided is not valid"
     return response
+
+@api.route('/dashboard', methods=['GET', 'PUT'])
+@jwt_required()
+@cross_origin()
+def dashboard():
+    response = {}
+    if request.method == 'GET':
+        u_id = auth_get_uid(get_jwt_identity(), conn)
+
+        # Grab Bookmarks
+        cursor.execute("""
+            SELECT r_id
+            FROM user_bookmarks
+            WHERE u_id = %s;
+        """, (u_id,))
+        bookmarks = cursor.fetchall()
+        response = {
+            'Bookmarks' : []
+        }
+
+        for id in bookmarks:
+            response["Bookmarks"].append(id[0])
+
+        return response, 200
+
+    elif request.method == 'PUT':
+        # This verification is incorrect. [TODO: Change this verification]
+        data = json.loads(request.get_data())
+        if type(data) is dict:
+            u_id = auth_get_uid(get_jwt_identity(), conn)
+            r_id = data['id']
+            bookmarks_id = data['bookmarkedRecipe']
+            if r_id in bookmarks_id: 
+                cursor.execute("""
+                    DELETE FROM user_bookmarks
+                    WHERE u_id = %s
+                    AND r_id = %s
+                """, (u_id, r_id))
+                bookmarks_id.remove(r_id)
+            elif r_id not in bookmarks_id: 
+                cursor.execute("""
+                    INSERT INTO user_bookmarks (u_id, r_id)
+                    VALUES (%s, %s);
+                """, (u_id, r_id))
+                bookmarks_id.append(r_id)
+            else: 
+                response["msg"] = "Error with recipe id and bookmarks"
+                return response, 400
+
+            response['Bookmarks'] = bookmarks_id
+            return response, 200
+        response["isSuccess"] = False
+        response["msg"] = "The data provided is not valid"
+    return response, 400
 ###############################################
 ### Search function
 # https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application

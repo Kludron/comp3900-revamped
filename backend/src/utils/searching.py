@@ -87,10 +87,10 @@ def search_general(method, data, conn) -> tuple:
                         constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
                         arguments.append(search_query.lower())
                     if ingredients:
-                        constraints.append(f"""EXISTS(
-                                        SELECT 1
-                                        FROM recipes r, ingredients i
-                                        JOIN recipe_ingredients ri ON ri.ingredient=i.id
+                        constraints.append(f"""r.id IN (
+                                        SELECT r_id
+                                        FROM recipe_ingredients
+                                        JOIN ingredients i ON ingredient=i.id
                                         WHERE i.name in ({','.join(['%s' for _ in range(len(ingredients))])})
                                     )""")
                         for ingredient in ingredients:
@@ -107,8 +107,10 @@ def search_general(method, data, conn) -> tuple:
                     if constraints:
                         query += " WHERE "
                         query += " AND ".join(constraints)
+                    print(query, tuple(arguments))
                     cursor.execute(query, tuple(arguments))
-                    __add_to_results(cursor.fetchall())
+                    results = cursor.fetchall()
+                    __add_to_results(results)
 
                     return (responseval, 200)
                 except (IndexError, ValueError, KeyError) as e:
