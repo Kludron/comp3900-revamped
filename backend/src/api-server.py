@@ -1,4 +1,4 @@
-from getpass import getuser
+import os 
 from hashlib import sha256
 import psycopg2
 import sys
@@ -23,6 +23,7 @@ from utils.customising import *
 from utils.contributing import *
 from utils.authentication import *
 from utils.searching import *
+from utils.gmail.gmail_auth import *
 
 api = Flask(__name__)
 
@@ -33,6 +34,9 @@ api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
+
+api.secret_key = 'REPLACE ME - this value is here as a placeholder.'
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 jwt = JWTManager(api)
 # Command to access the database
@@ -50,6 +54,102 @@ except Exception as e:
 #           Authentication Routes           #
 #                                           # 
 #############################################
+@api.route('/')
+def index():
+  return print_index_table()
+
+
+@api.route('/test')
+def test_api_request():
+    if 'credentials' not in flask.session:
+        return flask.redirect('authorize')
+        
+    global flask_session_credential
+    flask_session_credential = flask.session['credentials']
+    print(flask_session_credential)
+    
+    # Load credentials from the session.
+    credentials = google.oauth2.credentials.Credentials(
+        **flask_session_credential)
+
+    sentEmail = sendEmail('nathan.quan5@gmail.com', 'message: testing authentication', credentials)
+
+    return flask.jsonify(sentEmail)
+
+@api.route('/authorize')
+def authorize():
+  # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES)
+
+  # The URI created here must exactly match one of the authorized redirect URIs
+  # for the OAuth 2.0 client, which you configured in the API Console. If this
+  # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
+  # error.
+  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+
+  authorization_url, state = flow.authorization_url(
+      # Enable offline access so that you can refresh an access token without
+      # re-prompting the user for permission. Recommended for web server apps.
+      access_type='offline',
+      # Enable incremental authorization. Recommended as a best practice.
+      include_granted_scopes='true')
+
+  # Store the state so the callback can verify the auth server response.
+  flask.session['state'] = state
+
+  return flask.redirect(authorization_url)
+
+
+@api.route('/oauth2callback')
+def oauth2callback():
+  # Specify the state when creating the flow in the callback so that it can
+  # verified in the authorization server response.
+  state = flask.session['state']
+
+  flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+      CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+
+  # Use the authorization server's response to fetch the OAuth 2.0 tokens.
+  authorization_response = flask.request.url
+  flow.fetch_token(authorization_response=authorization_response)
+
+  # Store credentials in the session.
+  # ACTION ITEM: In a production app, you likely want to save these
+  #              credentials in a persistent database instead.
+  credentials = flow.credentials
+  flask.session['credentials'] = credentials_to_dict(credentials)
+
+  return flask.redirect(flask.url_for('test_api_request'))
+
+
+@api.route('/revoke')
+def revoke():
+  if 'credentials' not in flask.session:
+    return ('You need to <a href="/authorize">authorize</a> before ' +
+            'testing the code to revoke credentials.')
+
+  credentials = google.oauth2.credentials.Credentials(
+    **flask.session['credentials'])
+
+  revoke = requests.post('https://oauth2.googleapis.com/revoke',
+      params={'token': credentials.token},
+      headers = {'content-type': 'application/x-www-form-urlencoded'})
+
+  status_code = getattr(revoke, 'status_code')
+  if status_code == 200:
+    return('Credentials successfully revoked.' + print_index_table())
+  else:
+    return('An error occurred.' + print_index_table())
+
+
+@api.route('/clear')
+def clear_credentials():
+  if 'credentials' in flask.session:
+    del flask.session['credentials']
+  return ('Credentials have been cleared.<br><br>' +
+          print_index_table())
 
 @api.route('/auth/login', methods=['POST'])
 @cross_origin()
@@ -77,9 +177,16 @@ def change_username():
 @api.route('/auth/reset', methods=['POST'])
 @cross_origin()
 def reset():
-    data = json.loads(request.get_data())
-    email = data['email']
-    return auth_forgot_password(email, cursor, conn)
+    print(flask_session_credential)
+
+    if(not flask_session_credential):
+        return {'msg' : 'Developer email needs to be authorised for website'}, 500
+    # Load credentials from the session.
+    credentials = google.oauth2.credentials.Credentials(
+        **flask_session_credential)
+
+    return auth_forgot_password(request.get_data(), credentials)
+    
 
 # Haven't tested this yet
 # @api.after_request()
@@ -552,4 +659,9 @@ def setGoal():
         return ({'goals' : row}, 200)
 
 if __name__ == '__main__':
-    api.run(host='localhost', debug=True)
+    # When running locally, disable OAuthlib's HTTPs verification.
+    # ACTION ITEM for developers:
+    #     When running in production *do not* leave this option enabled.
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+    api.run(debug=True)
