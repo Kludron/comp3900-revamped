@@ -85,7 +85,7 @@ function MyRecipes() {
 		<div className="my-recipe-wrapper">
 			<NavBar/>
 			<div className="main-content">
-				<Button className="go-back" variant="contained" onClick={previous}>Go Back</Button>
+				<Button className="go-back" variant="contained" onClick={previous}>← Go Back</Button>
 				<h1>My Recipes</h1>
 				<div className='list_recipes'>
 					{myRecipes.map((recipe, key) => {

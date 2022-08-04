@@ -208,7 +208,7 @@ function DietAndMetrics() {
 			<img className='profile-background' src={profile_background} alt='profile background'></img>
 			<NavBar/>
 			<div className="main-content">
-				<Button className="go-back" variant='contained' onClick={previous}>Go Back</Button>
+				<Button className="go-back" variant='contained' onClick={previous}>← Go Back</Button>
 				<h1 className="title">Diet/Metrics</h1>
 				<h2 className="title">Set Calorie Goal</h2>
 				<div className='calorie_bar'>

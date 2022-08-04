@@ -38,7 +38,7 @@ function Favourite() {
     <img className='profile-background' src={profile_background} alt='profile background'></img>
     <NavBar />
     <div className="main-content">
-      <Button className="go-back" variant='contained' onClick={previous}>Go Back</Button>
+      <Button className="go-back" variant='contained' onClick={previous}>← Go Back</Button>
       <h1>Favourite Recipe</h1>
       <hr className="favourite-hr"/>
       <div className="list_bookmarked_recipes">
