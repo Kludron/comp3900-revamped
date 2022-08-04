@@ -185,7 +185,7 @@ def reset():
     credentials = google.oauth2.credentials.Credentials(
         **flask_session_credential)
 
-    return auth_forgot_password(request.get_data(), credentials)
+    return auth_forgot_password(request.get_data(), credentials, cursor, conn)
     
 
 # Haven't tested this yet
