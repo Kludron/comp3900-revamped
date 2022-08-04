@@ -13,6 +13,7 @@ function ForgotPasswordForm({submit}) {
 
 	return (<>
     <TextField
+      sx={{width:400}}
       margin="normal"
       required
       halfwidth="true"
@@ -24,7 +25,7 @@ function ForgotPasswordForm({submit}) {
 		<Button
       sx={{ mt: 3, mb: 2 }}
       id='login'
-      variant="contained" onClick={onSubmit}>Log in
+      variant="contained" onClick={onSubmit}>Reset
     </Button>
 	</>)
 }
