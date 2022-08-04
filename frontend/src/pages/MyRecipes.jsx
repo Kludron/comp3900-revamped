@@ -5,6 +5,7 @@ import './MyRecipes.css';
 import Button from '@mui/material/Button';
 import axios from "axios";
 import profile_background from '../img/profile-background.jpeg';
+import AddIcon from '@mui/icons-material/Add';
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -81,32 +82,35 @@ function MyRecipes() {
 
 	return <>
 		<img className='profile-background' src={profile_background} alt='profile background'></img>
-		<div className="wrapper">
+		<div className="my-recipe-wrapper">
 			<NavBar/>
 			<div className="main-content">
-				<button onClick={previous}>Go Back</button>
-				<h2>My Recipes</h2>
+				<Button className="go-back" variant="contained" onClick={previous}>← Go Back</Button>
+				<h1>My Recipes</h1>
 				<div className='list_recipes'>
 					{myRecipes.map((recipe, key) => {
 						return (
 							<div className='recipe_box' key={key}>
-								<button onClick={() => handleClick(recipe.id)}>Edit</button>
-								<h3>Name: {recipe.name}</h3>
+								<Button className='edit' variant='contained' onClick={() => handleClick(recipe.id)}>Edit</Button>
+								<h3>{recipe.name}</h3>
 								<p>Cuisine: {recipe.cuisine}</p>
 								<p>Description: {recipe.description}</p>
 								<p>Mealtype: {recipe.mealtype}</p>
 								<p>Serving Size: {recipe.servingsize}</p>
-								<button className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</button>
+								<Button className='see_recipe_button' variant='contained' onClick={() => viewRecipe(recipe.id, key)}>See Recipe→</Button>
 							</div>
 						)})}
 				</div>
 				<Button
-      		sx={{ mt: 3, mb: 2 }}
-      		id='create_recipe'
-      		variant="outlined"
+					sx={{ mt: 3, mb: 2,  marginLeft: 2}}
+					id='create_recipe'
+					variant="contained"
+					startIcon={<AddIcon/>}
+					size='large'
 					onClick={() => navigateRecipeForm()}>
 					Create Recipe
 				</Button>
+				<hr className="my-recipe-hr"/>
 				<div className="recent_viewed">
 					<h2>Recently Viewed</h2>
 					<div className='list_recipes'>
@@ -118,7 +122,6 @@ function MyRecipes() {
 									<p>Description: {recipe.description}</p>
 									<p>Mealtype: {recipe.mealtype}</p>
 									<p>Serving Size: {recipe.servingsize}</p>
-									
 								</div>
 							)})}
 					</div>
