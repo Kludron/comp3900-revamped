@@ -143,3 +143,7 @@
     width: 100%;
     margin-left: 20vw;
 }
+
+.profile .main-content .logout {
+    float: right;
+}

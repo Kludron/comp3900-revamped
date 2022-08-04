@@ -170,14 +170,16 @@ function Dashboard () {
           {recipes.map((recipe, key) => {
             return (
               <div className='recipe_box' key={key}>
-                <Button onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
-                <Button className='eaten_button' onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
-                <h3>Name: {recipe.name}</h3>
-                <p>Cuisine: {recipe.cuisine}</p>
-                <p>Description: {recipe.description}</p>
-                <p>Mealtype: {recipe.mealtype}</p>
-                <p>Serves: {recipe.servingsize}</p>
-                <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+                <Button className='btn' onClick={() => handleBookmark(recipe.id)}>{showBookmark(recipe.id)}</Button>
+                <Button className='btn' onClick={() => eatenRecipe(recipe.id)}>Eaten</Button>
+                <div className='details'>
+                  <h3 className='rec_name'>{recipe.name}</h3>
+                  <p>Cuisine: {recipe.cuisine}</p>
+                  <p>Description: {recipe.description}</p>
+                  <p>Mealtype: {recipe.mealtype}</p>
+                  <p>Serves: {recipe.servingsize}</p>
+                  <Button variant="contained" className='see_recipe_button' onClick={() => viewRecipe(recipe.id, key)}>View Recipe→</Button>
+                </div>
               </div>
             )
           })}
