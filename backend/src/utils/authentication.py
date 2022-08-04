@@ -8,6 +8,8 @@ import json
 import hashlib
 import smtplib
 import ssl
+import string
+import random
 from flask_jwt_extended import (
     create_access_token
 )
@@ -172,10 +174,10 @@ def auth_forgot_password(data, credentials, cursor, conn) -> tuple:
     data = json.loads(data)
     response = {}
 
-    reset_code = "23489" #placeholder
+    reset_code = password_generator()
 
     receiver_email = data['email']
-    message = "This is your password reset code " + reset_code
+    message = "This is your temporary password " + reset_code
 
     passhash = hashlib.sha256(str(reset_code + HASH_SALT).encode('utf8')).hexdigest()
 
@@ -191,6 +193,8 @@ def auth_forgot_password(data, credentials, cursor, conn) -> tuple:
     sentEmail = sendEmail(receiver_email, message, credentials)
     return {'msg': 'Success'}, 200
  
+def password_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def auth_jwt_refresh(expiry, identity, response) -> tuple:
      # If the user is active within 5 minutes after their token expires, refresh their expiry time.
