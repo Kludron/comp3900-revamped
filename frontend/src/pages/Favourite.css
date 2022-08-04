@@ -1,5 +1,5 @@
 .main-content {
-    position: relative;
+    position: fixed;
     left: 15%;
     width: 85%;
 }
@@ -57,4 +57,15 @@
     float: right;
     margin-right: 8px;
     top: -8px
+}
+
+.recipe_box .bookmark {
+    float: right;
+    margin: 1vw;
+}
+
+.recipe_box .see_recipe_button {
+    float: right;
+    top: -3vw;
+    margin-right: 1vw;
 }
