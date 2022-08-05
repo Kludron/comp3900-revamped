@@ -42,13 +42,15 @@ npm install
 ```
 
 After the required npm packages have been installed, to start the frontend server:
+
 ```
 npm start
 ```
 
 ### Backend
 
-Navigate to the backend folder
+In a seperate shell, navigate to the backend folder
+
 ```
 cd backend
 ```
