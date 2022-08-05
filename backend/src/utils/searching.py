@@ -193,6 +193,16 @@ def search_detailed(conn, r_id) -> tuple:
         except psycopg2.ProgrammingError:
             return {'msg' : 'Unable to grab ingredients'}, 400
 
+        rating = 0
+        cursor.execute('''
+            SELECT AVG(rating) 
+            FROM recipe_rating
+            WHERE r_id = %s;
+        ''', (r_id, ))
+        try:
+            rating = cursor.fetchone()[0]
+        except:
+            pass
         response = {
             "Name" : r_name,
             "Description" : r_description,
@@ -201,6 +211,7 @@ def search_detailed(conn, r_id) -> tuple:
             "ServingSize" : r_sS,
             "Instructions" : r_instructions,
             "Ingredients" : list(),
+            "Rating": rating,
         }
 
         for ingredient in ingredients:
