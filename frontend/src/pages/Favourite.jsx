@@ -56,7 +56,7 @@ function BookmarkedRecipe(r) {
   const [bookmarkStar, setbookmarkStar] = useState('★');
   const navigate = useNavigate();
 
-  const viewRecipe = ({ recipeid }) => {
+  const viewRecipe = ( recipeid ) => {
     console.log(recipeid);
     navigate(`/view/recipe/${recipeid}`);
   }
