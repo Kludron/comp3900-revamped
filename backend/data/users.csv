@@ -7,3 +7,4 @@ id,username,pass_hash,email,points,goal_daily,goal_weekly
 9,nathan.quan5@gmail.com,afbeaa91bb4f343a6e8587055c18f02d3fbfe745cfe7cd7f8d1492f9eeb7c5fd,nathan.quan5@gmail.com,0,0,13600
 5,Tianwei Mo,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0,0,13900
 11,hi,2236f21abb98da8bb377cecad3e96031752720010628f4c0b788553d44f0e91e,random@hi,0,0,0
+12,123,12ae173e2933cb80f11122abb7551a10e2d8a313b202307bd68cbec571058d57,123@123,0,0,0
