@@ -24,7 +24,8 @@ apt update
 
 apt install -y npm \
 python3-pip \
-python3-venv
+python3-venv \
+python3-flask
 ```
 
 Once these packages are installed, the frontend and backend will need to be run seperately.
@@ -32,10 +33,13 @@ Once these packages are installed, the frontend and backend will need to be run 
 ### Frontend
 
 Navigate to the frontend folder
+
 ```
 cd frontend
 ```
+
 and run the following to install required packages (this only needs to be run once)
+
 ```
 npm install
 ```
@@ -52,13 +56,17 @@ Navigate to the backend folder
 cd backend
 ```
 From here, on Unix based systems, we can either start the program (using a virtual environment) by running the `start.sh` executable. Or, to install the required filed, run the following:
+
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
+
 The above only needs to be run once. Once this installs successfully, simply type:
+
 ```
 flask run
 ```
+
 To start the backend
 
 ### Open the program
