@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecipeDetails.css';
 import Button from '@mui/material/Button';
+import { Rating } from '@mui/material';
 
 /* Recipe Page */
 function Recipe () {
@@ -44,7 +45,8 @@ function Recipe () {
 			ingredients: response.data.Ingredients, 
 			cuisine: response.data.Cuisine, 
 			mealtype: response.data.MealType, 
-			servingsize: response.data.ServingSize
+			servingsize: response.data.ServingSize, 
+			rating: response.data.Rating,
 		});
 		setIngredients(response.data.Ingredients);
 		console.log(response.data.Ingredients);
@@ -53,13 +55,14 @@ function Recipe () {
 	React.useEffect(() => {
 		getRecipe();
 	}, []);
-
+	console.log(recipe.rating)
 	return (
 		<div>
 			<div className='recipe_details'>
 				<Button className='btn' variant="contained" onClick={() => goBack()}>← Go Back</Button>
 				<div className='upper'>
 					<h2 className='recipe_name'>{recipe.name}</h2>
+					<Rating value={Number(recipe.rating)} precision={0.1} readOnly/>
 					<p className='recipe_description'>Description: {recipe.description}</p>
 					<p className='recipe_mealtype'>Mealtype: {recipe.mealtype}</p>
 					<p className='recipe_servingsize'>Serves: {recipe.servingsize} people</p>
