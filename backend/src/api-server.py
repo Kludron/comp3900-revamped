@@ -121,12 +121,6 @@ def reset():
 
     return auth_forgot_password(request.get_data(), credentials, cursor, conn)
     
-# Regenerate JWT Token
-@api.after_request()
-@jwt_required()
-def refresh_jwt(response: request):
-    return auth_jwt_refresh(get_jwt()["exp"], get_jwt_identity(), response)
-
 @api.route('/profile', methods=['GET', 'PUT']) # Route tbc later
 @jwt_required() # Required in request header: "Authorization : Bearer <token>"
 @cross_origin()
