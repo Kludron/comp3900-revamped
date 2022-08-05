@@ -58,8 +58,8 @@ def auth_login(data, conn) -> tuple:
         # Validate that there was a user with these credentials
         try:
             vEmail, username, points = cursor.fetchone()
-            isValid = vEmail == email
-        except (ValueError, TypeError, psycopg2.ProgrammingError):
+            isValid = bool(vEmail == email)
+        except (ValueError, psycopg2.ProgrammingError):
             isValid = False
         if not isValid:
             response["msg"] = "Invalid Email / Password"
@@ -87,7 +87,7 @@ def auth_register(data, conn) -> tuple:
         cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
         
         try:
-            doesExist = cursor.fetchone()[0] == email
+            doesExist = bool(cursor.fetchone()[0] == email)
         except (ValueError, TypeError, psycopg2.ProgrammingError):
             doesExist = False
 
@@ -109,7 +109,7 @@ def auth_register(data, conn) -> tuple:
         #Check if user already has an account
         cursor.execute("SELECT email FROM users WHERE email=%s;", (email,))
         try:
-            doesExist = cursor.fetchone()[0] == email
+            doesExist = bool(cursor.fetchone()[0] == email)
         except (ValueError, TypeError, psycopg2.ProgrammingError):
             doesExist = False
 
@@ -124,9 +124,6 @@ def auth_register(data, conn) -> tuple:
     response['msg'] = "Successfully registered"
     return (response, 200)
 
-def auth_logout() -> tuple:
-    pass
-
 def auth_change_password(data, identity, conn) -> tuple:
     with conn.cursor() as cursor:
         try:
@@ -134,20 +131,20 @@ def auth_change_password(data, identity, conn) -> tuple:
         except json.decoder.JSONDecodeError:
             return {'msg':'Invalid parameters'}, 401
 
-        if type(data) is dict:
-            newpwd = data['newpassword']
-            email = identity
-            passhash = hashlib.sha256(str(newpwd + HASH_SALT).encode('utf8')).hexdigest()
+        newpwd = data['newpassword']
+        email = identity
+        passhash = hashlib.sha256(str(newpwd + HASH_SALT).encode('utf8')).hexdigest()
 
-            try:
-                cursor.execute(
-                    "UPDATE users SET pass_hash = %s WHERE email = %s;", 
-                    (passhash, email)
-                )
-                conn.commit()
-            except psycopg2.errors.InFailedSqlTransaction:
-                conn.rollback()
-            return {"msg": "Success"}, 200
+        try:
+            cursor.execute(
+                "UPDATE users SET pass_hash = %s WHERE email = %s;",
+                (passhash, email)
+            )
+        except psycopg2.errors.InFailedSqlTransaction:
+            conn.rollback()
+        else:
+            conn.commit()
+        return {"msg": "Success"}, 200
 
 def auth_change_username(data, identity, conn) -> tuple:
     with conn.cursor() as cursor:
@@ -165,9 +162,11 @@ def auth_change_username(data, identity, conn) -> tuple:
                     "UPDATE users SET username = %s WHERE email = %s;", 
                     (username, email)
                 )
-                conn.commit()
             except psycopg2.errors.InFailedSqlTransaction:
                 conn.rollback()
+            else:
+                conn.commit()
+
             return {"msg": "Success"}, 200
 
 def auth_forgot_password(data, credentials, cursor, conn) -> tuple:
@@ -221,14 +220,9 @@ def auth_get_uid(email, conn):
                 return result[0]
             except TypeError:
                 return None
-        # try:
-        #     return result[0]
-        # except (TypeError,psycopg2.ProgrammingError):
     return None
 
-
 def auth_update_viewed(data, email, conn):
-
     with conn.cursor() as cursor:
         # Grab the users u_id
         cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
@@ -278,6 +272,7 @@ def auth_update_viewed(data, email, conn):
                     conn.rollback()
             
         try:
+            # Grab all of the recently viewed recipes (for display on the frontend)
             cursor.execute("SELECT r_id FROM user_recentlyviewed WHERE u_id=%s;", (u_id,))
             results = cursor.fetchall()
             recipes = list()

@@ -84,9 +84,11 @@ def search_general(method, data, conn) -> tuple:
                     arguments = []
 
                     if search_query:
+                        # Add text search to query
                         constraints.append("lower(r.name) LIKE CONCAT('%%',%s,'%%')")
                         arguments.append(search_query.lower())
                     if ingredients:
+                        # Add ingredients search to query
                         constraints.append(f"""r.id IN (
                                         SELECT r_id
                                         FROM recipe_ingredients
@@ -96,10 +98,12 @@ def search_general(method, data, conn) -> tuple:
                         for ingredient in ingredients:
                             arguments.append(ingredient["Name"])
                     if mealTypes:
+                        # Add mealtype search to query
                         constraints.append(f"m.name in ({','.join(['%s' for _ in range(len(mealTypes))])})")
                         for mealType in mealTypes:
                             arguments.append(mealType)
                     if cuisines:
+                        # Add cuisine search to query
                         constraints.append(f"c.name in ({','.join(['%s' for _ in range(len(cuisines))])})")
                         for cuisine in cuisines:
                             arguments.append(cuisine)
@@ -239,7 +243,8 @@ def search_detailed(conn, r_id) -> tuple:
             )
             response["Ingredients"].append(ingredient_info)
 
-        if not response["Ingredients"]: # Default value
+        # Set Default Values
+        if not response["Ingredients"]:
             response["Ingredients"].append(dict(
                 Name="N/A",
                 Energy=0,

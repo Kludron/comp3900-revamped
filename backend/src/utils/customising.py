@@ -4,7 +4,6 @@ import json
 from platformdirs import user_cache_path
 
 def customise_profile(data, email, cursor, conn):
-    # This verification is incorrect. [TODO: Change this verification]
         data = json.loads(data)
         if type(data) is dict:
             cursor.execute('''

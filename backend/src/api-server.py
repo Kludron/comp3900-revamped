@@ -30,7 +30,7 @@ api = Flask(__name__)
 cors = CORS(api)
 api.config['CORS_HEADERS'] = 'Content-Type'
 
-api.config["JWT_SECRET_KEY"] = JWT_KEY # Randomly Generated
+api.config["JWT_SECRET_KEY"] = JWT_KEY
 api.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_EXPIRY
 api.config["JWT_TOKEN_LOCATION"] = 'headers'
 api.config["JWT_FORM_KEY"] = 'token'
@@ -39,9 +39,6 @@ api.secret_key = 'REPLACE ME - this value is here as a placeholder.' # This is t
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 jwt = JWTManager(api)
-# Command to access the database
-# psql -h 45.77.234.200 -U comp3900_user -d comp3900db
-# yckAPfc9MX42N4
 
 try:
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASS)
@@ -124,12 +121,11 @@ def reset():
 
     return auth_forgot_password(request.get_data(), credentials, cursor, conn)
     
-
-# Haven't tested this yet
-# @api.after_request()
-# @jwt_required()
-# def refresh_jwt(response: request):
-#     return auth_jwt_refresh(get_jwt()["exp"], get_jwt_identity(), response)
+# Regenerate JWT Token
+@api.after_request()
+@jwt_required()
+def refresh_jwt(response: request):
+    return auth_jwt_refresh(get_jwt()["exp"], get_jwt_identity(), response)
 
 @api.route('/profile', methods=['GET', 'PUT']) # Route tbc later
 @jwt_required() # Required in request header: "Authorization : Bearer <token>"
@@ -215,6 +211,7 @@ def favourite():
         response["msg"] = "The data provided is not valid"
     return response
 
+
 @api.route('/dashboard', methods=['GET', 'PUT'])
 @jwt_required()
 @cross_origin()
@@ -277,14 +274,7 @@ def dashboard():
         response["isSuccess"] = False
         response["msg"] = "The data provided is not valid"
     return response, 400
-###############################################
-### Search function
-# https://stackoverflow.com/questions/49721884/handle-incorrect-spelling-of-user-defined-names-in-python-application
 
-
-
-# def detailed_search():
-#     pass
 
 @api.route('/my-recipes', methods=['GET'])
 @jwt_required()
@@ -297,12 +287,10 @@ def get_my_recipes():
 def find_recipe(r_id):
     return search_detailed(conn, r_id)
 
-@api.route('/reviews/recipeid=<id>', methods=['GET', 'POST'])
+@api.route('/reviews/recipeid=<id>', methods=['GET'])
 @cross_origin()
 def reviews(id):
 
-    # [TODO]: Replace the default '3' with a grab from the rating table
-    # Consider restructuring this section
     if request.method == 'GET':
         if not str(id).isdigit():
             return {"msg" : "Recipe not found"}, 404
@@ -313,11 +301,16 @@ def reviews(id):
             WHERE c.r_id = %s
             AND u.id = c.u_id;
         """, (id,))
+
         response = {
             "Comments":list()
         }
 
-        comments = cursor.fetchall()
+        try:
+            comments = cursor.fetchall()
+        except Exception:
+            comments = []
+
         for comment in comments:
             username, description = comment
             response["Comments"].append({
@@ -325,46 +318,6 @@ def reviews(id):
                 "Content":description,
             })
         return response, 200
-
-#     # [TODO]: Replace the default '3' with a grab from the rating table
-#     # Consider restructuring this section
-#     if request.method == 'GET':
-#         if not str(id).isdigit():
-#             return {"msg" : "Recipe not found"}, 404
-
-#         cursor.execute("""
-#             SELECT u.username, c.description, rr.rating
-#             FROM users u, comments c, recipe_rating rr
-#             WHERE c.r_id = %s
-#             AND rr.r_id = c.r_id
-#             AND u.id = rr.u_id;
-#         """, (id,))
-#         response = {
-#             "Comments":list()
-#         }
-
-#         comments = cursor.fetchall()
-#         for comment in comments:
-#             username, description, rating = comment
-#             response["Comments"].append({
-#                 "Username":username,
-#                 "Content":description,
-#                 "Rating":rating
-#             })
-#         return response, 200
-
-
-#         comments = cursor.fetchall()
-#         for comment in comments:
-#             username, description, rating = comment
-#             response["Comments"].append({
-#                 "Username":username,
-#                 "Content":description,
-#                 "Rating":rating
-#             })
-#         return response, 200
-#     elif request.method == 'POST':
-#         return {'msg' : 'This is not implemented yet'}, 404
 
 #############################################
 #                                           #
@@ -426,7 +379,7 @@ def eaten(id):
     if not u_id:
         return ("msg: user does not exist", 401)
 
-    #Note: need to add caloric values to ingredients
+
     try:
         cursor.execute("INSERT INTO meal_history(u_id, r_id, date) VALUES (%s, %s, %s);", (u_id, r_id, dateString))
     except Exception:
@@ -445,24 +398,24 @@ def overview():
         return {'msg' : 'Authentication error'}, 403
 
     cursor.execute("""
-                    SELECT
-                    SUM(energy) AS energy,
-                    SUM(protein) AS protein, 
-                    SUM(fat) AS fat,
-                    SUM(fibre) AS fibre,
-                    SUM(sugars) AS sugars,
-                    SUM(carbohydrates) AS carbohydrates,
-                    SUM(calcium) AS calcium,
-                    SUM(iron) AS iron,
-                    SUM(magnesium) AS magnesium
-                    FROM (
-                            SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
-                            FROM (SELECT r_id FROM meal_history WHERE u_id = 1 ORDER BY date BETWEEN '2022-06-26' AND '2022-08-26') AS history
-                            JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
-                            JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
-                    ) ingredientHistory
-                     
-                    """, (u_id, '2022-06-26', '2022-08-26'))
+        SELECT
+        SUM(energy) AS energy,
+        SUM(protein) AS protein, 
+        SUM(fat) AS fat,
+        SUM(fibre) AS fibre,
+        SUM(sugars) AS sugars,
+        SUM(carbohydrates) AS carbohydrates,
+        SUM(calcium) AS calcium,
+        SUM(iron) AS iron,
+        SUM(magnesium) AS magnesium
+        FROM (
+                SELECT history.r_id, ingredient, energy, protein, fat, fibre, sugars, carbohydrates, calcium, iron, magnesium, manganese, phosphorus
+                FROM (SELECT r_id FROM meal_history WHERE u_id = 1 ORDER BY date BETWEEN '2022-06-26' AND '2022-08-26') AS history
+                JOIN recipe_ingredients on history.r_id = recipe_ingredients.r_id
+                JOIN Ingredients on recipe_ingredients.ingredient = Ingredients.id
+        ) ingredientHistory
+         
+    """, (u_id, '2022-06-26', '2022-09-26'))
 
     try:
         overview = cursor.fetchone()
@@ -476,6 +429,7 @@ def overview():
     return response, 200
 
 def find_imbalance(u_id):
+    # These are all the average daily required nutrients
     check_nutrients = [('protein', 70), ('fat', 60), ('fibre', 27), 
                         ('sugars', 27), ('carbohydrates', 300), ('calcium', 2500), 
                         ('iron', 12), ('magnesium', 400)]
@@ -547,8 +501,7 @@ def find_recipe_more(recommended_nutrient, amount):
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def recommend():
    
-    #u_id = auth_get_uid(get_jwt_identity(), cursor)
-    u_id = 1
+    u_id = auth_get_uid(get_jwt_identity(), cursor)
     if not u_id:
         return {'msg' : 'Authentication error'}, 403
 
