@@ -2,7 +2,8 @@ id,username,pass_hash,email,points,goal_daily,goal_weekly
 2,Ed,df3b585ca9d8399a7245d33e57195495216bb243d8316e186b1eca9458eae74c,edmond.lung@hotmail.com,0,0,0
 8,random,4bf5d2b76591e18921165db485e6e06f8a7a6c73b8b4573a31b0fe1f1428cb59,random@random.com,0,0,0
 1,Liam,bd25f93e765c380a414d1cb7887a9cfcf5394fbc36443810256df3ce39f7ab32,sample@sample.com,0,1900,12600
-5,Tianwei Mo,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0,0,0
 10,Demo,d27f98a0b52927b3272ba86174d41d915351a22bb6e29d2b9ae68163f3070926,FinalDemo@gmail.com,0,0,0
 4,Demo1,e944cfda543d2a7666744ce20ee7ca23bcb2a65448902ff5b4b272225a8d4cf7,email@email,0,2050,12600
 9,nathan.quan5@gmail.com,afbeaa91bb4f343a6e8587055c18f02d3fbfe745cfe7cd7f8d1492f9eeb7c5fd,nathan.quan5@gmail.com,0,0,13600
+5,Tianwei Mo,c564efa004b043465200aebb8781f5c5f0d0ce25505cca7e35e46dfdffa12936,tianwei_mo@outlook.com,0,0,13900
+11,hi,2236f21abb98da8bb377cecad3e96031752720010628f4c0b788553d44f0e91e,random@hi,0,0,0
