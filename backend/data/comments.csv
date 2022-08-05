@@ -16,3 +16,7 @@ c_id,r_id,u_id,description,parent
 15,3,1,demo1,
 16,3,5,soooooo bad!,
 17,3,5,sooo good!,
+18,3,5,rating 0,
+19,3,5,rating 3,
+20,13,5,giving a 4 star rating!,
+21,13,1,Five stars for funny steps,
