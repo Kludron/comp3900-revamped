@@ -43,7 +43,25 @@ Week 7
 - Completed the frontend ability to display recipes and can click into them to view further details.
 - Discussed with Nathan about working on different backend routes to meet our user story requirements.
 - Have moved onto being able to comment/rate the recipe. (in the works)
+- Implemented the searching fields with minor bugs.
 
 Week 8
+- Coordinated sprint meeting on tuesday and prepared a list of deliverables required for the demo later this week.
+- Continued working on sprint 2 health user stories that were incomplete.
+- 
+
+Week 9/10
+- Assigned Bill to work on comments page, bookmarking and profile page.
+- Did a lot of pair programming during this period to speed up the progress of implementation.
+- Completed the multiple select function located in the dashbord that accepts different input and debugged with Liam and Nathan.
+- Completed the Diet/Metrics and MyRecipes Page and its functions. (Recommend, Intake Overview, SetGoal, MyRecipes and RecentlyViewed)
+- Spent a lot of time debugging with Nathan and Liam regarding Authorization errors and linking the server to the frontend.
+- Created a Project Demo script
+- Styled the Login, Register, Landing, Dashboard, Recipe, ChangePassword, ChangeUsername, ForgotPassword pages and relevant components.
+- Created a Project report skeleton.
+- Created a Folder in our google drive of our week 10 deliverables (report, software quality, peer and demo)
+- Completed the Description of Functionalities, Title page, Table of Contents, and frontend related implementation sections of the project report.
+- Completed the report on Friday and Liam completed the software quality.
+- Submitted the report and software quality as Scrum Master on behalf of the team. (Uploaded to github as our zip was over 100MB)
 
 
