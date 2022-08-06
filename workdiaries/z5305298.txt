@@ -18,4 +18,6 @@ Week 7:
 Week 8: 
     I tried to create a favourite recipes page for bookmarked recipes. Allergens function was fixed, they can be added and displayed correctly. Also tried to collaborate frontend with backend. After the demo, we had the retrospective. In all, I think I did better than in the last sprint.
 Week 9:
-    I implemented favourite recipe page on both frontend and backend.
+    I implemented favourite recipe page and comment page on both frontend and backend. Users can bookmark and unbookmakr recipes on dashboard and bookmarked recipe page. In terms of comment, users can comment and rating the recipes. What's more, I refactored profile dashboard code.
+Week 10:
+    This week I focused on styling the frontend. I styled profile, favourite recipe, diet and metrics, my recipe and comment page with material UI. Specifically, I changed the style of buttons and arrangement of boxes. I've also added some shaddows to boxes. Apart from that, I completed average rating.
