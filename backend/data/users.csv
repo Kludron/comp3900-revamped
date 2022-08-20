@@ -1,10 +1,11 @@
 id,username,pass_hash,email,points,goal_daily,goal_weekly
 2,Ed,df3b585ca9d8399a7245d33e57195495216bb243d8316e186b1eca9458eae74c,edmond.lung@hotmail.com,0,0,0
 16,tam,bb5f71fef7c7d5b16ad1f1fcd1b3756da183102589ba8dbc355dd854fd0ccb2d,tam.lam@unsw.edu.au,0,0,0
-15,minji,bb5f71fef7c7d5b16ad1f1fcd1b3756da183102589ba8dbc355dd854fd0ccb2d,test,0,0,0
 8,random,4bf5d2b76591e18921165db485e6e06f8a7a6c73b8b4573a31b0fe1f1428cb59,random@random.com,0,0,0
+15,minji,bb5f71fef7c7d5b16ad1f1fcd1b3756da183102589ba8dbc355dd854fd0ccb2d,test,0,2000,14100
 10,Demo,d27f98a0b52927b3272ba86174d41d915351a22bb6e29d2b9ae68163f3070926,FinalDemo@gmail.com,0,0,0
 4,Demo1,e944cfda543d2a7666744ce20ee7ca23bcb2a65448902ff5b4b272225a8d4cf7,email@email,0,2050,12600
+19,testtttttttttttttttttttttt,8400aa1ebd2de5c97adcbcb2d1bd967d8a957651c340cb2a43e9ecb0abe9d10a,testtttttt,0,0,0
 9,nathan.quan5@gmail.com,afbeaa91bb4f343a6e8587055c18f02d3fbfe745cfe7cd7f8d1492f9eeb7c5fd,nathan.quan5@gmail.com,0,0,13600
 11,hi,2236f21abb98da8bb377cecad3e96031752720010628f4c0b788553d44f0e91e,random@hi,0,0,0
 12,123,12ae173e2933cb80f11122abb7551a10e2d8a313b202307bd68cbec571058d57,123@123,0,0,0
