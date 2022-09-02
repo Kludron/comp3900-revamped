@@ -1,4 +1,3 @@
-This is a base template created for COMP3900 class H14A group f1v3guy5.
 ### Google Drive
 https://drive.google.com/drive/folders/1gRJpRURyTGFYxh-9HWNVDomvBb3JXgL1?usp=sharing
 
