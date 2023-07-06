@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+}
+
+ul.navBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.CustomLink {
+    margin: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ul.navBar li {
+    display: block;
+    height: 20%;
+    background-color: #4dabf5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ul.navBar li.active {
+    background-color: #1769aa;
+    color: white;
+}
+
+.navBar-text {
+    color: white
+}
+

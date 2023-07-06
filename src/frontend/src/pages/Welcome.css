@@ -1,0 +1,119 @@
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.big-wrapper {
+    position: relative;
+    padding: 1.7rem 0 2rem;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container {
+    position: relative;
+    max-width: 83rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 3rem;
+    z-index: 10;
+}
+
+header {
+    position: relative;
+    z-index: 70;
+}
+  
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+  
+.logo img {
+    width: 50px;
+    margin-right: 0.6rem;
+    margin-top: -0.6rem;
+}
+  
+.logo h3 {
+    font-size: 1.55rem;
+    line-height: 1.2;
+    font-weight: 700;
+}
+  
+.links ul {
+    display: flex;
+    list-style: none;
+    align-items: flex-start;
+}
+
+.links li {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+
+.links li Button{
+    width: 120px;
+}
+
+.showcase-area .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .big-title {
+    font-size: 1.4rem;
+    text-transform: capitalize;
+    line-height: 1.5;
+  }
+  
+  .text {
+    font-size: 1.1rem;
+    margin: 1.9rem 0 2.5rem;
+    max-width: 700px;
+    line-height: 2.3;
+  }
+  
+  .food {
+    width: 80%;
+    transform: translate(0%, 0px);
+ }
+  
+.shape {
+    position: absolute;
+    z-index: 0;
+    width: 80%;
+    bottom: -120px;
+    right: 220px;
+    opacity: 0.5;
+}
+
+.shape2 {
+    transform: scaleX(-1);
+    position: absolute;
+    z-index: 0;
+    width: 80%;
+    bottom: -120px;
+    right: 220px;
+    opacity: 0.25;
+}
+.signuplogin-btn {
+    position: absolute;
+    top: 50%;
+    padding: 50pt;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 20pt; 
+}

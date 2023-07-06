@@ -1,0 +1,60 @@
+.main-content {
+    position: relative;
+    left: 15%;
+    width: 85%;
+}
+
+.favourite-hr {
+    border-top: 1vh dotted;
+}
+.list_bookmarked_recipes {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.recipe_box{
+    box-shadow: 3px 3px 5px rgb(212, 212, 212);
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: lightblue;
+    width: 48%;
+    height: 10%;
+    margin: 2px;
+}
+
+.recipe_box .btn{
+    position: relative;
+    background-color: white;
+    float: right;
+    margin: 8px;
+}
+
+.recipe_box .btn{
+    position: relative;
+    background-color: white;
+    float: right;
+    margin: 8px;
+}
+
+.recipe_box .details{
+    font-family: "Poppins", sans-serif;
+    margin-left: 1.5vw;
+}
+
+.recipe_box .details .rec_name{
+    font-size: 17pt;
+}
+
+.recipe_box .details > p {
+    color: grey;
+}
+
+.recipe_box .details .see_recipe_button {
+    float: right;
+    margin-right: 8px;
+    top: -8px
+}

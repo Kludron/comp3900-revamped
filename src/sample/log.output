@@ -1,0 +1,528 @@
+2022-06-23 12:07:08.988 AEST [4072621] FATAL:  lock file "postmaster.pid" already exists
+2022-06-23 12:07:08.988 AEST [4072621] HINT:  Is another postmaster (PID 4059012) running in data directory "/localstorage/z5256175/pgsql/data"?
+2022-06-23 12:07:14.916 AEST [4072653] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-23 12:07:14.918 AEST [4072653] LOG:  listening on Unix socket "/localstorage/z5256175/pgsql/data/.s.PGSQL.5432"
+2022-06-23 12:07:14.922 AEST [4072654] LOG:  database system was shut down at 2022-06-23 12:07:12 AEST
+2022-06-23 12:07:14.957 AEST [4072653] LOG:  database system is ready to accept connections
+2022-06-23 12:11:47.879 AEST [4072653] LOG:  received smart shutdown request
+2022-06-23 12:11:47.895 AEST [4072653] LOG:  received SIGHUP, reloading configuration files
+2022-06-23 12:11:47.895 AEST [4072653] LOG:  background worker "logical replication launcher" (PID 4072660) exited with exit code 1
+2022-06-23 12:11:47.896 AEST [4072655] LOG:  shutting down
+2022-06-23 12:11:47.954 AEST [4072653] LOG:  database system is shut down
+2022-06-22 22:18:59.001 EDT [9023] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:18:59.001 EDT [9023] LOG:  could not bind IPv6 address "::1": Address already in use
+2022-06-22 22:18:59.001 EDT [9023] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:18:59.002 EDT [9023] LOG:  could not bind IPv4 address "127.0.0.1": Address already in use
+2022-06-22 22:18:59.002 EDT [9023] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:18:59.002 EDT [9023] WARNING:  could not create listen socket for "localhost"
+2022-06-22 22:18:59.002 EDT [9023] FATAL:  could not create any TCP/IP sockets
+2022-06-22 22:18:59.005 EDT [9023] LOG:  database system is shut down
+2022-06-22 22:19:37.180 EDT [9060] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:19:37.180 EDT [9060] LOG:  could not bind IPv6 address "::1": Address already in use
+2022-06-22 22:19:37.180 EDT [9060] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:19:37.180 EDT [9060] LOG:  could not bind IPv4 address "127.0.0.1": Address already in use
+2022-06-22 22:19:37.180 EDT [9060] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:19:37.180 EDT [9060] WARNING:  could not create listen socket for "localhost"
+2022-06-22 22:19:37.181 EDT [9060] FATAL:  could not create any TCP/IP sockets
+2022-06-22 22:19:37.182 EDT [9060] LOG:  database system is shut down
+2022-06-22 22:20:11.954 EDT [9107] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:20:11.956 EDT [9107] LOG:  could not bind IPv6 address "::1": Address already in use
+2022-06-22 22:20:11.956 EDT [9107] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:20:11.956 EDT [9107] LOG:  could not bind IPv4 address "127.0.0.1": Address already in use
+2022-06-22 22:20:11.956 EDT [9107] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2022-06-22 22:20:11.956 EDT [9107] WARNING:  could not create listen socket for "localhost"
+2022-06-22 22:20:11.956 EDT [9107] FATAL:  could not create any TCP/IP sockets
+2022-06-22 22:20:11.958 EDT [9107] LOG:  database system is shut down
+2022-06-22 22:25:12.851 EDT [9362] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:25:12.852 EDT [9362] LOG:  listening on IPv6 address "::1", port 5432
+2022-06-22 22:25:12.852 EDT [9362] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2022-06-22 22:25:12.856 EDT [9362] FATAL:  could not create lock file "/var/run/postgresql/.s.PGSQL.5432.lock": Permission denied
+2022-06-22 22:25:12.857 EDT [9362] LOG:  database system is shut down
+2022-06-22 22:25:22.786 EDT [9375] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:25:22.787 EDT [9375] LOG:  listening on IPv6 address "::1", port 5432
+2022-06-22 22:25:22.787 EDT [9375] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2022-06-22 22:25:22.791 EDT [9375] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2022-06-22 22:25:22.799 EDT [9376] LOG:  database system was shut down at 2022-06-22 22:20:11 EDT
+2022-06-22 22:25:22.811 EDT [9375] LOG:  database system is ready to accept connections
+2022-06-22 22:25:54.829 EDT [9412] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:25:54.829 EDT [9412] HINT:  Is another postmaster (PID 9375) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:26:58.740 EDT [1004] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:26:58.742 EDT [1004] LOG:  listening on IPv6 address "::1", port 5432
+2022-06-22 22:26:58.742 EDT [1004] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2022-06-22 22:26:58.747 EDT [1004] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2022-06-22 22:26:58.768 EDT [1005] LOG:  database system was interrupted; last known up at 2022-06-22 22:25:44 EDT
+2022-06-22 22:26:59.184 EDT [1005] LOG:  database system was not properly shut down; automatic recovery in progress
+2022-06-22 22:26:59.200 EDT [1005] LOG:  redo starts at 0/161F4B8
+2022-06-22 22:26:59.200 EDT [1005] LOG:  invalid record length at 0/161F5E8: wanted 24, got 0
+2022-06-22 22:26:59.200 EDT [1005] LOG:  redo done at 0/161F5B0
+2022-06-22 22:26:59.268 EDT [1004] LOG:  database system is ready to accept connections
+2022-06-22 22:28:51.115 EDT [1074] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:28:51.115 EDT [1074] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:31:48.493 EDT [1561] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:34:38.974 EDT [2166] ERROR:  relation "users" already exists
+2022-06-22 22:34:38.974 EDT [2166] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:34:38.974 EDT [2166] ERROR:  relation "cuisines" already exists
+2022-06-22 22:34:38.974 EDT [2166] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:34:38.975 EDT [2166] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:34:38.975 EDT [2166] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:34:38.975 EDT [2166] ERROR:  relation "ingredients" already exists
+2022-06-22 22:34:38.975 EDT [2166] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:34:38.975 EDT [2166] ERROR:  relation "recipes" already exists
+2022-06-22 22:34:38.975 EDT [2166] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:34:38.975 EDT [2166] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:34:38.975 EDT [2166] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:34:38.975 EDT [2166] ERROR:  could not open file "data/recipes.csv" for reading: No such file or directory
+2022-06-22 22:34:38.975 EDT [2166] HINT:  COPY FROM instructs the PostgreSQL server process to read a file. You may want a client-side facility such as psql's \copy.
+2022-06-22 22:34:38.975 EDT [2166] STATEMENT:  COPY recipes FROM 'data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:35:11.825 EDT [2197] ERROR:  relation "users" already exists
+2022-06-22 22:35:11.825 EDT [2197] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:35:11.826 EDT [2197] ERROR:  relation "cuisines" already exists
+2022-06-22 22:35:11.826 EDT [2197] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:11.829 EDT [2197] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:35:11.829 EDT [2197] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:11.829 EDT [2197] ERROR:  relation "ingredients" already exists
+2022-06-22 22:35:11.829 EDT [2197] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:35:11.830 EDT [2197] ERROR:  relation "recipes" already exists
+2022-06-22 22:35:11.830 EDT [2197] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:11.830 EDT [2197] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:35:11.830 EDT [2197] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:35:11.830 EDT [2197] ERROR:  syntax error at or near ""data/recipes.csv"" at character 19
+2022-06-22 22:35:11.830 EDT [2197] STATEMENT:  COPY recipes FROM "data/recipes.csv" DELIMITER ',' CSV HEADER;
+2022-06-22 22:35:28.621 EDT [2208] ERROR:  relation "users" already exists
+2022-06-22 22:35:28.621 EDT [2208] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:35:28.622 EDT [2208] ERROR:  relation "cuisines" already exists
+2022-06-22 22:35:28.622 EDT [2208] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:28.623 EDT [2208] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:35:28.623 EDT [2208] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:28.624 EDT [2208] ERROR:  relation "ingredients" already exists
+2022-06-22 22:35:28.624 EDT [2208] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:35:28.624 EDT [2208] ERROR:  relation "recipes" already exists
+2022-06-22 22:35:28.624 EDT [2208] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:35:28.624 EDT [2208] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:35:28.624 EDT [2208] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:35:28.625 EDT [2208] ERROR:  could not open file "./data/recipes.csv" for reading: No such file or directory
+2022-06-22 22:35:28.625 EDT [2208] HINT:  COPY FROM instructs the PostgreSQL server process to read a file. You may want a client-side facility such as psql's \copy.
+2022-06-22 22:35:28.625 EDT [2208] STATEMENT:  COPY recipes FROM './data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:37:15.099 EDT [2307] ERROR:  relation "users" already exists
+2022-06-22 22:37:15.099 EDT [2307] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:37:15.099 EDT [2307] ERROR:  relation "cuisines" already exists
+2022-06-22 22:37:15.099 EDT [2307] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:15.099 EDT [2307] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:37:15.099 EDT [2307] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:15.099 EDT [2307] ERROR:  relation "ingredients" already exists
+2022-06-22 22:37:15.099 EDT [2307] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:37:15.099 EDT [2307] ERROR:  relation "recipes" already exists
+2022-06-22 22:37:15.099 EDT [2307] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:15.100 EDT [2307] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:37:15.100 EDT [2307] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:37:15.114 EDT [2307] ERROR:  insert or update on table "recipes" violates foreign key constraint "recipes_cuisine_fkey"
+2022-06-22 22:37:15.114 EDT [2307] DETAIL:  Key (cuisine)=(1) is not present in table "cuisines".
+2022-06-22 22:37:15.114 EDT [2307] STATEMENT:  COPY recipes FROM '/home/user/Documents/comp3900/sample/data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:37:28.606 EDT [2318] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:37:28.606 EDT [2318] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:37:31.922 EDT [2332] ERROR:  relation "users" already exists
+2022-06-22 22:37:31.922 EDT [2332] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:37:31.922 EDT [2332] ERROR:  relation "cuisines" already exists
+2022-06-22 22:37:31.922 EDT [2332] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:31.923 EDT [2332] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:37:31.923 EDT [2332] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:31.923 EDT [2332] ERROR:  relation "ingredients" already exists
+2022-06-22 22:37:31.923 EDT [2332] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:37:31.924 EDT [2332] ERROR:  relation "recipes" already exists
+2022-06-22 22:37:31.924 EDT [2332] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:37:31.924 EDT [2332] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:37:31.924 EDT [2332] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:37:31.925 EDT [2332] ERROR:  insert or update on table "recipes" violates foreign key constraint "recipes_cuisine_fkey"
+2022-06-22 22:37:31.925 EDT [2332] DETAIL:  Key (cuisine)=(1) is not present in table "cuisines".
+2022-06-22 22:37:31.925 EDT [2332] STATEMENT:  COPY recipes FROM '/home/user/Documents/comp3900/sample/data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:39:48.428 EDT [2400] ERROR:  relation "users" already exists
+2022-06-22 22:39:48.428 EDT [2400] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:39:48.428 EDT [2400] ERROR:  relation "cuisines" already exists
+2022-06-22 22:39:48.428 EDT [2400] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:39:48.428 EDT [2400] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:39:48.428 EDT [2400] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:39:48.429 EDT [2400] ERROR:  relation "ingredients" already exists
+2022-06-22 22:39:48.429 EDT [2400] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:39:48.429 EDT [2400] ERROR:  relation "recipes" already exists
+2022-06-22 22:39:48.429 EDT [2400] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:39:48.429 EDT [2400] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:39:48.429 EDT [2400] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:39:48.430 EDT [2400] ERROR:  insert or update on table "recipes" violates foreign key constraint "recipes_cuisine_fkey"
+2022-06-22 22:39:48.430 EDT [2400] DETAIL:  Key (cuisine)=(1) is not present in table "cuisines".
+2022-06-22 22:39:48.430 EDT [2400] STATEMENT:  COPY recipes FROM '/home/user/Documents/comp3900/sample/data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "users" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "cuisines" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "ingredients" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "recipes" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:39.977 EDT [2457] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:40:39.977 EDT [2457] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:40:39.978 EDT [2457] ERROR:  duplicate key value violates unique constraint "cuisines_pkey"
+2022-06-22 22:40:39.978 EDT [2457] DETAIL:  Key (id)=(1) already exists.
+2022-06-22 22:40:39.978 EDT [2457] CONTEXT:  COPY cuisines, line 2
+2022-06-22 22:40:39.978 EDT [2457] STATEMENT:  COPY cuisines FROM '/home/user/Documents/comp3900/sample/data/cuisines.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:40:39.978 EDT [2457] ERROR:  duplicate key value violates unique constraint "mealtypes_pkey"
+2022-06-22 22:40:39.978 EDT [2457] DETAIL:  Key (id)=(1) already exists.
+2022-06-22 22:40:39.978 EDT [2457] CONTEXT:  COPY mealtypes, line 2
+2022-06-22 22:40:39.978 EDT [2457] STATEMENT:  COPY mealtypes FROM '/home/user/Documents/comp3900/sample/data/mealtypes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:40:48.508 EDT [2465] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:40:48.508 EDT [2465] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "users" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table Users (
+	    id            int unique not null,
+	    username      varchar(200) unique not null,
+	    pass_hash     varchar(256) not null,
+	    
+	    email         text not null,
+	    points        int default 0,
+	    primary key  (id)
+	);
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "cuisines" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table Cuisines (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "mealtypes" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table MealTypes (
+	    id            int unique not null,
+	    name          text unique not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "ingredients" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table Ingredients (
+	    id            int unique not null,
+	    name          text unique not null,
+	    calories      float,  
+	    primary key   (id)
+	);
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "recipes" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table Recipes (
+	    id            int unique not null,
+	    name          varchar(200) not null,
+	    description   text not null,
+	    cuisine       int references Cuisines(id),
+	    meal_type     int references MealTypes(id),
+	    serving_size  int not null,
+	    primary key   (id)
+	);
+2022-06-22 22:40:50.694 EDT [2478] ERROR:  relation "recipe_ingredients" already exists
+2022-06-22 22:40:50.694 EDT [2478] STATEMENT:  create table recipe_ingredients (
+	    recipe        int references Recipes(id),
+	    ingredient    int references Ingredients(id),
+	    quantity      float,  
+	    grams         float,
+	    millilitres   float,
+	    primary key   (recipe, ingredient)
+	);
+2022-06-22 22:40:50.695 EDT [2478] ERROR:  duplicate key value violates unique constraint "cuisines_pkey"
+2022-06-22 22:40:50.695 EDT [2478] DETAIL:  Key (id)=(1) already exists.
+2022-06-22 22:40:50.695 EDT [2478] CONTEXT:  COPY cuisines, line 2
+2022-06-22 22:40:50.695 EDT [2478] STATEMENT:  COPY cuisines FROM '/home/user/Documents/comp3900/sample/data/cuisines.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:40:50.695 EDT [2478] ERROR:  duplicate key value violates unique constraint "mealtypes_pkey"
+2022-06-22 22:40:50.695 EDT [2478] DETAIL:  Key (id)=(1) already exists.
+2022-06-22 22:40:50.695 EDT [2478] CONTEXT:  COPY mealtypes, line 2
+2022-06-22 22:40:50.695 EDT [2478] STATEMENT:  COPY mealtypes FROM '/home/user/Documents/comp3900/sample/data/mealtypes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:40:50.695 EDT [2478] ERROR:  duplicate key value violates unique constraint "recipes_pkey"
+2022-06-22 22:40:50.695 EDT [2478] DETAIL:  Key (id)=(1) already exists.
+2022-06-22 22:40:50.695 EDT [2478] CONTEXT:  COPY recipes, line 2
+2022-06-22 22:40:50.695 EDT [2478] STATEMENT:  COPY recipes FROM '/home/user/Documents/comp3900/sample/data/recipes.csv' DELIMITER ',' CSV HEADER;
+2022-06-22 22:41:51.072 EDT [2520] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:41:51.072 EDT [2520] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:42:22.866 EDT [2545] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:42:22.866 EDT [2545] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:42:46.150 EDT [2563] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:42:46.150 EDT [2563] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:43:47.017 EDT [2639] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:45:00.934 EDT [2685] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:45:23.641 EDT [2700] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:45:40.078 EDT [2709] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:46:31.154 EDT [2749] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:47:44.716 EDT [2816] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:49:36.755 EDT [2857] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:52:31.253 EDT [2953] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 22:56:45.536 EDT [1263] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:56:45.536 EDT [1263] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:57:58.638 EDT [1355] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:57:58.638 EDT [1355] HINT:  Is another postmaster (PID 1004) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:58:51.763 EDT [1450] LOG:  starting PostgreSQL 13.7 (Debian 13.7-0+deb11u1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2022-06-22 22:58:51.764 EDT [1450] LOG:  listening on IPv6 address "::1", port 5432
+2022-06-22 22:58:51.764 EDT [1450] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2022-06-22 22:58:51.767 EDT [1450] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2022-06-22 22:58:51.786 EDT [1451] LOG:  database system was shut down at 2022-06-22 22:58:51 EDT
+2022-06-22 22:58:51.798 EDT [1450] LOG:  database system is ready to accept connections
+2022-06-22 22:58:52.043 EDT [1462] FATAL:  database "comp3900db" does not exist
+2022-06-22 22:59:11.156 EDT [1474] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:59:11.156 EDT [1474] HINT:  Is another postmaster (PID 1450) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 22:59:11.480 EDT [1479] FATAL:  database "comp3900db" does not exist
+2022-06-22 22:59:36.519 EDT [1513] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 22:59:36.519 EDT [1513] HINT:  Is another postmaster (PID 1450) running in data directory "/home/user/.local/pgsql/data"?
+2022-06-22 23:00:14.935 EDT [1554] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:06:29.679 EDT [1874] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:07:25.987 EDT [1928] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:07:36.826 EDT [1941] ERROR:  syntax error at or near "sample" at character 45
+2022-06-22 23:07:36.826 EDT [1941] STATEMENT:  SELECT r.name FROM recipes r WHERE r.name=''sample''
+2022-06-22 23:07:54.440 EDT [1958] ERROR:  column "'sample'" does not exist at character 43
+2022-06-22 23:07:54.440 EDT [1958] STATEMENT:  SELECT r.name FROM recipes r WHERE r.name="'sample'"
+2022-06-22 23:08:28.588 EDT [1974] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:08:46.541 EDT [2013] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:09:10.083 EDT [2030] LOG:  unexpected EOF on client connection with an open transaction
+2022-06-22 23:14:09.463 EDT [2177] FATAL:  lock file "postmaster.pid" already exists
+2022-06-22 23:14:09.463 EDT [2177] HINT:  Is another postmaster (PID 1450) running in data directory "/home/user/.local/pgsql/data"?

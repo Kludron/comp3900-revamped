@@ -1,0 +1,36 @@
+.comments {
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+
+}
+
+.comments .comment-go-back {
+    margin-bottom: 3vh;
+}
+
+.comment {
+    padding: 2%;
+    display: flex;
+    border-bottom-style: double;
+}
+
+.comment-user {
+    display: flex;
+    width: 15%;
+}
+
+.comment-user-icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 5%;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.CommentBar {
+    width: 50%;
+}

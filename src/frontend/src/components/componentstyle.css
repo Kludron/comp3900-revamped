@@ -1,0 +1,19 @@
+.forgot-password-btn{
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    border-color: white;
+    font-size: 15pt;
+    color: rgb(52, 52, 254);
+    cursor: pointer;
+}
+
+.ingredientbar {
+    width: 80%;
+}
+
+.recipebar {
+    width: 100%;
+    float: left;
+}

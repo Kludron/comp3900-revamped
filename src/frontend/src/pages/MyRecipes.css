@@ -1,0 +1,45 @@
+.my-recipe-wrapper {
+    display: flex;
+    position: relative;
+}
+
+.my-recipe-wrapper .main-content {
+    width: 100vw;
+}
+
+.my-recipe-hr {
+    border-top: 1vh dashed;
+}
+
+.my-recipe-wrapper .main-content .list_recipes {
+    width: 80vw;
+}
+
+.my-recipe-wrapper .main-content .list_recipes .recipe_box {
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 1vw;
+    width: 48%;
+}
+
+.my-recipe-wrapper .main-content .list_recipes .recipe_box > h3 {
+    font-family: "Poppins", sans-serif;
+    font-size: 20pt;
+    margin-left: 1.5vw;
+}
+
+.my-recipe-wrapper .main-content .list_recipes .recipe_box > p {
+    color: gray;
+    margin-left: 1.5vw;
+}
+
+.my-recipe-wrapper .main-content .list_recipes .recipe_box .edit {
+    float: right;
+    margin: 1vw;
+}
+
+.my-recipe-wrapper .main-content .list_recipes .recipe_box .see_recipe_button {
+    float: right;
+    top: -1vw;
+    margin-right: 1vw
+}
+

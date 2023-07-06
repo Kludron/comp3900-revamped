@@ -1,0 +1,152 @@
+.recipeBox {
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.search_bars {
+    flex-wrap: wrap;
+}
+
+.ingredient_bar {
+    display: flex;
+    width: 96%;
+    align-items: center;
+    justify-content: center;
+}
+
+.search_bars .remaining_bars {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search_bars .ingredient_bar .bar {
+    background-color: white;
+    width: 95vw;
+    border-radius: 5px;
+}
+
+.search_bars .remaining_bars .bar2 {
+    width: 25vw;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.search_bars .remaining_bars .btn{
+    width: 8vw;
+}
+.recipeBox .upper-section {
+    background-color: #4dabf5;
+    border-radius: 10px;
+}
+
+.recipeBox .upper-section .title_bar .head {
+    color: white;
+    font-size: 25pt;
+    font-family: "Poppins", sans-serif;
+}
+.recipe_screen {
+    border-style: solid;
+    border-color: pink;
+    margin-top: 15;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.recipe_screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+p {
+    margin: 3px;
+    font-size: 12px;
+}
+
+.break {
+    width: 100%;
+    height: 5px;
+    border-radius: 30px;
+    background-color: lightgray;
+    border: 0 none;
+}
+
+.list_recipes {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.list_recipes .recipe_box {
+    box-shadow: 3px 3px 5px rgb(212, 212, 212);
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: lightblue;
+    width: 48%;
+    height: 10%;
+    margin: 2px;
+}
+
+.recipeBox .upper-section .title_bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.recipeBox .upper-section .title_bar .logout_btn {
+    width: 8vw;
+    margin-left: 2vw;
+}
+
+.recipeBox .upper-section .title_bar .avatar {
+    margin-right: 2vw;
+    cursor: pointer;
+}
+
+.recipeBox .list_recipes {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.recipeBox .list_recipes {
+    box-shadow: 0px 15px grey;
+}
+
+.recipeBox .list_recipes .recipe_box .btn{
+    position: relative;
+    background-color: white;
+    float: right;
+    margin: 8px;
+}
+
+.recipeBox .list_recipes .recipe_box .details{
+    font-family: "Poppins", sans-serif;
+    margin-left: 1.5vw;
+}
+
+.recipeBox .list_recipes .recipe_box .details .rec_name{
+    font-size: 17pt;
+}
+
+.recipeBox .list_recipes .recipe_box .details > p {
+    color: grey;
+}
+
+.recipeBox .list_recipes .recipe_box .details .see_recipe_button {
+    float: right;
+    margin-right: 8px;
+    top: -8px;
+}
+
+.search_results {
+    margin: 1vw;
+}

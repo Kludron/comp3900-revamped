@@ -1,0 +1,149 @@
+.profile-background {
+    position: fixed;
+    opacity: 0.3;
+    width: 100%;
+    z-index: -1;
+}
+
+.main-content {
+    position: relative;
+    left: 15%;
+    width: 85%;
+}
+
+.main-content > * {
+    margin: 2vw;
+}
+
+.main-content .go-back {
+    margin: 2vw;
+}
+
+.main-content .logout {
+    margin: 2vw;
+}
+
+.userdata_field {
+    display: flex;
+    width: 60%;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.attribute {
+    border-style: ridge;
+    border-right-style: groove;
+    border-width: 0.3vw;
+    border-right-width: 0.5vw;
+}
+
+.attribute p {
+    font-size: 1.5vw;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    padding: 1vw;
+    border-bottom-style: double;
+}
+
+.info {
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    border-style: ridge;
+    border-left-style: none;
+    border-width: 0.3vw;    
+}
+.info p {
+    font-size: 1.5vw;
+    padding: 1vw;
+    border-bottom-style: double;
+}
+
+.info p Button {
+    float: right;
+    font-size: 1vw;
+}
+/* .data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 70px;
+}
+
+.data div {
+    margin: 10px;
+} */
+
+.change-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: flex-start;
+}
+
+.change-button Button {
+    margin: 1vh;
+}
+
+.allergens {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.select-allergens{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.selections {
+    height: 40vh;
+    width: 30vw;
+    border-style: outset;
+    border-width: 0.4vw;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.selections .selection {
+    align-self: center;
+    margin-left: 0.5vw;
+}
+
+.added-allergies {
+    text-align: center;
+}
+
+.users-allergen {
+    text-align: center;
+}
+
+.allergies-box {
+    height: 40vh;
+    width: 30vw;
+    border-style: inset;
+    border-width: 0.4vw;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.allergies-box-element {
+    margin: 1vw;
+}
+
+.reset-save-button {
+    margin: 2vh;
+    display: flex;
+    justify-content: space-around;
+}
+
+.wrapper .main-content {
+    width: 100%;
+    margin-left: 20vw;
+}
+
+.profile .main-content .logout {
+    float: right;
+}
