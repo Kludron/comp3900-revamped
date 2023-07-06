@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      dockerfile: backend.Dockerfile
+    ports:
+      - 5000:5000
+
+#   frontend:
+#    image: nodejs
+#
+#  db:
+#    image: postgres
+#    restart: always
+#    environment:
+#      POSTGRES_PASSWORD: passwd
+#    ports:
+#      - 5432
